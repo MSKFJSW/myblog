@@ -1,0 +1,84 @@
+---
+title: "ブログ始めました"
+author: "Misaki Fujisawa"
+date: 2020-12-04
+categories: ["R"]
+tags: ["R Markdown", "Blogdown", "Rstudio"]
+---
+
+<link href="{{< relref "post/2020-12-06/index.html" >}}index_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="{{< relref "post/2020-12-06/index.html" >}}index_files/anchor-sections/anchor-sections.js"></script>
+
+
+<p>Rstudioでブログを作ってみました。このブログではSASやRでの統計解析の結果やコードをアップしていく予定。</p>
+<p>解析は基本的にSASを使っているのだけど、RMarkdownが便利すぎて驚いた。Rでレポート作成ができ、プログラムを貼り付ければ解析結果を表示してくれるという素晴らしい仕様。解析結果をエクセルで作り直してワードに貼り付けるという今までの作業が馬鹿馬鹿しくなってくる。しかも論文作成と解析をRstudio内でつくるのだから結果の入力ミスなども防止できる。この記事もRMarkdownで書いてます。</p>
+<p>試しに乱数データのデータフレームをhtml記法で表示してみる。</p>
+<div id="通常のrによる出力" class="section level1">
+<h1>通常のRによる出力</h1>
+<pre class="r"><code>y &lt;- rnorm(10, rep(1:10), sd=1)
+mean &lt;- rep(1:10)
+df &lt;- data.frame(母平均=mean, 乱数=y)
+head(df)</code></pre>
+<pre><code>##   母平均      乱数
+## 1      1 0.7021888
+## 2      2 1.2552000
+## 3      3 4.2194895
+## 4      4 3.7941818
+## 5      5 5.7634429
+## 6      6 8.4217045</code></pre>
+</div>
+<div id="html記法による出力" class="section level1">
+<h1>HTML記法による出力</h1>
+<pre class="r"><code>knitr::kable(df)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">母平均</th>
+<th align="right">乱数</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.7021888</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">1.2552000</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="right">4.2194895</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="right">3.7941818</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="right">5.7634429</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="right">8.4217045</td>
+</tr>
+<tr class="odd">
+<td align="right">7</td>
+<td align="right">7.2835896</td>
+</tr>
+<tr class="even">
+<td align="right">8</td>
+<td align="right">8.2431585</td>
+</tr>
+<tr class="odd">
+<td align="right">9</td>
+<td align="right">8.6443435</td>
+</tr>
+<tr class="even">
+<td align="right">10</td>
+<td align="right">8.7404407</td>
+</tr>
+</tbody>
+</table>
+<p>見やすさは段違いですね！</p>
+</div>

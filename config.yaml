@@ -1,0 +1,97 @@
+baseURL: https://example.org/
+languageCode: ja
+defaultContentLanguage: ja
+title: 九頭竜
+theme: hugo-tranquilpeak-theme
+disqusShortname: hugo-tranquilpeak-theme
+paginate: 7
+canonifyurls: yes
+permalinks:
+  post: /:year/:month/:slug/
+taxonomies:
+  archive: アーカイブ
+  category: カテゴリー
+  tag: タグ
+author:
+  bio: 疫学・医療統計専攻の大学院生
+  gravatarEmail: 
+  job: 疫学・因果推論・産業衛生
+  location: 京都
+  name: Misaki Fujisawa
+  picture: https://pbs.twimg.com/media/D4rAM6EU8AYwAGL?format=jpg&name=900x900
+menu:
+  links:
+    - identifier: github
+      name: GitHub
+      pre: <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      url: https://github.com/kakawait
+      weight: 1
+    - identifier: stackoverflow
+      name: Stack Overflow
+      pre: <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
+      url: https://stackoverflow.com/users/636472/kakawait
+      weight: 2
+    - identifier: はてなブログ
+      name: はてなブログ
+      pre: <i class="sidebar-button-icon fa fa-address-book" aria-hidden="true"></i>
+      url: https://misaki-fjsw.hatenablog.jp/
+      weight: 3
+    - identifier: twitter
+      name: Twitter
+      pre: <i class="sidebar-button-icon fa fa-twitter" aria-hidden="true"></i>
+      url: https://twitter.com/goukenn722
+      weight: 4
+      
+  main:
+    - identifier: home
+      name: Home
+      pre: <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      url: /
+      weight: 1
+    - identifier: categories
+      name: Categories
+      pre: <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      url: /categories
+      weight: 2
+    - identifier: tags
+      name: Tags
+      pre: <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      url: /tags
+      weight: 3
+    - identifier: archives
+      name: Archives
+      pre: <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+      url: /archives
+      weight: 4
+  misc:
+    - identifier: rss
+      name: RSS
+      pre: <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+      url: /index.xml
+      weight: 1
+params:
+  autoThumbnailImage: yes
+  clearReading: yes
+  coverImage: images/cover.jpg
+  description: Hugo tranquilpeak theme demo
+  header:
+    rightLink:
+      class: ''
+      icon: ''
+      url: /#about
+  hierarchicalCategories: yes
+  imageGallery: yes
+  sharingOptions:
+    - icon: fa-facebook-official
+      name: Facebook
+      url: https://www.facebook.com/sharer/sharer.php?u=%s
+    - icon: fa-twitter
+      name: Twitter
+      url: https://twitter.com/intent/tweet?text=%s
+    - icon: fa-google-plus
+      name: Google+
+      url: https://plus.google.com/share?url=%s
+  sidebarBehavior: 1
+  syntaxHighlighter: highlight.js
+  thumbnailImage: yes
+  thumbnailImagePosition: bottom

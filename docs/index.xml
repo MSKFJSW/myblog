@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>九頭竜</title>
+    <link>https://example.org/</link>
+    <description>Recent content on 九頭竜</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Fri, 04 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://example.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ブログ始めました</title>
+      <link>https://example.org/2020/12/%E3%83%96%E3%83%AD%E3%82%B0%E5%A7%8B%E3%82%81%E3%81%BE%E3%81%97%E3%81%9F/</link>
+      <pubDate>Fri, 04 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://example.org/2020/12/%E3%83%96%E3%83%AD%E3%82%B0%E5%A7%8B%E3%82%81%E3%81%BE%E3%81%97%E3%81%9F/</guid>
+      <description>Rstudioでブログを作ってみました。このブログではSASやRでの統計解析の結果やコードをアップしていく予定。
+解析は基本的にSASを使っているのだけど、RMarkdownが便利すぎて驚いた。Rでレポート作成ができ、プログラムを貼り付ければ解析結果を表示してくれるという素晴らしい仕様。解析結果をエクセルで作り直してワードに貼り付けるという今までの作業が馬鹿馬鹿しくなってくる。しかも論文作成と解析をRstudio内でつくるのだから結果の入力ミスなども防止できる。この記事もRMarkdownで書いてます。
+試しに乱数データのデータフレームをhtml記法で表示してみる。
+通常のRによる出力 y &amp;lt;- rnorm(10, rep(1:10), sd=1) mean &amp;lt;- rep(1:10) df &amp;lt;- data.frame(母平均=mean, 乱数=y) head(df) ## 母平均 乱数 ## 1 1 1.264864 ## 2 2 1.650143 ## 3 3 3.559212 ## 4 4 4.987774 ## 5 5 6.612587 ## 6 6 6.097653  HTML記法による出力 knitr::kable(df)   母平均 乱数    1 1.264864  2 1.650143  3 3.559212  4 4.987774  5 6.612587  6 6.</description>
+    </item>
+    
+  </channel>
+</rss>
