@@ -95,3 +95,7 @@ params:
   syntaxHighlighter: highlight.js
   thumbnailImage: yes
   thumbnailImagePosition: bottom
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
