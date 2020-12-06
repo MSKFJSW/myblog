@@ -1,4 +1,4 @@
-baseURL: https://example.org/
+baseURL: https://msmsfjsw.netlify.app//
 languageCode: ja
 defaultContentLanguage: ja
 title: 九頭竜
@@ -15,7 +15,7 @@ taxonomies:
 author:
   bio: 疫学・医療統計専攻の大学院生
   gravatarEmail: 
-  job: 疫学・因果推論・産業衛生
+  job: 疫学・健康情報学・産業衛生
   location: 京都
   name: Misaki Fujisawa
   picture: https://pbs.twimg.com/media/D4rAM6EU8AYwAGL?format=jpg&name=900x900
