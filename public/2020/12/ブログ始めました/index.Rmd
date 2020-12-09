@@ -4,6 +4,8 @@ author: "Misaki Fujisawa"
 date: 2020-12-04
 categories: ["R"]
 tags: ["R Markdown", "Blogdown", "Rstudio"]
+thumbnailImage: "content/post/Rstudio.png"
+thumbnailImagePosition: left
 ---
 
 Rstudioでブログを作ってみました。このブログではSASやRでの統計解析の結果やコードをアップしていく予定。 

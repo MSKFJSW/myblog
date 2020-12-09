@@ -2,8 +2,10 @@
 title: "ブログ始めました"
 author: "Misaki Fujisawa"
 date: 2020-12-04
-categories: ["R"]
+categories: ["RMarkdown", "Rstudio", "blogdown"]
 tags: ["R Markdown", "Blogdown", "Rstudio"]
+thumbnailImage: https://www.pngitem.com/pimgs/m/32-323166_copyright-symbol-r-free-download-png-r-studio.png
+thumbnailImagePosition: left
 ---
 
 <link href="{{< relref "post/2020-12-06/index.html" >}}index_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
@@ -12,20 +14,20 @@ tags: ["R Markdown", "Blogdown", "Rstudio"]
 
 <p>Rstudioでブログを作ってみました。このブログではSASやRでの統計解析の結果やコードをアップしていく予定。</p>
 <p>解析は基本的にSASを使っているのだけど、RMarkdownが便利すぎて驚いた。Rでレポート作成ができ、プログラムを貼り付ければ解析結果を表示してくれるという素晴らしい仕様。解析結果をエクセルで作り直してワードに貼り付けるという今までの作業が馬鹿馬鹿しくなってくる。しかも論文作成と解析をRstudio内でつくるのだから結果の入力ミスなども防止できる。この記事もRMarkdownで書いてます。</p>
-<p>試しに乱数データのデータフレームをhtml記法で表示してみる。</p>
+<p>RMarkdownはhtmlやpdfなどの形式でレポート作成ができるのでおすすめ。html表示ができる利点を活かして、試しに乱数データのデータフレームを表示してみる。</p>
 <div id="通常のrによる出力" class="section level1">
 <h1>通常のRによる出力</h1>
 <pre class="r"><code>y &lt;- rnorm(10, rep(1:10), sd=1)
 mean &lt;- rep(1:10)
 df &lt;- data.frame(母平均=mean, 乱数=y)
 head(df)</code></pre>
-<pre><code>##   母平均      乱数
-## 1      1 -1.136880
-## 2      2  2.388465
-## 3      3  2.943371
-## 4      4  3.797913
-## 5      5  5.947199
-## 6      6  6.925088</code></pre>
+<pre><code>##   母平均     乱数
+## 1      1 1.781545
+## 2      2 2.459910
+## 3      3 3.140292
+## 4      4 3.945440
+## 5      5 5.158530
+## 6      6 7.136379</code></pre>
 </div>
 <div id="html記法による出力" class="section level1">
 <h1>HTML記法による出力</h1>
@@ -40,43 +42,43 @@ head(df)</code></pre>
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">-1.136880</td>
+<td align="right">1.781545</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
-<td align="right">2.388465</td>
+<td align="right">2.459910</td>
 </tr>
 <tr class="odd">
 <td align="right">3</td>
-<td align="right">2.943371</td>
+<td align="right">3.140292</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
-<td align="right">3.797913</td>
+<td align="right">3.945441</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
-<td align="right">5.947199</td>
+<td align="right">5.158530</td>
 </tr>
 <tr class="even">
 <td align="right">6</td>
-<td align="right">6.925088</td>
+<td align="right">7.136380</td>
 </tr>
 <tr class="odd">
 <td align="right">7</td>
-<td align="right">6.767964</td>
+<td align="right">8.285197</td>
 </tr>
 <tr class="even">
 <td align="right">8</td>
-<td align="right">9.919741</td>
+<td align="right">6.440440</td>
 </tr>
 <tr class="odd">
 <td align="right">9</td>
-<td align="right">10.025195</td>
+<td align="right">10.281085</td>
 </tr>
 <tr class="even">
 <td align="right">10</td>
-<td align="right">8.637154</td>
+<td align="right">9.446818</td>
 </tr>
 </tbody>
 </table>
