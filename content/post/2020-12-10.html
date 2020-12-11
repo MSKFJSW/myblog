@@ -1,0 +1,210 @@
+---
+title: "Rでの統計的学習"
+date: 2020-12-10
+categories:
+- 線形回帰
+- R
+tags:
+- Rstudio
+keywords:
+- tech
+thumbnailImage: https://images-na.ssl-images-amazon.com/images/I/61Lvnv9+CML.jpg
+thumbnailImagePosition: left
+---
+
+<link href="/rmarkdown-libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/anchor-sections/anchor-sections.js"></script>
+
+
+<p>最近流行りの統計的学習をRで実装。
+まずは線形回帰から。</p>
+<div id="データセットの取得" class="section level1">
+<h1>データセットの取得</h1>
+<p>MASSライブラリからBostonデータを取得。</p>
+<pre class="r"><code>library(MASS)
+dt &lt;- head(Boston)
+knitr::kable(dt)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">crim</th>
+<th align="right">zn</th>
+<th align="right">indus</th>
+<th align="right">chas</th>
+<th align="right">nox</th>
+<th align="right">rm</th>
+<th align="right">age</th>
+<th align="right">dis</th>
+<th align="right">rad</th>
+<th align="right">tax</th>
+<th align="right">ptratio</th>
+<th align="right">black</th>
+<th align="right">lstat</th>
+<th align="right">medv</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.00632</td>
+<td align="right">18</td>
+<td align="right">2.31</td>
+<td align="right">0</td>
+<td align="right">0.538</td>
+<td align="right">6.575</td>
+<td align="right">65.2</td>
+<td align="right">4.0900</td>
+<td align="right">1</td>
+<td align="right">296</td>
+<td align="right">15.3</td>
+<td align="right">396.90</td>
+<td align="right">4.98</td>
+<td align="right">24.0</td>
+</tr>
+<tr class="even">
+<td align="right">0.02731</td>
+<td align="right">0</td>
+<td align="right">7.07</td>
+<td align="right">0</td>
+<td align="right">0.469</td>
+<td align="right">6.421</td>
+<td align="right">78.9</td>
+<td align="right">4.9671</td>
+<td align="right">2</td>
+<td align="right">242</td>
+<td align="right">17.8</td>
+<td align="right">396.90</td>
+<td align="right">9.14</td>
+<td align="right">21.6</td>
+</tr>
+<tr class="odd">
+<td align="right">0.02729</td>
+<td align="right">0</td>
+<td align="right">7.07</td>
+<td align="right">0</td>
+<td align="right">0.469</td>
+<td align="right">7.185</td>
+<td align="right">61.1</td>
+<td align="right">4.9671</td>
+<td align="right">2</td>
+<td align="right">242</td>
+<td align="right">17.8</td>
+<td align="right">392.83</td>
+<td align="right">4.03</td>
+<td align="right">34.7</td>
+</tr>
+<tr class="even">
+<td align="right">0.03237</td>
+<td align="right">0</td>
+<td align="right">2.18</td>
+<td align="right">0</td>
+<td align="right">0.458</td>
+<td align="right">6.998</td>
+<td align="right">45.8</td>
+<td align="right">6.0622</td>
+<td align="right">3</td>
+<td align="right">222</td>
+<td align="right">18.7</td>
+<td align="right">394.63</td>
+<td align="right">2.94</td>
+<td align="right">33.4</td>
+</tr>
+<tr class="odd">
+<td align="right">0.06905</td>
+<td align="right">0</td>
+<td align="right">2.18</td>
+<td align="right">0</td>
+<td align="right">0.458</td>
+<td align="right">7.147</td>
+<td align="right">54.2</td>
+<td align="right">6.0622</td>
+<td align="right">3</td>
+<td align="right">222</td>
+<td align="right">18.7</td>
+<td align="right">396.90</td>
+<td align="right">5.33</td>
+<td align="right">36.2</td>
+</tr>
+<tr class="even">
+<td align="right">0.02985</td>
+<td align="right">0</td>
+<td align="right">2.18</td>
+<td align="right">0</td>
+<td align="right">0.458</td>
+<td align="right">6.430</td>
+<td align="right">58.7</td>
+<td align="right">6.0622</td>
+<td align="right">3</td>
+<td align="right">222</td>
+<td align="right">18.7</td>
+<td align="right">394.12</td>
+<td align="right">5.21</td>
+<td align="right">28.7</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="記述統計表相関行列" class="section level1">
+<h1>記述統計表・相関行列</h1>
+<pre class="r"><code>summary(Boston)</code></pre>
+<pre><code>##       crim                zn             indus            chas        
+##  Min.   : 0.00632   Min.   :  0.00   Min.   : 0.46   Min.   :0.00000  
+##  1st Qu.: 0.08204   1st Qu.:  0.00   1st Qu.: 5.19   1st Qu.:0.00000  
+##  Median : 0.25651   Median :  0.00   Median : 9.69   Median :0.00000  
+##  Mean   : 3.61352   Mean   : 11.36   Mean   :11.14   Mean   :0.06917  
+##  3rd Qu.: 3.67708   3rd Qu.: 12.50   3rd Qu.:18.10   3rd Qu.:0.00000  
+##  Max.   :88.97620   Max.   :100.00   Max.   :27.74   Max.   :1.00000  
+##       nox               rm             age              dis        
+##  Min.   :0.3850   Min.   :3.561   Min.   :  2.90   Min.   : 1.130  
+##  1st Qu.:0.4490   1st Qu.:5.886   1st Qu.: 45.02   1st Qu.: 2.100  
+##  Median :0.5380   Median :6.208   Median : 77.50   Median : 3.207  
+##  Mean   :0.5547   Mean   :6.285   Mean   : 68.57   Mean   : 3.795  
+##  3rd Qu.:0.6240   3rd Qu.:6.623   3rd Qu.: 94.08   3rd Qu.: 5.188  
+##  Max.   :0.8710   Max.   :8.780   Max.   :100.00   Max.   :12.127  
+##       rad              tax           ptratio          black       
+##  Min.   : 1.000   Min.   :187.0   Min.   :12.60   Min.   :  0.32  
+##  1st Qu.: 4.000   1st Qu.:279.0   1st Qu.:17.40   1st Qu.:375.38  
+##  Median : 5.000   Median :330.0   Median :19.05   Median :391.44  
+##  Mean   : 9.549   Mean   :408.2   Mean   :18.46   Mean   :356.67  
+##  3rd Qu.:24.000   3rd Qu.:666.0   3rd Qu.:20.20   3rd Qu.:396.23  
+##  Max.   :24.000   Max.   :711.0   Max.   :22.00   Max.   :396.90  
+##      lstat            medv      
+##  Min.   : 1.73   Min.   : 5.00  
+##  1st Qu.: 6.95   1st Qu.:17.02  
+##  Median :11.36   Median :21.20  
+##  Mean   :12.65   Mean   :22.53  
+##  3rd Qu.:16.95   3rd Qu.:25.00  
+##  Max.   :37.97   Max.   :50.00</code></pre>
+</div>
+<div id="単回帰分析" class="section level1">
+<h1>単回帰分析</h1>
+<pre class="r"><code>reg &lt;- lm(medv~lstat, data=Boston)
+summary(reg)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = medv ~ lstat, data = Boston)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -15.168  -3.990  -1.318   2.034  24.500 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 34.55384    0.56263   61.41   &lt;2e-16 ***
+## lstat       -0.95005    0.03873  -24.53   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 6.216 on 504 degrees of freedom
+## Multiple R-squared:  0.5441, Adjusted R-squared:  0.5432 
+## F-statistic: 601.6 on 1 and 504 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div id="回帰係数とその95信頼区間" class="section level1">
+<h1>回帰係数とその95%信頼区間</h1>
+<pre class="r"><code>coef(reg)</code></pre>
+<pre><code>## (Intercept)       lstat 
+##  34.5538409  -0.9500494</code></pre>
+<pre class="r"><code>confint(reg)</code></pre>
+<pre><code>##                 2.5 %     97.5 %
+## (Intercept) 33.448457 35.6592247
+## lstat       -1.026148 -0.8739505</code></pre>
+</div>

@@ -2,17 +2,17 @@
 title: "ブログ始めました"
 author: "Misaki Fujisawa"
 date: 2020-12-04
-categories: ["RMarkdown", "Rstudio", "blogdown"]
+categories: ["R"]
 tags: ["R Markdown", "Blogdown", "Rstudio"]
 thumbnailImage: https://www.pngitem.com/pimgs/m/32-323166_copyright-symbol-r-free-download-png-r-studio.png
 thumbnailImagePosition: left
 ---
 
-Rstudioでブログを作ってみました。このブログではSASやRでの統計解析の結果やコードをアップしていく予定。 
+RstudioのBlogdownパッケージでブログを作ってみた。このブログでは統計解析のコードなどをアップしていく予定。 SASとRがメインになるかと。
 
-解析は基本的にSASを使っているのだけど、RMarkdownが便利すぎて驚いた。Rでレポート作成ができ、プログラムを貼り付ければ解析結果を表示してくれるという素晴らしい仕様。解析結果をエクセルで作り直してワードに貼り付けるという今までの作業が馬鹿馬鹿しくなってくる。しかも論文作成と解析をRstudio内でつくるのだから結果の入力ミスなども防止できる。この記事もRMarkdownで書いてます。
+今まで解析は基本的にSASを使っていたのだけど、RMarkdownが便利すぎて驚いた。RStudioでレポート作成ができ、文章中にRのコードを書けば解析結果を埋め込んで表示してくれるという素晴らしい仕様。解析結果をエクセルで作り直してワードに貼り付けるという作業が馬鹿馬鹿しくなってくる。しかも論文作成と解析を同一のソフトでつくるのだから結果の入力ミスなども防止できる。この記事もRMarkdownで書いている。
 
-RMarkdownはhtmlやpdfなどの形式でレポート作成ができるのでおすすめ。html表示ができる利点を活かして、試しに乱数データのデータフレームを表示してみる。
+RMarkdownはhtmlやpdfなどの形式でレポート作成ができるのでおすすめ。せっかくなのでhtml表示ができる利点を活かして、試しに乱数データのデータフレームを表示してみる。
 
 # 通常のRによる出力
 
@@ -29,4 +29,4 @@ knitr::kable(df)
 ```
 
 
-見やすさは段違いですね！
+見やすさは全然違う！

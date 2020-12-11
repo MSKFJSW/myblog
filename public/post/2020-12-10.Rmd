@@ -1,0 +1,46 @@
+---
+title: "Rでの統計的学習"
+date: 2020-12-10
+categories:
+- 線形回帰
+- R
+tags:
+- Rstudio
+keywords:
+- tech
+thumbnailImage: https://images-na.ssl-images-amazon.com/images/I/61Lvnv9+CML.jpg
+thumbnailImagePosition: left
+---
+
+最近流行りの統計的学習をRで実装。
+まずは線形回帰から。
+
+# データセットの取得
+MASSライブラリからBostonデータを取得。
+
+```{r}
+library(MASS)
+dt <- head(Boston)
+knitr::kable(dt)
+```
+
+
+# 記述統計表・相関行列
+```{r}
+summary(Boston)
+```
+
+
+# 単回帰分析
+```{r}
+reg <- lm(medv~lstat, data=Boston)
+summary(reg)
+```
+
+# 回帰係数とその95%信頼区間
+```{r}
+coef(reg)
+confint(reg)
+```
+
+

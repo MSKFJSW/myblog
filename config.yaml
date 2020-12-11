@@ -6,7 +6,7 @@ theme: hugo-tranquilpeak-theme
 disqusShortname: hugo-tranquilpeak-theme
 paginate: 7
 canonifyurls: yes
-googleAnalytics: 255573654
+googleAnalytics: G-RFE4S58MLQ
 permalinks:
   post: /:year/:month/:slug/
 taxonomies:
@@ -47,17 +47,17 @@ menu:
     - identifier: categories
       name: Categories
       pre: <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
-      url: /categories
+      url: /カテゴリー
       weight: 2
     - identifier: tags
       name: Tags
       pre: <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
-      url: /tags
+      url: /タグ
       weight: 3
     - identifier: archives
       name: Archives
       pre: <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
-      url: /archives
+      url: /アーカイブ
       weight: 4
   misc:
     - identifier: rss

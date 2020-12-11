@@ -128,7 +128,7 @@ if (!doNotTrack) {
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://msmsfjsw.netlify.app/categories">
+      <a class="sidebar-button-link " href="https://msmsfjsw.netlify.app/%E3%82%AB%E3%83%86%E3%82%B4%E3%83%AA%E3%83%BC">
     
       <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
       
@@ -138,7 +138,7 @@ if (!doNotTrack) {
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://msmsfjsw.netlify.app/tags">
+      <a class="sidebar-button-link " href="https://msmsfjsw.netlify.app/%E3%82%BF%E3%82%B0">
     
       <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
       
@@ -148,7 +148,7 @@ if (!doNotTrack) {
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://msmsfjsw.netlify.app/archives">
+      <a class="sidebar-button-link " href="https://msmsfjsw.netlify.app/%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%96">
     
       <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
       
@@ -249,7 +249,11 @@ if (!doNotTrack) {
   
     <span>カテゴリー</span>
     
-      <a class="category-link" href="https://msmsfjsw.netlify.app/categories/r">R</a>
+      <a class="category-link" href="https://msmsfjsw.netlify.app/categories/rmarkdown">RMarkdown</a>, 
+    
+      <a class="category-link" href="https://msmsfjsw.netlify.app/categories/rstudio">Rstudio</a>, 
+    
+      <a class="category-link" href="https://msmsfjsw.netlify.app/categories/blogdown">blogdown</a>
     
   
 
@@ -260,8 +264,8 @@ if (!doNotTrack) {
       
         Rstudioでブログを作ってみました。このブログではSASやRでの統計解析の結果やコードをアップしていく予定。
 解析は基本的にSASを使っているのだけど、RMarkdownが便利すぎて驚いた。Rでレポート作成ができ、プログラムを貼り付ければ解析結果を表示してくれるという素晴らしい仕様。解析結果をエクセルで作り直してワードに貼り付けるという今までの作業が馬鹿馬鹿しくなってくる。しかも論文作成と解析をRstudio内でつくるのだから結果の入力ミスなども防止できる。この記事もRMarkdownで書いてます。
-試しに乱数データのデータフレームをhtml記法で表示してみる。
-通常のRによる出力 y &lt;- rnorm(10, rep(1:10), sd=1) mean &lt;- rep(1:10) df &lt;- data.frame(母平均=mean, 乱数=y) head(df) ## 母平均 乱数 ## 1 1 2.236765 ## 2 2 4.211302 ## 3 3 3.019249 ## 4 4 4.684851 ## 5 5 2.767339 ## 6 6 7.613789  HTML記法による出力 knitr::kable(df)   母平均 乱数    1 2.236765  2 4.211302  3 3.019249  4 4.684851  5 2.767339  6 7.
+RMarkdownはhtmlやpdfなどの形式でレポート作成ができるのでおすすめ。html表示ができる利点を活かして、試しに乱数データのデータフレームを表示してみる。
+通常のRによる出力 y &lt;- rnorm(10, rep(1:10), sd=1) mean &lt;- rep(1:10) df &lt;- data.frame(母平均=mean, 乱数=y) head(df) ## 母平均 乱数 ## 1 1 1.781545 ## 2 2 2.459910 ## 3 3 3.140292 ## 4 4 3.945440 ## 5 5 5.158530 ## 6 6 7.136379  HTML記法による出力 knitr::kable(df)   母平均 乱数    1 1.781545  2 2.459910  3 3.140292  4 3.945441  5 5.158530  6 7.
       
       <p>
         <a href="https://msmsfjsw.netlify.app/2020/12/%E3%83%96%E3%83%AD%E3%82%B0%E5%A7%8B%E3%82%81%E3%81%BE%E3%81%97%E3%81%9F/" class="postShorten-excerpt_link link">続きを読む</a>
@@ -272,7 +276,7 @@ if (!doNotTrack) {
   
     <a href="https://msmsfjsw.netlify.app/2020/12/%E3%83%96%E3%83%AD%E3%82%B0%E5%A7%8B%E3%82%81%E3%81%BE%E3%81%97%E3%81%9F/">
       <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="https://msmsfjsw.netlify.app/content/post/Rstudio.png"/>
+        <img alt="" itemprop="image" src="https://www.pngitem.com/pimgs/m/32-323166_copyright-symbol-r-free-download-png-r-studio.png"/>
       </div>
     </a>
   
