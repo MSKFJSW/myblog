@@ -232,16 +232,16 @@ if (!doNotTrack) {
     
     <div class="postShorten-header">
       <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="https://msmsfjsw.netlify.app/2020/12/r%E3%81%A7%E3%81%AE%E7%B5%B1%E8%A8%88%E7%9A%84%E5%AD%A6%E7%BF%92/">
-          Rでの統計的学習
+        <a class="link-unstyled" href="https://msmsfjsw.netlify.app/2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF/">
+          データの読み込み
         </a>
       </h1>
       
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2020-12-10T00:00:00Z">
+      <time itemprop="datePublished" datetime="2020-12-13T00:00:00Z">
         
-  12 10, 2020
+  12 13, 2020
 
       </time>
     
@@ -250,9 +250,7 @@ if (!doNotTrack) {
   
     <span>カテゴリー</span>
     
-      <a class="category-link" href="https://msmsfjsw.netlify.app/categories/%e7%b7%9a%e5%bd%a2%e5%9b%9e%e5%b8%b0">線形回帰</a>, 
-    
-      <a class="category-link" href="https://msmsfjsw.netlify.app/categories/r">R</a>
+      <a class="category-link" href="https://msmsfjsw.netlify.app/categories/%e3%83%87%e3%83%bc%e3%82%bf%e3%81%ae%e8%aa%ad%e3%81%bf%e8%be%bc%e3%81%bf">データの読み込み</a>
     
   
 
@@ -261,20 +259,26 @@ if (!doNotTrack) {
     </div>
     <div class="postShorten-excerpt" itemprop="articleBody">
       
-        最近流行りの統計的学習をRで実装。 まずは線形回帰から。
-データセットの取得 MASSライブラリからBostonデータを取得。
-library(MASS) dt &lt;- head(Boston) knitr::kable(dt)   crim zn indus chas nox rm age dis rad tax ptratio black lstat medv    0.00632 18 2.31 0 0.538 6.575 65.2 4.0900 1 296 15.3 396.90 4.98 24.0  0.02731 0 7.07 0 0.469 6.421 78.9 4.9671 2 242 17.8 396.90 9.14 21.6  0.02729 0 7.07 0 0.469 7.185 61.1 4.9671 2 242 17.
+          Rstudioによるデータ読み込みについての簡単なまとめ。
+CSVデータの読み込み dt &lt;- read.csv(file=&quot;heart.csv&quot;, header=TRUE, fill=TRUE) dt &lt;- read.table(file=&quot;heart.csv&quot;, header=TRUE, fill=TRUE)  file=“ファイル名”
+上記はカレントの場合で、異なる場合はパスを指定 header={TRUE/FALSE}　1行目を変数名として読み込む
+ fill={TRUE/FALSE}
+欠測値の読み込み   EXCELデータの読みこみ library(gdata) dt &lt;- read.xls(&quot;heart.xlsx&quot;, sheet=1) エクセルファイルの読み込みにはgdataパッケージのインストールが必要。 - sheet=シート番号 読み込むシートの番号を指定。名前は指定不可。
+ SASファイルの読み込み library(haven) dt &lt;- read_sas(&quot;heart.sas7bdat&quot;) SASから読み込んだ場合、欠測なども自動的にNAに変換してくれる。
+ データ型について 上記の方法で読み込んだデータはデータフレームになる。データフレームでは列ごとに異なるデータ型を扱うことができ、excelファイルと似た扱いができる。個々のデータ参照も容易にできることから、データ解析を行う上で大変便利。（行列では1つの型しか扱えない） ただしデータフレームにおける文字データの型は「factor型」であることに注意。
+ 動作環境 Windows10 WSL2 Ubuntu20.04 Rstudio-server
+ 
       
       <p>
-        <a href="https://msmsfjsw.netlify.app/2020/12/r%E3%81%A7%E3%81%AE%E7%B5%B1%E8%A8%88%E7%9A%84%E5%AD%A6%E7%BF%92/" class="postShorten-excerpt_link link">続きを読む</a>
+        <a href="https://msmsfjsw.netlify.app/2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF/" class="postShorten-excerpt_link link">続きを読む</a>
         
       </p>
     </div>
   </div>
   
-    <a href="https://msmsfjsw.netlify.app/2020/12/r%E3%81%A7%E3%81%AE%E7%B5%B1%E8%A8%88%E7%9A%84%E5%AD%A6%E7%BF%92/">
+    <a href="https://msmsfjsw.netlify.app/2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF/">
       <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="https://images-na.ssl-images-amazon.com/images/I/61Lvnv9&#43;CML.jpg"/>
+        <img alt="" itemprop="image" src="https://japan.zdnet.com/storage/2019/04/17/f654b887ad747de0ff80b8e986e5bf4c/t/584/438/d/managing-ai-in-the-enterprise-intro-thumb_1280x960.jpg"/>
       </div>
     </a>
   

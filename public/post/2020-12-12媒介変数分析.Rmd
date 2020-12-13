@@ -1,0 +1,84 @@
+---
+title: "媒介分析"
+date: 2020-12-12
+categories:
+- 媒介変数分析
+tags:
+- R
+keywords:
+- 因果推論
+thumbnailImage: https://news.blr.com/app/uploads/sites/3/2019/04/mediation-5.jpg
+thumbnailImagePosition: left
+---
+
+課題研究で媒介変数分析を行ったのでそのまとめ。    
+
+## 媒介変数とは    
+
+曝露変数とアウトカムの関係を媒介する関係にある変数。    
+
+```{r ,include=FALSE, results='asis'}
+library(DiagrammeR)
+
+grViz('digraph{
+    graph[rankdir=TB]
+    node[label="曝露"]A
+    node[label="アウトカム"]B
+    node[label="媒介変数"]C
+    A->C->B
+    A->B
+    } '
+)
+
+
+```
+
+
+```{r libload}
+library(SASmarkdown)
+```
+
+```{sashtml}
+proc corr data=sashelp.class plots=matrix;
+run;
+
+```
+
+## 媒介分析   
+ある要因がアウトカムにおいて関連性が確認されている場合、それは曝露変数からアウトカムへの直接的な影響なのか、媒介変数を介した間接的な影響なのかを知りたい。
+
+
+間接効果
+　曝露->媒介変数、媒介変数->アウトカムのパス係数の積
+　
+間接効果＝直接効果の減少分（回帰分析）
+　媒介変数を入れた場合と入れない場合での曝露->アウトカムのパスの差。いずれも有意でないと媒介変数があるとは言えない
+
+
+## 完全媒介と部分媒介
+完全媒介：間接効果有意、直接効果非有意
+部分媒介：間接効果有意、直接効果有意
+変な媒介効果：非有意な直接効果が媒介後に有意に
+　　　　　　　性の直接効果が媒介後に負で有意に
+
+
+
+
+## 回帰分析による媒介分析
+- 間接効果の検定方法
+1. 正規近似
+2. ブートストラップ法
+3. MCMCによるベイズ推定の信用区間
+
+
+
+構造方程式モデル
+　間接効果を
+
+
+
+
+
+
+
+

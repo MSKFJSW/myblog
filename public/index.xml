@@ -6,16 +6,22 @@
     <description>Recent content on 九頭竜</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Thu, 10 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://msmsfjsw.netlify.app/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 13 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://msmsfjsw.netlify.app/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Rでの統計的学習</title>
-      <link>https://msmsfjsw.netlify.app/2020/12/r%E3%81%A7%E3%81%AE%E7%B5%B1%E8%A8%88%E7%9A%84%E5%AD%A6%E7%BF%92/</link>
-      <pubDate>Thu, 10 Dec 2020 00:00:00 +0000</pubDate>
+      <title>データの読み込み</title>
+      <link>https://msmsfjsw.netlify.app/2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF/</link>
+      <pubDate>Sun, 13 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://msmsfjsw.netlify.app/2020/12/r%E3%81%A7%E3%81%AE%E7%B5%B1%E8%A8%88%E7%9A%84%E5%AD%A6%E7%BF%92/</guid>
-      <description>最近流行りの統計的学習をRで実装。 まずは線形回帰から。
-データセットの取得 MASSライブラリからBostonデータを取得。
-library(MASS) dt &amp;lt;- head(Boston) knitr::kable(dt)   crim zn indus chas nox rm age dis rad tax ptratio black lstat medv    0.00632 18 2.31 0 0.538 6.575 65.2 4.0900 1 296 15.3 396.90 4.98 24.0  0.02731 0 7.07 0 0.469 6.421 78.9 4.9671 2 242 17.8 396.90 9.14 21.6  0.02729 0 7.07 0 0.469 7.185 61.1 4.9671 2 242 17.</description>
+      <guid>https://msmsfjsw.netlify.app/2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF/</guid>
+      <description>  Rstudioによるデータ読み込みについての簡単なまとめ。
+CSVデータの読み込み dt &amp;lt;- read.csv(file=&amp;quot;heart.csv&amp;quot;, header=TRUE, fill=TRUE) dt &amp;lt;- read.table(file=&amp;quot;heart.csv&amp;quot;, header=TRUE, fill=TRUE)  file=“ファイル名”
+上記はカレントの場合で、異なる場合はパスを指定 header={TRUE/FALSE}　1行目を変数名として読み込む
+ fill={TRUE/FALSE}
+欠測値の読み込み   EXCELデータの読みこみ library(gdata) dt &amp;lt;- read.xls(&amp;quot;heart.xlsx&amp;quot;, sheet=1) エクセルファイルの読み込みにはgdataパッケージのインストールが必要。 - sheet=シート番号 読み込むシートの番号を指定。名前は指定不可。
+ SASファイルの読み込み library(haven) dt &amp;lt;- read_sas(&amp;quot;heart.sas7bdat&amp;quot;) SASから読み込んだ場合、欠測なども自動的にNAに変換してくれる。
+ データ型について 上記の方法で読み込んだデータはデータフレームになる。データフレームでは列ごとに異なるデータ型を扱うことができ、excelファイルと似た扱いができる。個々のデータ参照も容易にできることから、データ解析を行う上で大変便利。（行列では1つの型しか扱えない） ただしデータフレームにおける文字データの型は「factor型」であることに注意。
+ 動作環境 Windows10 WSL2 Ubuntu20.04 Rstudio-server
+ </description>
     </item>
     
     <item>

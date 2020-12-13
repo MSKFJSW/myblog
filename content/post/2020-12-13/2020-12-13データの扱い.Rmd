@@ -1,0 +1,54 @@
+---
+title: "データの読み込み"
+date: 2020-12-13
+categories:
+- データの読み込み
+tags:
+- read.table
+- read.csv
+- read.xls(gdataパッケージ)
+- read_sas(havenパッケージ)
+thumbnailImage: https://japan.zdnet.com/storage/2019/04/17/f654b887ad747de0ff80b8e986e5bf4c/t/584/438/d/managing-ai-in-the-enterprise-intro-thumb_1280x960.jpg
+thumbnailImagePosition: left
+---
+
+Rstudioによるデータ読み込みについての簡単なまとめ。
+
+### CSVデータの読み込み
+
+```{r}
+dt <- read.csv(file="heart.csv", header=TRUE, fill=TRUE)
+dt <- read.table(file="heart.csv", header=TRUE, fill=TRUE)
+```
+- file="ファイル名"    
+上記はカレントの場合で、異なる場合はパスを指定
+- header={TRUE/FALSE}　    
+1行目を変数名として読み込む    
+- fill={TRUE/FALSE}    
+欠測値の読み込み    
+
+### EXCELデータの読みこみ
+```{r, eval=FALSE}
+library(gdata)
+dt <- read.xls("heart.xlsx", sheet=1)
+```
+エクセルファイルの読み込みにはgdataパッケージのインストールが必要。
+- sheet=シート番号
+    読み込むシートの番号を指定。名前は指定不可。
+
+
+### SASファイルの読み込み
+```{r, eval=FALSE}
+library(haven)
+dt <- read_sas("heart.sas7bdat")
+
+```
+SASから読み込んだ場合、欠測なども自動的にNAに変換してくれる。
+
+### データ型について
+上記の方法で読み込んだデータはデータフレームになる。データフレームでは列ごとに異なるデータ型を扱うことができ、excelファイルと似た扱いができる。個々のデータ参照も容易にできることから、データ解析を行う上で大変便利。（行列では1つの型しか扱えない）   ただしデータフレームにおける文字データの型は「factor型」であることに注意。
+
+
+### 動作環境
+Windows10 WSL2 Ubuntu20.04 Rstudio-server 
+

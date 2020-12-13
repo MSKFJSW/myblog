@@ -1,0 +1,55 @@
+---
+title: "データの読み込み"
+date: 2020-12-13
+categories:
+- データの読み込み
+tags:
+- read.table
+- read.csv
+- read.xls(gdataパッケージ)
+- read_sas(havenパッケージ)
+thumbnailImage: https://japan.zdnet.com/storage/2019/04/17/f654b887ad747de0ff80b8e986e5bf4c/t/584/438/d/managing-ai-in-the-enterprise-intro-thumb_1280x960.jpg
+thumbnailImagePosition: left
+---
+
+<link href="2020-12-13データの扱い_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="2020-12-13データの扱い_files/anchor-sections/anchor-sections.js"></script>
+
+
+<p>Rstudioによるデータ読み込みについての簡単なまとめ。</p>
+<div id="csvデータの読み込み" class="section level3">
+<h3>CSVデータの読み込み</h3>
+<pre class="r"><code>dt &lt;- read.csv(file=&quot;heart.csv&quot;, header=TRUE, fill=TRUE)
+dt &lt;- read.table(file=&quot;heart.csv&quot;, header=TRUE, fill=TRUE)</code></pre>
+<ul>
+<li>file=“ファイル名”<br />
+上記はカレントの場合で、異なる場合はパスを指定</li>
+<li>header={TRUE/FALSE}　<br />
+1行目を変数名として読み込む<br />
+</li>
+<li>fill={TRUE/FALSE}<br />
+欠測値の読み込み</li>
+</ul>
+</div>
+<div id="excelデータの読みこみ" class="section level3">
+<h3>EXCELデータの読みこみ</h3>
+<pre class="r"><code>library(gdata)
+dt &lt;- read.xls(&quot;heart.xlsx&quot;, sheet=1)</code></pre>
+<p>エクセルファイルの読み込みにはgdataパッケージのインストールが必要。
+- sheet=シート番号
+読み込むシートの番号を指定。名前は指定不可。</p>
+</div>
+<div id="sasファイルの読み込み" class="section level3">
+<h3>SASファイルの読み込み</h3>
+<pre class="r"><code>library(haven)
+dt &lt;- read_sas(&quot;heart.sas7bdat&quot;)</code></pre>
+<p>SASから読み込んだ場合、欠測なども自動的にNAに変換してくれる。</p>
+</div>
+<div id="データ型について" class="section level3">
+<h3>データ型について</h3>
+<p>上記の方法で読み込んだデータはデータフレームになる。データフレームでは列ごとに異なるデータ型を扱うことができ、excelファイルと似た扱いができる。個々のデータ参照も容易にできることから、データ解析を行う上で大変便利。（行列では1つの型しか扱えない） ただしデータフレームにおける文字データの型は「factor型」であることに注意。</p>
+</div>
+<div id="動作環境" class="section level3">
+<h3>動作環境</h3>
+<p>Windows10 WSL2 Ubuntu20.04 Rstudio-server</p>
+</div>
