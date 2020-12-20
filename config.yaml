@@ -1,4 +1,5 @@
 baseURL: https://msmsfjsw.netlify.app/
+publishDir: docs 
 languageCode: ja
 defaultContentLanguage: ja
 title: 九頭竜
@@ -12,7 +13,7 @@ permalinks:
 taxonomies:
   archive: アーカイブ
   category: カテゴリー
-  tag: タグ
+  tags: タグ
 author:
   bio: 疫学・医療統計専攻の大学院生
   gravatarEmail: 

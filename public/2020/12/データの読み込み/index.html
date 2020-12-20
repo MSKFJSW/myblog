@@ -14,6 +14,7 @@ CSVデータの読み込み dt &lt;- read.csv(file=&quot;heart.csv&quot;, header
  fill={TRUE/FALSE}
 欠測値の読み込み   EXCELデータの読みこみ library(gdata) dt &lt;- read.xls(&quot;heart.xlsx&quot;, sheet=1) エクセルファイルの読み込みにはgdataパッケージのインストールが必要。 - sheet=シート番号 読み込むシートの番号を指定。名前は指定不可。
  SASファイルの読み込み library(haven) dt &lt;- read_sas(&quot;heart.sas7bdat&quot;) SASから読み込んだ場合、欠測なども自動的にNAに変換してくれる。
+ EXCELデータなどの範囲読み込み dt &lt;- read.table(stdin(), header=TRUE, fill=TRUE) コンソールで0:と表示されるので、そこにエクセルなどからコピペすると入力完了。
  データ型について 上記の方法で読み込んだデータはデータフレームになる。データフレームでは列ごとに異なるデータ型を扱うことができ、excelファイルと似た扱いができる。個々のデータ参照も容易にできることから、データ解析を行う上で大変便利。（行列では1つの型しか扱えない） ただしデータフレームにおける文字データの型は「factor型」であることに注意。
  動作環境 Windows10 WSL2 Ubuntu20.04 Rstudio-server
  ">
@@ -25,6 +26,7 @@ CSVデータの読み込み dt &lt;- read.csv(file=&quot;heart.csv&quot;, header
  fill={TRUE/FALSE}
 欠測値の読み込み   EXCELデータの読みこみ library(gdata) dt &lt;- read.xls(&quot;heart.xlsx&quot;, sheet=1) エクセルファイルの読み込みにはgdataパッケージのインストールが必要。 - sheet=シート番号 読み込むシートの番号を指定。名前は指定不可。
  SASファイルの読み込み library(haven) dt &lt;- read_sas(&quot;heart.sas7bdat&quot;) SASから読み込んだ場合、欠測なども自動的にNAに変換してくれる。
+ EXCELデータなどの範囲読み込み dt &lt;- read.table(stdin(), header=TRUE, fill=TRUE) コンソールで0:と表示されるので、そこにエクセルなどからコピペすると入力完了。
  データ型について 上記の方法で読み込んだデータはデータフレームになる。データフレームでは列ごとに異なるデータ型を扱うことができ、excelファイルと似た扱いができる。個々のデータ参照も容易にできることから、データ解析を行う上で大変便利。（行列では1つの型しか扱えない） ただしデータフレームにおける文字データの型は「factor型」であることに注意。
  動作環境 Windows10 WSL2 Ubuntu20.04 Rstudio-server
  ">
@@ -40,6 +42,7 @@ CSVデータの読み込み dt &lt;- read.csv(file=&quot;heart.csv&quot;, header
  fill={TRUE/FALSE}
 欠測値の読み込み   EXCELデータの読みこみ library(gdata) dt &lt;- read.xls(&quot;heart.xlsx&quot;, sheet=1) エクセルファイルの読み込みにはgdataパッケージのインストールが必要。 - sheet=シート番号 読み込むシートの番号を指定。名前は指定不可。
  SASファイルの読み込み library(haven) dt &lt;- read_sas(&quot;heart.sas7bdat&quot;) SASから読み込んだ場合、欠測なども自動的にNAに変換してくれる。
+ EXCELデータなどの範囲読み込み dt &lt;- read.table(stdin(), header=TRUE, fill=TRUE) コンソールで0:と表示されるので、そこにエクセルなどからコピペすると入力完了。
  データ型について 上記の方法で読み込んだデータはデータフレームになる。データフレームでは列ごとに異なるデータ型を扱うことができ、excelファイルと似た扱いができる。個々のデータ参照も容易にできることから、データ解析を行う上で大変便利。（行列では1つの型しか扱えない） ただしデータフレームにおける文字データの型は「factor型」であることに注意。
  動作環境 Windows10 WSL2 Ubuntu20.04 Rstudio-server
  ">
@@ -49,6 +52,7 @@ CSVデータの読み込み dt &lt;- read.csv(file=&quot;heart.csv&quot;, header
  fill={TRUE/FALSE}
 欠測値の読み込み   EXCELデータの読みこみ library(gdata) dt &lt;- read.xls(&quot;heart.xlsx&quot;, sheet=1) エクセルファイルの読み込みにはgdataパッケージのインストールが必要。 - sheet=シート番号 読み込むシートの番号を指定。名前は指定不可。
  SASファイルの読み込み library(haven) dt &lt;- read_sas(&quot;heart.sas7bdat&quot;) SASから読み込んだ場合、欠測なども自動的にNAに変換してくれる。
+ EXCELデータなどの範囲読み込み dt &lt;- read.table(stdin(), header=TRUE, fill=TRUE) コンソールで0:と表示されるので、そこにエクセルなどからコピペすると入力完了。
  データ型について 上記の方法で読み込んだデータはデータフレームになる。データフレームでは列ごとに異なるデータ型を扱うことができ、excelファイルと似た扱いができる。個々のデータ参照も容易にできることから、データ解析を行う上で大変便利。（行列では1つの型しか扱えない） ただしデータフレームにおける文字データの型は「factor型」であることに注意。
  動作環境 Windows10 WSL2 Ubuntu20.04 Rstudio-server
  ">
@@ -63,7 +67,7 @@ CSVデータの読み込み dt &lt;- read.csv(file=&quot;heart.csv&quot;, header
   
   
     
-      <meta property="article:section" content="データの読み込み">
+      <meta property="article:section" content="データの読み込み(R)">
     
   
   
@@ -295,7 +299,7 @@ if (!doNotTrack) {
   
     <span>カテゴリー</span>
     
-      <a class="category-link" href="https://msmsfjsw.netlify.app/categories/%e3%83%87%e3%83%bc%e3%82%bf%e3%81%ae%e8%aa%ad%e3%81%bf%e8%be%bc%e3%81%bf">データの読み込み</a>
+      <a class="category-link" href="https://msmsfjsw.netlify.app/categories/%e3%83%87%e3%83%bc%e3%82%bf%e3%81%ae%e8%aa%ad%e3%81%bf%e8%be%bc%e3%81%bfr">データの読み込み(R)</a>
     
   
 
@@ -339,6 +343,11 @@ dt &lt;- read.xls(&quot;heart.xlsx&quot;, sheet=1)</code></pre>
 dt &lt;- read_sas(&quot;heart.sas7bdat&quot;)</code></pre>
 <p>SASから読み込んだ場合、欠測なども自動的にNAに変換してくれる。</p>
 </div>
+<div id="excelデータなどの範囲読み込み" class="section level3">
+<h3>EXCELデータなどの範囲読み込み</h3>
+<pre class="r"><code>dt &lt;- read.table(stdin(), header=TRUE, fill=TRUE)</code></pre>
+<p>コンソールで0:と表示されるので、そこにエクセルなどからコピペすると入力完了。</p>
+</div>
 <div id="データ型について" class="section level3">
 <h3>データ型について</h3>
 <p>上記の方法で読み込んだデータはデータフレームになる。データフレームでは列ごとに異なるデータ型を扱うことができ、excelファイルと似た扱いができる。個々のデータ参照も容易にできることから、データ解析を行う上で大変便利。（行列では1つの型しか扱えない） ただしデータフレームにおける文字データの型は「factor型」であることに注意。</p>
@@ -378,7 +387,7 @@ dt &lt;- read_sas(&quot;heart.sas7bdat&quot;)</code></pre>
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--disabled">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://msmsfjsw.netlify.app/2020/12/%E7%B5%B1%E8%A8%88%E7%9A%84%E5%9B%A0%E6%9E%9C%E6%8E%A8%E8%AB%96%E3%81%A8%E3%81%AF%E4%BD%95%E3%81%8B/" data-tooltip="統計的因果推論とは何か">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">次</span>
@@ -464,7 +473,7 @@ dt &lt;- read_sas(&quot;heart.sas7bdat&quot;)</code></pre>
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--disabled">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://msmsfjsw.netlify.app/2020/12/%E7%B5%B1%E8%A8%88%E7%9A%84%E5%9B%A0%E6%9E%9C%E6%8E%A8%E8%AB%96%E3%81%A8%E3%81%AF%E4%BD%95%E3%81%8B/" data-tooltip="統計的因果推論とは何か">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">次</span>

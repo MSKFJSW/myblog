@@ -443,6 +443,11 @@ dt &lt;- read.xls(&quot;heart.xlsx&quot;, sheet=1)</code></pre>
 dt &lt;- read_sas(&quot;heart.sas7bdat&quot;)</code></pre>
 <p>SASから読み込んだ場合、欠測なども自動的にNAに変換してくれる。</p>
 </div>
+<div id="excelデータなどの範囲読み込み" class="section level3">
+<h3>EXCELデータなどの範囲読み込み</h3>
+<pre class="r"><code>dt &lt;- read.table(stdin(), header=TRUE, fill=TRUE)</code></pre>
+<p>コンソールで0:と表示されるので、そこにエクセルなどからコピペすると入力完了。</p>
+</div>
 <div id="データ型について" class="section level3">
 <h3>データ型について</h3>
 <p>上記の方法で読み込んだデータはデータフレームになる。データフレームでは列ごとに異なるデータ型を扱うことができ、excelファイルと似た扱いができる。個々のデータ参照も容易にできることから、データ解析を行う上で大変便利。（行列では1つの型しか扱えない） ただしデータフレームにおける文字データの型は「factor型」であることに注意。</p>

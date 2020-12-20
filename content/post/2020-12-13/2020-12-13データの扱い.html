@@ -1,8 +1,7 @@
 ---
 title: "データの読み込み"
 date: 2020-12-13
-categories:
-- データの読み込み
+categories: ["データの読み込み(R)"]
 tags:
 - read.table
 - read.csv
@@ -44,6 +43,11 @@ dt &lt;- read.xls(&quot;heart.xlsx&quot;, sheet=1)</code></pre>
 <pre class="r"><code>library(haven)
 dt &lt;- read_sas(&quot;heart.sas7bdat&quot;)</code></pre>
 <p>SASから読み込んだ場合、欠測なども自動的にNAに変換してくれる。</p>
+</div>
+<div id="excelデータなどの範囲読み込み" class="section level3">
+<h3>EXCELデータなどの範囲読み込み</h3>
+<pre class="r"><code>dt &lt;- read.table(stdin(), header=TRUE, fill=TRUE)</code></pre>
+<p>コンソールで0:と表示されるので、そこにエクセルなどからコピペすると入力完了。</p>
 </div>
 <div id="データ型について" class="section level3">
 <h3>データ型について</h3>
