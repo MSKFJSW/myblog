@@ -9,6 +9,11 @@ disqusShortname: hugo-tranquilpeak-theme
 paginate: 7
 canonifyurls: yes
 googleAnalytics: UA-185052364-1
+relativeURLs: true
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
 permalinks:
   post: /:year/:month/:slug/
 taxonomies:
@@ -93,7 +98,3 @@ params:
   syntaxHighlighter: highlight.js
   thumbnailImage: yes
   thumbnailImagePosition: bottom
-markup:
-  goldmark:
-    renderer:
-      unsafe: true

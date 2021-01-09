@@ -70,4 +70,3 @@ dt_sort <- dplyr::arrange(dt, Sex)
 head(dt_sort) %>% kable(caption = "性別でソート") %>% kable_classic_2(full_width=F, html_font="san-serif", font_size=10)
 ```
 
-
