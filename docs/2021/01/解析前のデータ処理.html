@@ -8,18 +8,18 @@
 <meta name="generator" content="Hugo 0.78.2 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Misaki Fujisawa">
 <meta name="keywords" content="">
-<meta name="description" content="統計解析前のデータチェック・処理についてのまとめ。 エクセルデータの読み込み readxlパッケージのread_excel関数が高速読み込みでお">
+<meta name="description" content="統計解析前のデータチェック・処理についてのまとめ。 1. エクセルデータの読み込み readxlパッケージのread_excel関数が高速読み込みで">
 
 
-<meta property="og:description" content="統計解析前のデータチェック・処理についてのまとめ。 エクセルデータの読み込み readxlパッケージのread_excel関数が高速読み込みでお">
+<meta property="og:description" content="統計解析前のデータチェック・処理についてのまとめ。 1. エクセルデータの読み込み readxlパッケージのread_excel関数が高速読み込みで">
 <meta property="og:type" content="article">
 <meta property="og:title" content="解析前のデータ処理">
 <meta name="twitter:title" content="解析前のデータ処理">
 <meta property="og:url" content="https://example.com/2021/01/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86.html">
 <meta property="twitter:url" content="https://example.com/2021/01/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86.html">
 <meta property="og:site_name" content="九頭竜">
-<meta property="og:description" content="統計解析前のデータチェック・処理についてのまとめ。 エクセルデータの読み込み readxlパッケージのread_excel関数が高速読み込みでお">
-<meta name="twitter:description" content="統計解析前のデータチェック・処理についてのまとめ。 エクセルデータの読み込み readxlパッケージのread_excel関数が高速読み込みでお">
+<meta property="og:description" content="統計解析前のデータチェック・処理についてのまとめ。 1. エクセルデータの読み込み readxlパッケージのread_excel関数が高速読み込みで">
+<meta name="twitter:description" content="統計解析前のデータチェック・処理についてのまとめ。 1. エクセルデータの読み込み readxlパッケージのread_excel関数が高速読み込みで">
 <meta property="og:locale" content="ja">
 
   
@@ -31,7 +31,11 @@
   
   
     
-      <meta property="article:section" content="データチェック">
+      <meta property="article:section" content="要約統計量">
+    
+      <meta property="article:section" content="集計">
+    
+      <meta property="article:section" content="ソート">
     
   
   
@@ -253,7 +257,11 @@ if (!doNotTrack) {
   
     <span>カテゴリー</span>
     
-      <a class="category-link" href="https://example.com/categories/%e3%83%87%e3%83%bc%e3%82%bf%e3%83%81%e3%82%a7%e3%83%83%e3%82%af">データチェック</a>
+      <a class="category-link" href="https://example.com/categories/%e8%a6%81%e7%b4%84%e7%b5%b1%e8%a8%88%e9%87%8f">要約統計量</a>, 
+    
+      <a class="category-link" href="https://example.com/categories/%e9%9b%86%e8%a8%88">集計</a>, 
+    
+      <a class="category-link" href="https://example.com/categories/%e3%82%bd%e3%83%bc%e3%83%88">ソート</a>
     
   
 
@@ -268,15 +276,11 @@ if (!doNotTrack) {
 <script src="20210107データ処理_files/anchor-sections/anchor-sections.js"></script>
 <script src="20210107データ処理_files/kePrint/kePrint.js"></script>
 <link href="20210107データ処理_files/lightable/lightable.css" rel="stylesheet" />
-<script src="20210107データ処理_files/htmlwidgets/htmlwidgets.js"></script>
-<script src="20210107データ処理_files/viz/viz.js"></script>
-<link href="20210107データ処理_files/DiagrammeR-styles/styles.css" rel="stylesheet" />
-<script src="20210107データ処理_files/grViz-binding/grViz.js"></script>
 
 
 <p>統計解析前のデータチェック・処理についてのまとめ。　</p>
 <div id="エクセルデータの読み込み" class="section level2">
-<h2>エクセルデータの読み込み</h2>
+<h2>1. エクセルデータの読み込み</h2>
 <p>readxlパッケージのread_excel関数が高速読み込みでおすすめ。</p>
 <pre class="r"><code>library(readxl)
 dt &lt;- read_excel(&quot;heart.xls&quot;)</code></pre>
@@ -662,7 +666,7 @@ Non-smoker
 </table>
 </div>
 <div id="データの構造確認" class="section level2">
-<h2>データの構造確認</h2>
+<h2>2. データの構造確認</h2>
 <p>変数名、変数の型、データ数をチェック</p>
 <pre class="r"><code>str(dt)</code></pre>
 <pre><code>## tibble [5,209 × 17] (S3: tbl_df/tbl/data.frame)
@@ -685,7 +689,7 @@ Non-smoker
 ##  $ SmokingStu: chr [1:5209] &quot;Non-smoker&quot; &quot;Non-smoker&quot; &quot;Moderate (6-15)&quot; &quot;Non-smoker&quot; ...</code></pre>
 </div>
 <div id="要約統計量" class="section level2">
-<h2>要約統計量</h2>
+<h2>3. 要約統計量</h2>
 <pre class="r"><code>summary(dt)</code></pre>
 <pre><code>##     Status           DeathCause            AgeCHD         Sex           
 ##  Length:5209        Length:5209        Min.   :32.0   Length:5209       
@@ -721,11 +725,11 @@ Non-smoker
 ## </code></pre>
 </div>
 <div id="変数ごとの集計" class="section level2">
-<h2>変数ごとの集計</h2>
+<h2>4. 変数ごとの集計</h2>
 <p>データ$変数名でいずれかの列の変数を指定</p>
 <pre class="r"><code>library(tidyverse)
 library(kableExtra)
-p &lt;- ggplot(dt, aes(x=AgeStart))+geom_histogram()+theme_bw()+labs(x=&quot;AgeStart 追跡開始時年齢&quot;, y=&quot;データ数&quot;)+stat_bin(bins=100)
+p &lt;- ggplot(dt, aes(x=AgeStart))+geom_histogram()+theme_bw()+labs(x=&quot;AgeStart 追跡開始時年齢&quot;, y=&quot;度数&quot;)+stat_bin(bins=13)
 p</code></pre>
 <p><img src="https://example.com/post/20210107データ処理/20210107%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <pre class="r"><code>table(dt$DeathCause) %&gt;% knitr::kable() %&gt;% kable_classic(full_width=F, html_font=&quot;san-serif&quot;)　</code></pre>
@@ -787,7 +791,7 @@ Unknown
 # library(knitr)とknitr::は同じ意味</code></pre>
 </div>
 <div id="列の追加" class="section level2">
-<h2>列の追加</h2>
+<h2>5. 列の追加</h2>
 <p>dplyrパッケージのmutate関数を使用<br />
 試しに開始年齢から平均値を引いた変数stdAgeを作成</p>
 <pre class="r"><code>dt1 &lt;- dplyr::mutate(dt, stdAge=AgeStart-mean(AgeStart))
@@ -833,11 +837,393 @@ x
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>library(DiagrammeR)
-graph &lt;- &quot;digraph{graph[fontoname=Meiryo, rankdir=LR] node[label=&#39;魚＋ステンレス&#39;] A node[label=&#39;生臭くない&#39;]B node[label=&#39;魚&#39;]C node[label=&#39;生臭い&#39;]D A-&gt;B C-&gt;D}&quot;
-grViz(graph)</code></pre>
-<div id="htmlwidget-1" style="width:672px;height:480px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1">{"x":{"diagram":"digraph{graph[fontoname=Meiryo, rankdir=LR] node[label=\"魚＋ステンレス\"] A node[label=\"生臭くない\"]B node[label=\"魚\"]C node[label=\"生臭い\"]D A->B C->D}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="ソート" class="section level2">
+<h2>6. ソート</h2>
+<p>dt[order(dt[, 4]),]もしくはdplyr::arrange(dt, Sex)で昇順ソート。<br />
+dt[order(dt[, 4]),decreasing=T]もしくはdplyr::arrange(dt, desc(Sex)で降順ソート</p>
+<pre class="r"><code>dt_sort &lt;- dplyr::arrange(dt, Sex)
+head(dt_sort) %&gt;% kable(caption = &quot;性別でソート&quot;) %&gt;% kable_classic_2(full_width=F, html_font=&quot;san-serif&quot;, font_size=10)</code></pre>
+<table class=" lightable-classic-2" style="font-size: 10px; font-family: san-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:unnamed-chunk-7">Table 2: </span>性別でソート
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Status
+</th>
+<th style="text-align:left;">
+DeathCause
+</th>
+<th style="text-align:right;">
+AgeCHD
+</th>
+<th style="text-align:left;">
+Sex
+</th>
+<th style="text-align:right;">
+AgeStart
+</th>
+<th style="text-align:right;">
+Height
+</th>
+<th style="text-align:right;">
+Weight
+</th>
+<th style="text-align:right;">
+Diastolic
+</th>
+<th style="text-align:right;">
+Systolic
+</th>
+<th style="text-align:right;">
+MRW
+</th>
+<th style="text-align:right;">
+Smoking
+</th>
+<th style="text-align:right;">
+AgeDeath
+</th>
+<th style="text-align:right;">
+Chol
+</th>
+<th style="text-align:left;">
+CholStu
+</th>
+<th style="text-align:left;">
+BPStu
+</th>
+<th style="text-align:left;">
+WeightStu
+</th>
+<th style="text-align:left;">
+SmokingStu
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Dead
+</td>
+<td style="text-align:left;">
+Other
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+Female
+</td>
+<td style="text-align:right;">
+29
+</td>
+<td style="text-align:right;">
+62.50
+</td>
+<td style="text-align:right;">
+140
+</td>
+<td style="text-align:right;">
+78
+</td>
+<td style="text-align:right;">
+124
+</td>
+<td style="text-align:right;">
+121
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+55
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+Normal
+</td>
+<td style="text-align:left;">
+Overweight
+</td>
+<td style="text-align:left;">
+Non-smoker
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Dead
+</td>
+<td style="text-align:left;">
+Cancer
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+Female
+</td>
+<td style="text-align:right;">
+41
+</td>
+<td style="text-align:right;">
+59.75
+</td>
+<td style="text-align:right;">
+194
+</td>
+<td style="text-align:right;">
+92
+</td>
+<td style="text-align:right;">
+144
+</td>
+<td style="text-align:right;">
+183
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+57
+</td>
+<td style="text-align:right;">
+181
+</td>
+<td style="text-align:left;">
+Desirable
+</td>
+<td style="text-align:left;">
+High
+</td>
+<td style="text-align:left;">
+Overweight
+</td>
+<td style="text-align:left;">
+Non-smoker
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alive
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+Female
+</td>
+<td style="text-align:right;">
+57
+</td>
+<td style="text-align:right;">
+62.25
+</td>
+<td style="text-align:right;">
+132
+</td>
+<td style="text-align:right;">
+90
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+114
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+250
+</td>
+<td style="text-align:left;">
+High
+</td>
+<td style="text-align:left;">
+High
+</td>
+<td style="text-align:left;">
+Overweight
+</td>
+<td style="text-align:left;">
+Moderate (6-15)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alive
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+Female
+</td>
+<td style="text-align:right;">
+39
+</td>
+<td style="text-align:right;">
+65.75
+</td>
+<td style="text-align:right;">
+158
+</td>
+<td style="text-align:right;">
+80
+</td>
+<td style="text-align:right;">
+128
+</td>
+<td style="text-align:right;">
+123
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+242
+</td>
+<td style="text-align:left;">
+High
+</td>
+<td style="text-align:left;">
+Normal
+</td>
+<td style="text-align:left;">
+Overweight
+</td>
+<td style="text-align:left;">
+Non-smoker
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alive
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+Female
+</td>
+<td style="text-align:right;">
+58
+</td>
+<td style="text-align:right;">
+61.75
+</td>
+<td style="text-align:right;">
+131
+</td>
+<td style="text-align:right;">
+92
+</td>
+<td style="text-align:right;">
+176
+</td>
+<td style="text-align:right;">
+117
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+196
+</td>
+<td style="text-align:left;">
+Desirable
+</td>
+<td style="text-align:left;">
+High
+</td>
+<td style="text-align:left;">
+Overweight
+</td>
+<td style="text-align:left;">
+Non-smoker
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alive
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+Female
+</td>
+<td style="text-align:right;">
+36
+</td>
+<td style="text-align:right;">
+64.75
+</td>
+<td style="text-align:right;">
+136
+</td>
+<td style="text-align:right;">
+80
+</td>
+<td style="text-align:right;">
+112
+</td>
+<td style="text-align:right;">
+110
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+196
+</td>
+<td style="text-align:left;">
+Desirable
+</td>
+<td style="text-align:left;">
+Normal
+</td>
+<td style="text-align:left;">
+Overweight
+</td>
+<td style="text-align:left;">
+Moderate (6-15)
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 
               
