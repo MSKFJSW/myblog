@@ -46,6 +46,7 @@ summary(dt)
 ```{r message=FALSE}
 library(tidyverse)
 library(kableExtra)
+library(plotly)
 p <- ggplot(dt, aes(x=AgeStart))+geom_histogram()+theme_bw()+labs(x="AgeStart 追跡開始時年齢", y="度数")+stat_bin(bins=13)
 p
 table(dt$DeathCause) %>% knitr::kable() %>% kable_classic(full_width=F, html_font="san-serif")　
@@ -69,5 +70,4 @@ dt[order(dt[, 4]),decreasing=T]もしくはdplyr::arrange(dt, desc(Sex)で降順
 dt_sort <- dplyr::arrange(dt, Sex)
 head(dt_sort) %>% kable(caption = "性別でソート") %>% kable_classic_2(full_width=F, html_font="san-serif", font_size=10)
 ```
-
 

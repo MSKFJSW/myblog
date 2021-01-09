@@ -15,8 +15,8 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="解析前のデータ処理">
 <meta name="twitter:title" content="解析前のデータ処理">
-<meta property="og:url" content="https://mskfjsw.github.io/myblog/2021/01/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86/">
-<meta property="twitter:url" content="https://mskfjsw.github.io/myblog/2021/01/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86/">
+<meta property="og:url" content="/2021/01/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86/">
+<meta property="twitter:url" content="/2021/01/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86/">
 <meta property="og:site_name" content="九頭竜">
 <meta property="og:description" content="統計解析前のデータチェック・処理についてのまとめ。 1. エクセルデータの読み込み readxlパッケージのread_excel関数が高速読み込みで">
 <meta name="twitter:description" content="統計解析前のデータチェック・処理についてのまとめ。 1. エクセルデータの読み込み readxlパッケージのread_excel関数が高速読み込みで">
@@ -62,12 +62,12 @@
 
     <title>解析前のデータ処理</title>
 
-    <link rel="icon" href="https://mskfjsw.github.io/myblog/favicon.png">
+    <link rel="icon" href="../../../favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://mskfjsw.github.io/myblog/2021/01/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86/">
+    <link rel="canonical" href="../../../2021/01/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -75,7 +75,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
     
     
-    <link rel="stylesheet" href="https://mskfjsw.github.io/myblog/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
+    <link rel="stylesheet" href="../../../css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
     
     
 
@@ -103,12 +103,12 @@ if (!doNotTrack) {
       <header id="header" data-behavior="4">
   <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
   <div class="header-title">
-    <a class="header-title-link" href="https://mskfjsw.github.io/myblog/">九頭竜</a>
+    <a class="header-title-link" href="../../../">九頭竜</a>
   </div>
   
     
       <a class="header-right-picture "
-         href="https://mskfjsw.github.io/myblog/#about">
+         href="../../../#about">
     
     
     
@@ -124,7 +124,7 @@ if (!doNotTrack) {
   <div class="sidebar-container">
     
       <div class="sidebar-profile">
-        <a href="https://mskfjsw.github.io/myblog/#about">
+        <a href="../../../#about">
           <img class="sidebar-profile-picture" src="https://pbs.twimg.com/media/D4rAM6EU8AYwAGL?format=jpg&amp;name=900x900" alt="プロフィール画像" />
         </a>
         <h4 class="sidebar-profile-name">Misaki Fujisawa</h4>
@@ -137,7 +137,7 @@ if (!doNotTrack) {
       
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://mskfjsw.github.io/myblog/">
+      <a class="sidebar-button-link " href="../../../">
     
       <i class="sidebar-button-icon fa fa-lg fa-home"></i>
       
@@ -147,7 +147,7 @@ if (!doNotTrack) {
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://mskfjsw.github.io/myblog/%E3%82%AB%E3%83%86%E3%82%B4%E3%83%AA%E3%83%BC">
+      <a class="sidebar-button-link " href="../../../%E3%82%AB%E3%83%86%E3%82%B4%E3%83%AA%E3%83%BC">
     
       <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
       
@@ -157,7 +157,7 @@ if (!doNotTrack) {
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://mskfjsw.github.io/myblog/%E3%82%BF%E3%82%B0">
+      <a class="sidebar-button-link " href="../../../%E3%82%BF%E3%82%B0">
     
       <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
       
@@ -167,7 +167,7 @@ if (!doNotTrack) {
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://mskfjsw.github.io/myblog/%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%96">
+      <a class="sidebar-button-link " href="../../../%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%96">
     
       <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
       
@@ -181,7 +181,7 @@ if (!doNotTrack) {
       
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://github.com/MSKFJSW/statistical-analysis" target="_blank" rel="noopener">
+      <a class="sidebar-button-link " href="https://github.com/MSKFJSW/statistical-analysis">
     
       <i class="sidebar-button-icon fa fa-lg fa-github"></i>
       
@@ -191,7 +191,7 @@ if (!doNotTrack) {
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://misaki-fjsw.hatenablog.jp/" target="_blank" rel="noopener">
+      <a class="sidebar-button-link " href="https://misaki-fjsw.hatenablog.jp/">
     
       <i class="sidebar-button-icon fa fa-address-book" aria-hidden="true"></i>
       
@@ -201,7 +201,7 @@ if (!doNotTrack) {
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://twitter.com/goukenn722" target="_blank" rel="noopener">
+      <a class="sidebar-button-link " href="https://twitter.com/goukenn722">
     
       <i class="sidebar-button-icon fa fa-twitter" aria-hidden="true"></i>
       
@@ -215,7 +215,7 @@ if (!doNotTrack) {
       
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://mskfjsw.github.io/myblog/index.xml">
+      <a class="sidebar-button-link " href="../../../index.xml">
     
       <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
       
@@ -257,11 +257,11 @@ if (!doNotTrack) {
   
     <span>カテゴリー</span>
     
-      <a class="category-link" href="https://mskfjsw.github.io/myblog/categories/%e8%a6%81%e7%b4%84%e7%b5%b1%e8%a8%88%e9%87%8f">要約統計量</a>, 
+      <a class="category-link" href="../../../categories/%e8%a6%81%e7%b4%84%e7%b5%b1%e8%a8%88%e9%87%8f">要約統計量</a>, 
     
-      <a class="category-link" href="https://mskfjsw.github.io/myblog/categories/%e9%9b%86%e8%a8%88">集計</a>, 
+      <a class="category-link" href="../../../categories/%e9%9b%86%e8%a8%88">集計</a>, 
     
-      <a class="category-link" href="https://mskfjsw.github.io/myblog/categories/%e3%82%bd%e3%83%bc%e3%83%88">ソート</a>
+      <a class="category-link" href="../../../categories/%e3%82%bd%e3%83%bc%e3%83%88">ソート</a>
     
   
 
@@ -729,9 +729,10 @@ Non-smoker
 <p>データ$変数名でいずれかの列の変数を指定</p>
 <pre class="r"><code>library(tidyverse)
 library(kableExtra)
+library(plotly)
 p &lt;- ggplot(dt, aes(x=AgeStart))+geom_histogram()+theme_bw()+labs(x=&quot;AgeStart 追跡開始時年齢&quot;, y=&quot;度数&quot;)+stat_bin(bins=13)
 p</code></pre>
-<p><img src="https://mskfjsw.github.io/myblog/post/20210107データ処理/20210107%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="../../../post/20210107データ処理/20210107%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <pre class="r"><code>table(dt$DeathCause) %&gt;% knitr::kable() %&gt;% kable_classic(full_width=F, html_font=&quot;san-serif&quot;)　</code></pre>
 <table class=" lightable-classic" style="font-family: san-serif; width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
@@ -1248,7 +1249,7 @@ Moderate (6-15)
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://mskfjsw.github.io/myblog/2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF/" data-tooltip="データの読み込み">
+                <a class="post-action-btn btn btn--default tooltip--top" href="../../../2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF/" data-tooltip="データの読み込み">
               
                   <span class="hide-xs hide-sm text-small icon-mr">前</span>
                   <i class="fa fa-angle-right"></i>
@@ -1266,19 +1267,19 @@ Moderate (6-15)
         </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://mskfjsw.github.io/myblog/2021/01/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2021/01/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86/">
               <i class="fa fa-facebook-official"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://mskfjsw.github.io/myblog/2021/01/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2021/01/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86/">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://mskfjsw.github.io/myblog/2021/01/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=../../../2021/01/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86/">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -1334,7 +1335,7 @@ Moderate (6-15)
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://mskfjsw.github.io/myblog/2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF/" data-tooltip="データの読み込み">
+                <a class="post-action-btn btn btn--default tooltip--top" href="../../../2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF/" data-tooltip="データの読み込み">
               
                   <span class="hide-xs hide-sm text-small icon-mr">前</span>
                   <i class="fa fa-angle-right"></i>
@@ -1352,19 +1353,19 @@ Moderate (6-15)
         </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://mskfjsw.github.io/myblog/2021/01/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2021/01/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86/">
               <i class="fa fa-facebook-official"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://mskfjsw.github.io/myblog/2021/01/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2021/01/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86/">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://mskfjsw.github.io/myblog/2021/01/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=../../../2021/01/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86/">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -1394,19 +1395,19 @@ Moderate (6-15)
   <ul class="share-options">
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmskfjsw.github.io%2Fmyblog%2F2021%2F01%2F%25E8%25A7%25A3%25E6%259E%2590%25E5%2589%258D%25E3%2581%25AE%25E3%2583%2587%25E3%2583%25BC%25E3%2582%25BF%25E5%2587%25A6%25E7%2590%2586%2F">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=%2F2021%2F01%2F%25E8%25A7%25A3%25E6%259E%2590%25E5%2589%258D%25E3%2581%25AE%25E3%2583%2587%25E3%2583%25BC%25E3%2582%25BF%25E5%2587%25A6%25E7%2590%2586%2F">
           <i class="fa fa-facebook-official"></i><span>Facebookで共有</span>
         </a>
       </li>
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fmskfjsw.github.io%2Fmyblog%2F2021%2F01%2F%25E8%25A7%25A3%25E6%259E%2590%25E5%2589%258D%25E3%2581%25AE%25E3%2583%2587%25E3%2583%25BC%25E3%2582%25BF%25E5%2587%25A6%25E7%2590%2586%2F">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=%2F2021%2F01%2F%25E8%25A7%25A3%25E6%259E%2590%25E5%2589%258D%25E3%2581%25AE%25E3%2583%2587%25E3%2583%25BC%25E3%2582%25BF%25E5%2587%25A6%25E7%2590%2586%2F">
           <i class="fa fa-twitter"></i><span>Twitterで共有</span>
         </a>
       </li>
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https%3A%2F%2Fmskfjsw.github.io%2Fmyblog%2F2021%2F01%2F%25E8%25A7%25A3%25E6%259E%2590%25E5%2589%258D%25E3%2581%25AE%25E3%2583%2587%25E3%2583%25BC%25E3%2582%25BF%25E5%2587%25A6%25E7%2590%2586%2F">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=%2F2021%2F01%2F%25E8%25A7%25A3%25E6%259E%2590%25E5%2589%258D%25E3%2581%25AE%25E3%2583%2587%25E3%2583%25BC%25E3%2582%25BF%25E5%2587%25A6%25E7%2590%2586%2F">
           <i class="fa fa-google-plus"></i><span>Google&#43;で共有</span>
         </a>
       </li>
@@ -1450,7 +1451,7 @@ Moderate (6-15)
     
   
     
-      <div id="cover" style="background-image:url('https://mskfjsw.github.io/myblog/images/cover.jpg');"></div>
+      <div id="cover" style="background-image:url('/images/cover.jpg');"></div>
     
   
 
@@ -1463,7 +1464,7 @@ Moderate (6-15)
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
 
 
-<script src="https://mskfjsw.github.io/myblog/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
+<script src="../../../js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
 
 
 <script lang="javascript">
@@ -1498,7 +1499,7 @@ $(document).ready(function() {
     
       <script>
         var disqus_config = function () {
-          this.page.url = 'https:\/\/mskfjsw.github.io\/myblog\/2021\/01\/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86\/';
+          this.page.url = '\/2021\/01\/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86\/';
           
             this.page.identifier = '\/2021\/01\/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86\/'
           

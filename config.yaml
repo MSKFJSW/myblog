@@ -1,5 +1,5 @@
-baseURL: https://mskfjsw.github.io/myblog/
-publishDir: docs 
+baseURL: https://msmsfjsw.netlify.app/
+publishDir: docs
 languageCode: ja
 hasCJKLanguage: TRUE
 defaultContentLanguage: ja
