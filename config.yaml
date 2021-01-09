@@ -1,4 +1,4 @@
-baseURL: https://example.com/
+baseURL: https://mskfjsw.github.io/myblog/
 publishDir: docs 
 languageCode: ja
 uglyurls: TRUE
