@@ -47,7 +47,7 @@ summary(dt)
 library(tidyverse)
 library(kableExtra)
 p <- ggplot(dt, aes(x=AgeStart))+geom_histogram()+theme_bw()+labs(x="AgeStart 追跡開始時年齢", y="度数")+stat_bin(bins=13)
-p
+ggplotly(p)
 table(dt$DeathCause) %>% knitr::kable() %>% kable_classic(full_width=F, html_font="san-serif")　
 # %/%は左のオブジェクトを右の関数の第1引数に引き渡すパイプ演算子
 # library(knitr)とknitr::は同じ意味
