@@ -8,54 +8,18 @@
 <meta name="generator" content="Hugo 0.78.2 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Misaki Fujisawa">
 <meta name="keywords" content="">
-<meta name="description" content="  Rstudioによるデータ読み込みについての簡単なまとめ。
-CSVデータの読み込み dt &lt;- read.csv(file=&quot;heart.csv&quot;, header=TRUE, fill=TRUE) dt &lt;- read.table(file=&quot;heart.csv&quot;, header=TRUE, fill=TRUE)  file=“ファイル名”
-上記はカレントの場合で、異なる場合はパスを指定 header={TRUE/FALSE}　1行目を変数名として読み込む
- fill={TRUE/FALSE}
-欠測値の読み込み   EXCELデータの読みこみ library(gdata) dt &lt;- read.xls(&quot;heart.xlsx&quot;, sheet=1) エクセルファイルの読み込みにはgdataパッケージのインストールが必要。 - sheet=シート番号 読み込むシートの番号を指定。名前は指定不可。
- SASファイルの読み込み library(haven) dt &lt;- read_sas(&quot;heart.sas7bdat&quot;) SASから読み込んだ場合、欠測なども自動的にNAに変換してくれる。
- EXCELデータなどの範囲読み込み dt &lt;- read.table(stdin(), header=TRUE, fill=TRUE) コンソールで0:と表示されるので、そこにエクセルなどからコピペすると入力完了。
- データ型について 上記の方法で読み込んだデータはデータフレームになる。データフレームでは列ごとに異なるデータ型を扱うことができ、excelファイルと似た扱いができる。個々のデータ参照も容易にできることから、データ解析を行う上で大変便利。（行列では1つの型しか扱えない） ただしデータフレームにおける文字データの型は「factor型」であることに注意。
- 動作環境 Windows10 WSL2 Ubuntu20.04 Rstudio-server
- ">
+<meta name="description" content="Rstudioによるデータ読み込みについての簡単なまとめ。 CSVデータの読み込み dt &lt;- read.csv(file=&quot;heart.csv&quot;, header=TRUE, fill=TRUE) dt &lt;- read.table(file=&quot;heart.csv&quot;, header=TRUE, fill=TRUE) file=“ファイル名” 上記はカレントの">
 
 
-<meta property="og:description" content="  Rstudioによるデータ読み込みについての簡単なまとめ。
-CSVデータの読み込み dt &lt;- read.csv(file=&quot;heart.csv&quot;, header=TRUE, fill=TRUE) dt &lt;- read.table(file=&quot;heart.csv&quot;, header=TRUE, fill=TRUE)  file=“ファイル名”
-上記はカレントの場合で、異なる場合はパスを指定 header={TRUE/FALSE}　1行目を変数名として読み込む
- fill={TRUE/FALSE}
-欠測値の読み込み   EXCELデータの読みこみ library(gdata) dt &lt;- read.xls(&quot;heart.xlsx&quot;, sheet=1) エクセルファイルの読み込みにはgdataパッケージのインストールが必要。 - sheet=シート番号 読み込むシートの番号を指定。名前は指定不可。
- SASファイルの読み込み library(haven) dt &lt;- read_sas(&quot;heart.sas7bdat&quot;) SASから読み込んだ場合、欠測なども自動的にNAに変換してくれる。
- EXCELデータなどの範囲読み込み dt &lt;- read.table(stdin(), header=TRUE, fill=TRUE) コンソールで0:と表示されるので、そこにエクセルなどからコピペすると入力完了。
- データ型について 上記の方法で読み込んだデータはデータフレームになる。データフレームでは列ごとに異なるデータ型を扱うことができ、excelファイルと似た扱いができる。個々のデータ参照も容易にできることから、データ解析を行う上で大変便利。（行列では1つの型しか扱えない） ただしデータフレームにおける文字データの型は「factor型」であることに注意。
- 動作環境 Windows10 WSL2 Ubuntu20.04 Rstudio-server
- ">
+<meta property="og:description" content="Rstudioによるデータ読み込みについての簡単なまとめ。 CSVデータの読み込み dt &lt;- read.csv(file=&quot;heart.csv&quot;, header=TRUE, fill=TRUE) dt &lt;- read.table(file=&quot;heart.csv&quot;, header=TRUE, fill=TRUE) file=“ファイル名” 上記はカレントの">
 <meta property="og:type" content="article">
 <meta property="og:title" content="データの読み込み">
 <meta name="twitter:title" content="データの読み込み">
-<meta property="og:url" content="https://msmsfjsw.netlify.app/2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF/">
-<meta property="twitter:url" content="https://msmsfjsw.netlify.app/2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF/">
+<meta property="og:url" content="https://example.com/2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF.html">
+<meta property="twitter:url" content="https://example.com/2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF.html">
 <meta property="og:site_name" content="九頭竜">
-<meta property="og:description" content="  Rstudioによるデータ読み込みについての簡単なまとめ。
-CSVデータの読み込み dt &lt;- read.csv(file=&quot;heart.csv&quot;, header=TRUE, fill=TRUE) dt &lt;- read.table(file=&quot;heart.csv&quot;, header=TRUE, fill=TRUE)  file=“ファイル名”
-上記はカレントの場合で、異なる場合はパスを指定 header={TRUE/FALSE}　1行目を変数名として読み込む
- fill={TRUE/FALSE}
-欠測値の読み込み   EXCELデータの読みこみ library(gdata) dt &lt;- read.xls(&quot;heart.xlsx&quot;, sheet=1) エクセルファイルの読み込みにはgdataパッケージのインストールが必要。 - sheet=シート番号 読み込むシートの番号を指定。名前は指定不可。
- SASファイルの読み込み library(haven) dt &lt;- read_sas(&quot;heart.sas7bdat&quot;) SASから読み込んだ場合、欠測なども自動的にNAに変換してくれる。
- EXCELデータなどの範囲読み込み dt &lt;- read.table(stdin(), header=TRUE, fill=TRUE) コンソールで0:と表示されるので、そこにエクセルなどからコピペすると入力完了。
- データ型について 上記の方法で読み込んだデータはデータフレームになる。データフレームでは列ごとに異なるデータ型を扱うことができ、excelファイルと似た扱いができる。個々のデータ参照も容易にできることから、データ解析を行う上で大変便利。（行列では1つの型しか扱えない） ただしデータフレームにおける文字データの型は「factor型」であることに注意。
- 動作環境 Windows10 WSL2 Ubuntu20.04 Rstudio-server
- ">
-<meta name="twitter:description" content="  Rstudioによるデータ読み込みについての簡単なまとめ。
-CSVデータの読み込み dt &lt;- read.csv(file=&quot;heart.csv&quot;, header=TRUE, fill=TRUE) dt &lt;- read.table(file=&quot;heart.csv&quot;, header=TRUE, fill=TRUE)  file=“ファイル名”
-上記はカレントの場合で、異なる場合はパスを指定 header={TRUE/FALSE}　1行目を変数名として読み込む
- fill={TRUE/FALSE}
-欠測値の読み込み   EXCELデータの読みこみ library(gdata) dt &lt;- read.xls(&quot;heart.xlsx&quot;, sheet=1) エクセルファイルの読み込みにはgdataパッケージのインストールが必要。 - sheet=シート番号 読み込むシートの番号を指定。名前は指定不可。
- SASファイルの読み込み library(haven) dt &lt;- read_sas(&quot;heart.sas7bdat&quot;) SASから読み込んだ場合、欠測なども自動的にNAに変換してくれる。
- EXCELデータなどの範囲読み込み dt &lt;- read.table(stdin(), header=TRUE, fill=TRUE) コンソールで0:と表示されるので、そこにエクセルなどからコピペすると入力完了。
- データ型について 上記の方法で読み込んだデータはデータフレームになる。データフレームでは列ごとに異なるデータ型を扱うことができ、excelファイルと似た扱いができる。個々のデータ参照も容易にできることから、データ解析を行う上で大変便利。（行列では1つの型しか扱えない） ただしデータフレームにおける文字データの型は「factor型」であることに注意。
- 動作環境 Windows10 WSL2 Ubuntu20.04 Rstudio-server
- ">
+<meta property="og:description" content="Rstudioによるデータ読み込みについての簡単なまとめ。 CSVデータの読み込み dt &lt;- read.csv(file=&quot;heart.csv&quot;, header=TRUE, fill=TRUE) dt &lt;- read.table(file=&quot;heart.csv&quot;, header=TRUE, fill=TRUE) file=“ファイル名” 上記はカレントの">
+<meta name="twitter:description" content="Rstudioによるデータ読み込みについての簡単なまとめ。 CSVデータの読み込み dt &lt;- read.csv(file=&quot;heart.csv&quot;, header=TRUE, fill=TRUE) dt &lt;- read.table(file=&quot;heart.csv&quot;, header=TRUE, fill=TRUE) file=“ファイル名” 上記はカレントの">
 <meta property="og:locale" content="ja">
 
   
@@ -104,12 +68,12 @@ CSVデータの読み込み dt &lt;- read.csv(file=&quot;heart.csv&quot;, header
 
     <title>データの読み込み</title>
 
-    <link rel="icon" href="https://msmsfjsw.netlify.app/favicon.png">
+    <link rel="icon" href="https://example.com/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://msmsfjsw.netlify.app/2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF/">
+    <link rel="canonical" href="https://example.com/2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF.html">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -117,7 +81,7 @@ CSVデータの読み込み dt &lt;- read.csv(file=&quot;heart.csv&quot;, header
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
     
     
-    <link rel="stylesheet" href="https://msmsfjsw.netlify.app/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
+    <link rel="stylesheet" href="https://example.com/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
     
     
 
@@ -145,12 +109,12 @@ if (!doNotTrack) {
       <header id="header" data-behavior="4">
   <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
   <div class="header-title">
-    <a class="header-title-link" href="https://msmsfjsw.netlify.app/">九頭竜</a>
+    <a class="header-title-link" href="https://example.com/">九頭竜</a>
   </div>
   
     
       <a class="header-right-picture "
-         href="https://msmsfjsw.netlify.app/#about">
+         href="https://example.com/#about">
     
     
     
@@ -166,7 +130,7 @@ if (!doNotTrack) {
   <div class="sidebar-container">
     
       <div class="sidebar-profile">
-        <a href="https://msmsfjsw.netlify.app/#about">
+        <a href="https://example.com/#about">
           <img class="sidebar-profile-picture" src="https://pbs.twimg.com/media/D4rAM6EU8AYwAGL?format=jpg&amp;name=900x900" alt="プロフィール画像" />
         </a>
         <h4 class="sidebar-profile-name">Misaki Fujisawa</h4>
@@ -179,7 +143,7 @@ if (!doNotTrack) {
       
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://msmsfjsw.netlify.app/">
+      <a class="sidebar-button-link " href="https://example.com/">
     
       <i class="sidebar-button-icon fa fa-lg fa-home"></i>
       
@@ -189,7 +153,7 @@ if (!doNotTrack) {
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://msmsfjsw.netlify.app/%E3%82%AB%E3%83%86%E3%82%B4%E3%83%AA%E3%83%BC">
+      <a class="sidebar-button-link " href="https://example.com/%E3%82%AB%E3%83%86%E3%82%B4%E3%83%AA%E3%83%BC">
     
       <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
       
@@ -199,7 +163,7 @@ if (!doNotTrack) {
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://msmsfjsw.netlify.app/%E3%82%BF%E3%82%B0">
+      <a class="sidebar-button-link " href="https://example.com/%E3%82%BF%E3%82%B0">
     
       <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
       
@@ -209,7 +173,7 @@ if (!doNotTrack) {
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://msmsfjsw.netlify.app/%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%96">
+      <a class="sidebar-button-link " href="https://example.com/%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%96">
     
       <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
       
@@ -257,7 +221,7 @@ if (!doNotTrack) {
       
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://msmsfjsw.netlify.app/index.xml">
+      <a class="sidebar-button-link " href="https://example.com/index.xml">
     
       <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
       
@@ -299,7 +263,7 @@ if (!doNotTrack) {
   
     <span>カテゴリー</span>
     
-      <a class="category-link" href="https://msmsfjsw.netlify.app/categories/%e3%83%87%e3%83%bc%e3%82%bf%e3%81%ae%e8%aa%ad%e3%81%bf%e8%be%bc%e3%81%bfr">データの読み込み(R)</a>
+      <a class="category-link" href="https://example.com/categories/%e3%83%87%e3%83%bc%e3%82%bf%e3%81%ae%e8%aa%ad%e3%81%bf%e8%be%bc%e3%81%bfr">データの読み込み(R)</a>
     
   
 
@@ -368,13 +332,13 @@ dt &lt;- read_sas(&quot;heart.sas7bdat&quot;)</code></pre>
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">タグ</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://msmsfjsw.netlify.app/tags/read.table/">read.table</a>
+  <a class="tag tag--primary tag--small" href="https://example.com/tags/read.table/">read.table</a>
 
-  <a class="tag tag--primary tag--small" href="https://msmsfjsw.netlify.app/tags/read.csv/">read.csv</a>
+  <a class="tag tag--primary tag--small" href="https://example.com/tags/read.csv/">read.csv</a>
 
-  <a class="tag tag--primary tag--small" href="https://msmsfjsw.netlify.app/tags/read.xlsgdata%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8/">read.xls(gdataパッケージ)</a>
+  <a class="tag tag--primary tag--small" href="https://example.com/tags/read.xlsgdata%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8/">read.xls(gdataパッケージ)</a>
 
-  <a class="tag tag--primary tag--small" href="https://msmsfjsw.netlify.app/tags/read_sashaven%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8/">read_sas(havenパッケージ)</a>
+  <a class="tag tag--primary tag--small" href="https://example.com/tags/read_sashaven%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8/">read_sas(havenパッケージ)</a>
 
                   </div>
                 
@@ -387,7 +351,7 @@ dt &lt;- read_sas(&quot;heart.sas7bdat&quot;)</code></pre>
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://msmsfjsw.netlify.app/2020/12/%E7%B5%B1%E8%A8%88%E7%9A%84%E5%9B%A0%E6%9E%9C%E6%8E%A8%E8%AB%96%E3%81%A8%E3%81%AF%E4%BD%95%E3%81%8B/" data-tooltip="統計的因果推論とは何か">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://example.com/2021/01/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86.html" data-tooltip="解析前のデータ処理">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">次</span>
@@ -395,7 +359,7 @@ dt &lt;- read_sas(&quot;heart.sas7bdat&quot;)</code></pre>
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://msmsfjsw.netlify.app/2020/12/%E3%83%96%E3%83%AD%E3%82%B0%E5%A7%8B%E3%82%81%E3%81%BE%E3%81%97%E3%81%9F/" data-tooltip="ブログ始めました">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://example.com/2020/12/%E3%83%96%E3%83%AD%E3%82%B0%E5%A7%8B%E3%82%81%E3%81%BE%E3%81%97%E3%81%9F.html" data-tooltip="ブログ始めました">
               
                   <span class="hide-xs hide-sm text-small icon-mr">前</span>
                   <i class="fa fa-angle-right"></i>
@@ -413,19 +377,19 @@ dt &lt;- read_sas(&quot;heart.sas7bdat&quot;)</code></pre>
         </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://msmsfjsw.netlify.app/2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://example.com/2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF.html">
               <i class="fa fa-facebook-official"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://msmsfjsw.netlify.app/2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://example.com/2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF.html">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://msmsfjsw.netlify.app/2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://example.com/2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF.html">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -460,7 +424,7 @@ dt &lt;- read_sas(&quot;heart.sas7bdat&quot;)</code></pre>
         </article>
         <footer id="footer" class="main-content-wrap">
   <span class="copyrights">
-    &copy; 2020 Misaki Fujisawa. All Rights Reserved
+    &copy; 2021 Misaki Fujisawa. All Rights Reserved
   </span>
 </footer>
 
@@ -473,7 +437,7 @@ dt &lt;- read_sas(&quot;heart.sas7bdat&quot;)</code></pre>
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://msmsfjsw.netlify.app/2020/12/%E7%B5%B1%E8%A8%88%E7%9A%84%E5%9B%A0%E6%9E%9C%E6%8E%A8%E8%AB%96%E3%81%A8%E3%81%AF%E4%BD%95%E3%81%8B/" data-tooltip="統計的因果推論とは何か">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://example.com/2021/01/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86.html" data-tooltip="解析前のデータ処理">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">次</span>
@@ -481,7 +445,7 @@ dt &lt;- read_sas(&quot;heart.sas7bdat&quot;)</code></pre>
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://msmsfjsw.netlify.app/2020/12/%E3%83%96%E3%83%AD%E3%82%B0%E5%A7%8B%E3%82%81%E3%81%BE%E3%81%97%E3%81%9F/" data-tooltip="ブログ始めました">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://example.com/2020/12/%E3%83%96%E3%83%AD%E3%82%B0%E5%A7%8B%E3%82%81%E3%81%BE%E3%81%97%E3%81%9F.html" data-tooltip="ブログ始めました">
               
                   <span class="hide-xs hide-sm text-small icon-mr">前</span>
                   <i class="fa fa-angle-right"></i>
@@ -499,19 +463,19 @@ dt &lt;- read_sas(&quot;heart.sas7bdat&quot;)</code></pre>
         </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://msmsfjsw.netlify.app/2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://example.com/2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF.html">
               <i class="fa fa-facebook-official"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://msmsfjsw.netlify.app/2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://example.com/2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF.html">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://msmsfjsw.netlify.app/2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://example.com/2020/12/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF.html">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -541,19 +505,19 @@ dt &lt;- read_sas(&quot;heart.sas7bdat&quot;)</code></pre>
   <ul class="share-options">
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmsmsfjsw.netlify.app%2F2020%2F12%2F%25E3%2583%2587%25E3%2583%25BC%25E3%2582%25BF%25E3%2581%25AE%25E8%25AA%25AD%25E3%2581%25BF%25E8%25BE%25BC%25E3%2581%25BF%2F">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fexample.com%2F2020%2F12%2F%25E3%2583%2587%25E3%2583%25BC%25E3%2582%25BF%25E3%2581%25AE%25E8%25AA%25AD%25E3%2581%25BF%25E8%25BE%25BC%25E3%2581%25BF.html">
           <i class="fa fa-facebook-official"></i><span>Facebookで共有</span>
         </a>
       </li>
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fmsmsfjsw.netlify.app%2F2020%2F12%2F%25E3%2583%2587%25E3%2583%25BC%25E3%2582%25BF%25E3%2581%25AE%25E8%25AA%25AD%25E3%2581%25BF%25E8%25BE%25BC%25E3%2581%25BF%2F">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fexample.com%2F2020%2F12%2F%25E3%2583%2587%25E3%2583%25BC%25E3%2582%25BF%25E3%2581%25AE%25E8%25AA%25AD%25E3%2581%25BF%25E8%25BE%25BC%25E3%2581%25BF.html">
           <i class="fa fa-twitter"></i><span>Twitterで共有</span>
         </a>
       </li>
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https%3A%2F%2Fmsmsfjsw.netlify.app%2F2020%2F12%2F%25E3%2583%2587%25E3%2583%25BC%25E3%2582%25BF%25E3%2581%25AE%25E8%25AA%25AD%25E3%2581%25BF%25E8%25BE%25BC%25E3%2581%25BF%2F">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https%3A%2F%2Fexample.com%2F2020%2F12%2F%25E3%2583%2587%25E3%2583%25BC%25E3%2582%25BF%25E3%2581%25AE%25E8%25AA%25AD%25E3%2581%25BF%25E8%25BE%25BC%25E3%2581%25BF.html">
           <i class="fa fa-google-plus"></i><span>Google&#43;で共有</span>
         </a>
       </li>
@@ -597,7 +561,7 @@ dt &lt;- read_sas(&quot;heart.sas7bdat&quot;)</code></pre>
     
   
     
-      <div id="cover" style="background-image:url('https://msmsfjsw.netlify.app/images/cover.jpg');"></div>
+      <div id="cover" style="background-image:url('https://example.com/images/cover.jpg');"></div>
     
   
 
@@ -610,7 +574,7 @@ dt &lt;- read_sas(&quot;heart.sas7bdat&quot;)</code></pre>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
 
 
-<script src="https://msmsfjsw.netlify.app/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
+<script src="https://example.com/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
 
 
 <script lang="javascript">
@@ -645,9 +609,9 @@ $(document).ready(function() {
     
       <script>
         var disqus_config = function () {
-          this.page.url = 'https:\/\/msmsfjsw.netlify.app\/2020\/12\/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF\/';
+          this.page.url = 'https:\/\/example.com\/2020\/12\/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF.html';
           
-            this.page.identifier = '\/2020\/12\/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF\/'
+            this.page.identifier = '\/2020\/12\/%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF.html'
           
         };
         (function() {

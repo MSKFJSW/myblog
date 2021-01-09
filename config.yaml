@@ -1,6 +1,10 @@
-baseURL: https://msmsfjsw.netlify.app/
+baseURL: https://example.com/
 publishDir: docs 
 languageCode: ja
+uglyurls: TRUE
+#[permalinks]
+# post="/:year/:month/:day/:slug/"
+hasCJKLanguage: TRUE
 defaultContentLanguage: ja
 title: 九頭竜
 theme: hugo-tranquilpeak-theme

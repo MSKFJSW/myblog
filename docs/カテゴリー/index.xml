@@ -2,9 +2,9 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>カテゴリー on 九頭竜</title>
-    <link>https://msmsfjsw.netlify.app/%E3%82%AB%E3%83%86%E3%82%B4%E3%83%AA%E3%83%BC/</link>
+    <link>https://example.com/%E3%82%AB%E3%83%86%E3%82%B4%E3%83%AA%E3%83%BC.html</link>
     <description>Recent content in カテゴリー on 九頭竜</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>ja</language><atom:link href="https://msmsfjsw.netlify.app/%E3%82%AB%E3%83%86%E3%82%B4%E3%83%AA%E3%83%BC/index.xml" rel="self" type="application/rss+xml" />
+    <language>ja</language><atom:link href="https://example.com/%E3%82%AB%E3%83%86%E3%82%B4%E3%83%AA%E3%83%BC/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
