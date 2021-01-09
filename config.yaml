@@ -1,9 +1,6 @@
 baseURL: https://mskfjsw.github.io/myblog/
 publishDir: docs 
 languageCode: ja
-uglyurls: TRUE
-#[permalinks]
-# post="/:year/:month/:day/:slug/"
 hasCJKLanguage: TRUE
 defaultContentLanguage: ja
 title: 九頭竜
