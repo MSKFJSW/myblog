@@ -22,7 +22,7 @@ frameWidget(g)
 ```
 
 # plotyの表示
-```{r}
+```{r message=F}
 library(tidyverse)
 library(plotly)
 dt <- data("anscombe")
