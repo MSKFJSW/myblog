@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.78.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="author" content="Misaki Fujisawa">
+<meta name="keywords" content="">
+<meta name="description" content="このブログはRのBlogdownパッケージで記事を書いているが、一部のパッケージで結果がHTML上に表示されない場合があった。確認しているの">
+
+
+<meta property="og:description" content="このブログはRのBlogdownパッケージで記事を書いているが、一部のパッケージで結果がHTML上に表示されない場合があった。確認しているの">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BlogdownでDiagrammeRを表示する">
+<meta name="twitter:title" content="BlogdownでDiagrammeRを表示する">
+<meta property="og:url" content="/2021/01/blogdown%E3%81%A7diagrammer%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%99%E3%82%8B/">
+<meta property="twitter:url" content="/2021/01/blogdown%E3%81%A7diagrammer%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%99%E3%82%8B/">
+<meta property="og:site_name" content="九頭竜">
+<meta property="og:description" content="このブログはRのBlogdownパッケージで記事を書いているが、一部のパッケージで結果がHTML上に表示されない場合があった。確認しているの">
+<meta name="twitter:description" content="このブログはRのBlogdownパッケージで記事を書いているが、一部のパッケージで結果がHTML上に表示されない場合があった。確認しているの">
+<meta property="og:locale" content="ja">
+
+  
+    <meta property="article:published_time" content="2021-01-10T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2021-01-10T00:00:00">
+  
+  
+  
+    
+      <meta property="article:section" content="Blogdown">
+    
+      <meta property="article:section" content="DiagrammeR">
+    
+      <meta property="article:section" content="plotly">
+    
+  
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://rich-iannone.github.io/DiagrammeR/img/graph-functions/LETTERS_example.png">
+  <meta property="twitter:image" content="https://rich-iannone.github.io/DiagrammeR/img/graph-functions/LETTERS_example.png">
+
+
+
+
+
+  <meta property="og:image" content="https://pbs.twimg.com/media/D4rAM6EU8AYwAGL?format=jpg&name=900x900">
+  <meta property="twitter:image" content="https://pbs.twimg.com/media/D4rAM6EU8AYwAGL?format=jpg&name=900x900">
+
+
+    <title>BlogdownでDiagrammeRを表示する</title>
+
+    <link rel="icon" href="../../../favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="../../../2021/01/blogdown%E3%81%A7diagrammer%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%99%E3%82%8B/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="../../../css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
+    
+    
+
+    
+      
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-185052364-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="../../../">九頭竜</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="../../../#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://pbs.twimg.com/media/D4rAM6EU8AYwAGL?format=jpg&amp;name=900x900" alt="プロフィール画像" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="../../../#about">
+          <img class="sidebar-profile-picture" src="https://pbs.twimg.com/media/D4rAM6EU8AYwAGL?format=jpg&amp;name=900x900" alt="プロフィール画像" />
+        </a>
+        <h4 class="sidebar-profile-name">Misaki Fujisawa</h4>
+        
+          <h5 class="sidebar-profile-bio">疫学・医療統計専攻の大学院生</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="../../../">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">ホーム</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="../../../%E3%82%AB%E3%83%86%E3%82%B4%E3%83%AA%E3%83%BC">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">カテゴリー</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="../../../%E3%82%BF%E3%82%B0">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">タグ</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="../../../%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%96">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+      
+      <span class="sidebar-button-desc">アーカイブ</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/MSKFJSW/statistical-analysis">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://misaki-fjsw.hatenablog.jp/">
+    
+      <i class="sidebar-button-icon fa fa-address-book" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">はてなブログ</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://twitter.com/goukenn722">
+    
+      <i class="sidebar-button-icon fa fa-twitter" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Twitter</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="../../../index.xml">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      BlogdownでDiagrammeRを表示する
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2021-01-10T00:00:00Z">
+        
+  1 10, 2021
+
+      </time>
+    
+    
+  
+  
+    <span>カテゴリー</span>
+    
+      <a class="category-link" href="../../../categories/blogdown">Blogdown</a>, 
+    
+      <a class="category-link" href="../../../categories/diagrammer">DiagrammeR</a>, 
+    
+      <a class="category-link" href="../../../categories/plotly">plotly</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              
+<link href="../../../rmarkdown-libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="../../../rmarkdown-libs/anchor-sections/anchor-sections.js"></script>
+<script src="../../../rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="../../../rmarkdown-libs/pymjs/pym.v1.js"></script>
+<script src="../../../rmarkdown-libs/widgetframe-binding/widgetframe.js"></script>
+<script src="../../../rmarkdown-libs/plotly-binding/plotly.js"></script>
+<script src="../../../rmarkdown-libs/typedarray/typedarray.min.js"></script>
+<script src="../../../rmarkdown-libs/jquery/jquery.min.js"></script>
+<link href="../../../rmarkdown-libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+<script src="../../../rmarkdown-libs/crosstalk/js/crosstalk.min.js"></script>
+<link href="../../../rmarkdown-libs/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="../../../rmarkdown-libs/plotly-main/plotly-latest.min.js"></script>
+
+
+<p>　このブログはRのBlogdownパッケージで記事を書いているが、一部のパッケージで結果がHTML上に表示されない場合があった。確認しているのはDiagrammeRとplotly。<br />
+　どうやら原因は親となるHTMLファイル(Rmdファイルのレンダリングしたhtml)のCSSによって、パッケージによる結果表示(htmlwidget)が影響を受けるというもの。その他dygraphなどでも同様の不具合があるらしい。 1.<a href="https://bookdown.org/yihui/blogdown/html-widgets.html">YihuiらのBlogdown解説サイト</a> 2.<a href="https://github.com/jbkunst/highcharter/issues/283">Githubでの不具合報告</a></p>
+<p>　この不具合の解決にはwidgetframeパッケージが有効。これはhtmlwidgetを引数として受け取り、親ファイルのcssの影響を受けない新しいhtmlwidgetを生成するというもの。 <a href="https://github.com/bhaskarvk/widgetframe">widgetframeパッケージの開発者のGithub</a></p>
+<div id="diagrammerの表示" class="section level1">
+<h1>DiagrammeRの表示　</h1>
+<pre class="r"><code>library(DiagrammeR)
+library(widgetframe)
+g &lt;- grViz(&quot;digraph{graph[fontoname=Meiryo, rankdir=LR] node[label=&#39;DiagrammeR&#39;]A node[label=&#39;ウェブ上では非表示&#39;]B node[label=&#39;DiagrammeR + frameWidget関数&#39;]C node[label=&#39;ウェブ上で表示&#39;]D A-&gt;B C-&gt;D}&quot;)
+frameWidget(g)</code></pre>
+<div id="htmlwidget-1" style="width:100%;height:480px;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/post/2021-01-10_files/figure-html//widgets/widget_unnamed-chunk-1.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="plotyの表示" class="section level1">
+<h1>plotyの表示</h1>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ─ Attaching packages ──────────────────── tidyverse 1.3.0 ─</code></pre>
+<pre><code>## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
+## ✓ tibble  3.0.4     ✓ dplyr   1.0.2
+## ✓ tidyr   1.1.2     ✓ stringr 1.4.0
+## ✓ readr   1.4.0     ✓ forcats 0.5.0</code></pre>
+<pre><code>## ─ Conflicts ───────────────────── tidyverse_conflicts() ─
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(plotly)</code></pre>
+<pre><code>## 
+##  次のパッケージを付け加えます: &#39;plotly&#39;</code></pre>
+<pre><code>##  以下のオブジェクトは &#39;package:ggplot2&#39; からマスクされています: 
+## 
+##      last_plot</code></pre>
+<pre><code>##  以下のオブジェクトは &#39;package:stats&#39; からマスクされています: 
+## 
+##      filter</code></pre>
+<pre><code>##  以下のオブジェクトは &#39;package:graphics&#39; からマスクされています: 
+## 
+##      layout</code></pre>
+<pre class="r"><code>dt &lt;- data(&quot;anscombe&quot;)
+p &lt;- ggplot(anscombe, aes(x=x1,y=y1))+geom_point()+theme_bw()
+ggplotly(p)</code></pre>
+<div id="htmlwidget-2" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"data":[{"x":[10,8,13,9,11,14,6,4,12,7,5],"y":[8.04,6.95,7.58,8.81,8.33,9.96,7.24,4.26,10.84,4.82,5.68],"text":["x1: 10<br />y1:  8.04","x1:  8<br />y1:  6.95","x1: 13<br />y1:  7.58","x1:  9<br />y1:  8.81","x1: 11<br />y1:  8.33","x1: 14<br />y1:  9.96","x1:  6<br />y1:  7.24","x1:  4<br />y1:  4.26","x1: 12<br />y1: 10.84","x1:  7<br />y1:  4.82","x1:  5<br />y1:  5.68"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,0,0,1)","opacity":1,"size":5.66929133858268,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":26.2283105022831,"r":7.30593607305936,"b":40.1826484018265,"l":37.2602739726027},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[3.5,14.5],"tickmode":"array","ticktext":["6","9","12"],"tickvals":[6,9,12],"categoryorder":"array","categoryarray":["6","9","12"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":{"text":"x1","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[3.931,11.169],"tickmode":"array","ticktext":["4","6","8","10"],"tickvals":[4,6,8,10],"categoryorder":"array","categoryarray":["4","6","8","10"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":{"text":"y1","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":"transparent","line":{"color":"rgba(51,51,51,1)","width":0.66417600664176,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"4e506d8dd2d4":{"x":{},"y":{},"type":"scatter"}},"cur_data":"4e506d8dd2d4","visdat":{"4e506d8dd2d4":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">次</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="../../../2021/01/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86/" data-tooltip="解析前のデータ処理">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">前</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2021/01/blogdown%E3%81%A7diagrammer%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%99%E3%82%8B/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2021/01/blogdown%E3%81%A7diagrammer%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%99%E3%82%8B/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=../../../2021/01/blogdown%E3%81%A7diagrammer%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%99%E3%82%8B/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+                <div id="disqus_thread">
+  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2021 Misaki Fujisawa. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">次</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="../../../2021/01/%E8%A7%A3%E6%9E%90%E5%89%8D%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86/" data-tooltip="解析前のデータ処理">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">前</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2021/01/blogdown%E3%81%A7diagrammer%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%99%E3%82%8B/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2021/01/blogdown%E3%81%A7diagrammer%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%99%E3%82%8B/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=../../../2021/01/blogdown%E3%81%A7diagrammer%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%99%E3%82%8B/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=%2F2021%2F01%2Fblogdown%25E3%2581%25A7diagrammer%25E3%2582%2592%25E8%25A1%25A8%25E7%25A4%25BA%25E3%2581%2599%25E3%2582%258B%2F">
+          <i class="fa fa-facebook-official"></i><span>Facebookで共有</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=%2F2021%2F01%2Fblogdown%25E3%2581%25A7diagrammer%25E3%2582%2592%25E8%25A1%25A8%25E7%25A4%25BA%25E3%2581%2599%25E3%2582%258B%2F">
+          <i class="fa fa-twitter"></i><span>Twitterで共有</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=%2F2021%2F01%2Fblogdown%25E3%2581%25A7diagrammer%25E3%2582%2592%25E8%25A1%25A8%25E7%25A4%25BA%25E3%2581%2599%25E3%2582%258B%2F">
+          <i class="fa fa-google-plus"></i><span>Google&#43;で共有</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://pbs.twimg.com/media/D4rAM6EU8AYwAGL?format=jpg&amp;name=900x900" alt="プロフィール画像" />
+    
+    <h4 id="about-card-name">Misaki Fujisawa</h4>
+    
+      <div id="about-card-bio">疫学・医療統計専攻の大学院生</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        疫学・健康情報学・産業衛生
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        京都
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('/images/cover.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="../../../js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = '\/2021\/01\/blogdown%E3%81%A7diagrammer%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%99%E3%82%8B\/';
+          
+            this.page.identifier = '\/2021\/01\/blogdown%E3%81%A7diagrammer%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%99%E3%82%8B\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'hugo-tranquilpeak-theme';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+

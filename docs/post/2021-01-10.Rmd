@@ -1,0 +1,34 @@
+---
+title: "BlogdownでDiagrammeRを表示する"
+date: 2021-01-10
+categories:
+- Blogdown
+- DiagrammeR
+- plotly
+thumbnailImage: https://rich-iannone.github.io/DiagrammeR/img/graph-functions/LETTERS_example.png
+thumbnailImagePosition: left
+---
+　このブログはRのBlogdownパッケージで記事を書いているが、一部のパッケージで結果がHTML上に表示されない場合があった。確認しているのはDiagrammeRとplotly。  
+　どうやら原因は親となるHTMLファイル(Rmdファイルのレンダリングしたhtml)のCSSによって、パッケージによる結果表示(htmlwidget)が影響を受けるというもの。その他dygraphなどでも同様の不具合があるらしい。   1.[YihuiらのBlogdown解説サイト](https://bookdown.org/yihui/blogdown/html-widgets.html)    2.[Githubでの不具合報告](https://github.com/jbkunst/highcharter/issues/283)  
+
+　この不具合の解決にはwidgetframeパッケージが有効。これはhtmlwidgetを引数として受け取り、親ファイルのcssの影響を受けない新しいhtmlwidgetを生成するというもの。        [widgetframeパッケージの開発者のGithub](https://github.com/bhaskarvk/widgetframe)
+
+# DiagrammeRの表示　
+```{r message=F}
+library(DiagrammeR)
+library(widgetframe)
+g <- grViz("digraph{graph[fontoname=Meiryo, rankdir=LR] node[label='DiagrammeR']A node[label='ウェブ上では非表示']B node[label='DiagrammeR + frameWidget関数']C node[label='ウェブ上で表示']D A->B C->D}")
+frameWidget(g)
+```
+
+# plotyの表示
+```{r}
+library(tidyverse)
+library(plotly)
+dt <- data("anscombe")
+p <- ggplot(anscombe, aes(x=x1,y=y1))+geom_point()+theme_bw()
+ggplotly(p)
+```
+
+
+
