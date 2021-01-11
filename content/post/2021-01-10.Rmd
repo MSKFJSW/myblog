@@ -14,21 +14,25 @@ thumbnailImagePosition: left
 　この不具合の解決にはwidgetframeパッケージが有効。これはhtmlwidgetを引数として受け取り、親ファイルのcssの影響を受けない新しいhtmlwidgetを生成するというもの。        [widgetframeパッケージの開発者のGithub](https://github.com/bhaskarvk/widgetframe)
 
 # DiagrammeRの表示　
-```{r message=F}
+
+
+```{r message=FALSE}
 library(DiagrammeR)
 library(widgetframe)
-g <- grViz("digraph{graph[fontoname=Meiryo, rankdir=LR] node[label='DiagrammeR']A node[label='ウェブ上では非表示']B node[label='DiagrammeR + frameWidget関数']C node[label='ウェブ上で表示']D A->B C->D}")
+g <- grViz("digraph{graph[fontoname=Meiryo, rankdir=LR] 
+           node[label='DiagrammeR']A 
+           node[label='ウェブ上では非表示']B 
+           node[label='DiagrammeR + frameWidget関数']C 
+           node[label='ウェブ上で表示']D A->B C->D}" , height=200)
 frameWidget(g)
 ```
 
-# plotyの表示
-```{r message=F}
+# plotlyの表示
+```{r message=F, fig.height=5, fig.width=5}
 library(tidyverse)
 library(plotly)
 dt <- data("anscombe")
 p <- ggplot(anscombe, aes(x=x1,y=y1))+geom_point()+theme_bw()
 ggplotly(p)
+
 ```
-
-
-
