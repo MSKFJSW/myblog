@@ -732,7 +732,7 @@ library(kableExtra)
 library(plotly)
 p &lt;- ggplot(dt, aes(x=AgeStart))+geom_histogram()+theme_bw()+labs(x=&quot;AgeStart 追跡開始時年齢&quot;, y=&quot;度数&quot;)+stat_bin(bins=13)
 p</code></pre>
-<p><img src="../../../post/20210107データ処理/20210107%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="../../../post/2021-01-07 データ処理/20210107%E3%83%87%E3%83%BC%E3%82%BF%E5%87%A6%E7%90%86_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <pre class="r"><code>table(dt$DeathCause) %&gt;% knitr::kable() %&gt;% kable_classic(full_width=F, html_font=&quot;san-serif&quot;)　</code></pre>
 <table class=" lightable-classic" style="font-family: san-serif; width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>

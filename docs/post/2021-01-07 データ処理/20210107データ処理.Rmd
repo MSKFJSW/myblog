@@ -1,0 +1,73 @@
+---
+title: "解析前のデータ処理"
+date: 2021-01-07
+categories:
+- 要約統計量
+- 集計
+- ソート
+thumbnailImage: https://data.ac-illust.com/data/thumbnails/25/2556a1a58cc0f65945561861eae8c2b0_w.jpeg
+thumbnailImageposition: left
+output: html_document
+lang: ja
+---
+
+統計解析前のデータチェック・処理についてのまとめ。　
+
+
+## 1. エクセルデータの読み込み
+readxlパッケージのread_excel関数が高速読み込みでおすすめ。
+```{r}
+library(readxl)
+dt <- read_excel("heart.xls")
+```
+
+```{r echo=FALSE, message=FALSE}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+head(dt) %>% kable(caption = "Heart.xlsデータ") %>% kable_classic_2(full_width=F, html_font="san-serif", font_size=10)
+```
+
+
+## 2. データの構造確認
+変数名、変数の型、データ数をチェック
+```{r}
+str(dt)
+```
+
+## 3. 要約統計量
+```{r}
+summary(dt)
+```
+
+
+## 4. 変数ごとの集計
+データ$変数名でいずれかの列の変数を指定
+```{r message=FALSE}
+library(tidyverse)
+library(kableExtra)
+library(plotly)
+p <- ggplot(dt, aes(x=AgeStart))+geom_histogram()+theme_bw()+labs(x="AgeStart 追跡開始時年齢", y="度数")+stat_bin(bins=13)
+p
+table(dt$DeathCause) %>% knitr::kable() %>% kable_classic(full_width=F, html_font="san-serif")　
+# %/%は左のオブジェクトを右の関数の第1引数に引き渡すパイプ演算子
+# library(knitr)とknitr::は同じ意味
+```
+
+
+## 5. 列の追加
+dplyrパッケージのmutate関数を使用    
+試しに開始年齢から平均値を引いた変数stdAgeを作成
+```{r}
+dt1 <- dplyr::mutate(dt, stdAge=AgeStart-mean(AgeStart))
+head(dt1$stdAge) %>% kable(digits=2, aption = "stdAge") %>% kable_classic(full_width=F , html_font="san-serif")
+```
+
+## 6. ソート
+dt[order(dt[, 4]),]もしくはdplyr::arrange(dt, Sex)で昇順ソート。    
+dt[order(dt[, 4]),decreasing=T]もしくはdplyr::arrange(dt, desc(Sex)で降順ソート
+```{r}
+dt_sort <- dplyr::arrange(dt, Sex)
+head(dt_sort) %>% kable(caption = "性別でソート") %>% kable_classic_2(full_width=F, html_font="san-serif", font_size=10)
+```
+

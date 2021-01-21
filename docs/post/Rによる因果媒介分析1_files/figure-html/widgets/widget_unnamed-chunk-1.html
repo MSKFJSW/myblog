@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<style>body{background-color:white;}</style>
+<script src="grViz_libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="grViz_libs/viz/viz.js"></script>
+<link href="grViz_libs/DiagrammeR-styles/styles.css" rel="stylesheet" />
+<script src="grViz_libs/grViz-binding/grViz.js"></script>
+<script src="grViz_libs/pymjs/pym.v1.min.js"></script>
+  <title>grViz</title>
+</head>
+<body>
+<div id="htmlwidget_container">
+  <div id="htmlwidget-2d679e0524aca91304ed" style="width:100%;height:200px;" class="grViz html-widget"></div>
+  <script>HTMLWidgets.pymChild = new pym.Child();HTMLWidgets.addPostRenderHandler(function(){
+                                setTimeout(function(){HTMLWidgets.pymChild.sendHeight();},100);
+                            });</script>
+</div>
+<script type="application/json" data-for="htmlwidget-2d679e0524aca91304ed">{"x":{"diagram":"digraph{graph[rankdir=TB, label=\"図1 解析の流れ\"]\nnode[label=\"Mediatorモデル\nf(Y|X,M,T)\"]A\nnode[label=\"Outcomeモデル\nf(M|X,T)\"]B\nnode[label=\"因果媒介モデル\"]C\nnode[label=\"感度解析\"]D\nA->C\nB->C \nC->D\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<script type="application/htmlwidget-sizing" data-for="htmlwidget-2d679e0524aca91304ed">{"viewer":{"width":"100%","height":200,"padding":0,"fill":false},"browser":{"width":"100%","height":200,"padding":0,"fill":false}}</script>
+</body>
+</html>
