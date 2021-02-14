@@ -8,18 +8,18 @@
 <meta name="generator" content="Hugo 0.78.2 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Misaki Fujisawa">
 <meta name="keywords" content="">
-<meta name="description" content="Rによる因果媒介分析のまとめ。 今回は媒介変数・アウトカムが連続変数の場合のパラメトリックな手法を扱う。 Baron-Kenny法 Baron-K">
+<meta name="description" content="はじめに Rによる因果媒介分析のまとめ。今回は媒介変数・アウトカムが連続変数の場合のパラメトリックな手法を扱う。比較的お手軽にできる解析手法だ">
 
 
-<meta property="og:description" content="Rによる因果媒介分析のまとめ。 今回は媒介変数・アウトカムが連続変数の場合のパラメトリックな手法を扱う。 Baron-Kenny法 Baron-K">
+<meta property="og:description" content="はじめに Rによる因果媒介分析のまとめ。今回は媒介変数・アウトカムが連続変数の場合のパラメトリックな手法を扱う。比較的お手軽にできる解析手法だ">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Rによる因果媒介分析1 Baron-Kenny法">
 <meta name="twitter:title" content="Rによる因果媒介分析1 Baron-Kenny法">
 <meta property="og:url" content="/2021/01/r%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%901-baron-kenny%E6%B3%95/">
 <meta property="twitter:url" content="/2021/01/r%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%901-baron-kenny%E6%B3%95/">
 <meta property="og:site_name" content="九頭竜">
-<meta property="og:description" content="Rによる因果媒介分析のまとめ。 今回は媒介変数・アウトカムが連続変数の場合のパラメトリックな手法を扱う。 Baron-Kenny法 Baron-K">
-<meta name="twitter:description" content="Rによる因果媒介分析のまとめ。 今回は媒介変数・アウトカムが連続変数の場合のパラメトリックな手法を扱う。 Baron-Kenny法 Baron-K">
+<meta property="og:description" content="はじめに Rによる因果媒介分析のまとめ。今回は媒介変数・アウトカムが連続変数の場合のパラメトリックな手法を扱う。比較的お手軽にできる解析手法だ">
+<meta name="twitter:description" content="はじめに Rによる因果媒介分析のまとめ。今回は媒介変数・アウトカムが連続変数の場合のパラメトリックな手法を扱う。比較的お手軽にできる解析手法だ">
 <meta property="og:locale" content="ja">
 
   
@@ -276,8 +276,10 @@ if (!doNotTrack) {
 <script src="Rによる因果媒介分析1_files/anchor-sections/anchor-sections.js"></script>
 
 
-<p>　Rによる因果媒介分析のまとめ。
-今回は媒介変数・アウトカムが連続変数の場合のパラメトリックな手法を扱う。</p>
+<div id="はじめに" class="section level2">
+<h2>はじめに</h2>
+<p>　Rによる因果媒介分析のまとめ。今回は媒介変数・アウトカムが連続変数の場合のパラメトリックな手法を扱う。比較的お手軽にできる解析手法だが、同時に厳しい仮定を必要とする手法でもある。なので実際の解析から感度分析による結果の解釈までまとめてみたい。</p>
+</div>
 <div id="baron-kenny法" class="section level2">
 <h2>Baron-Kenny法</h2>
 <p>　Baron-Kenny法は線形モデルによって媒介効果を推定する手法。アウトカムと媒介変数を応答変数とした2回の回帰分析を行い、媒介効果を推定。
@@ -335,10 +337,10 @@ summary(m.out)</code></pre>
 ## Nonparametric Bootstrap Confidence Intervals with the Percentile Method
 ## 
 ##                Estimate 95% CI Lower 95% CI Upper p-value  
-## ACME            -0.0137      -0.0337         0.00    0.09 .
-## ADE             -0.0368      -0.1126         0.04    0.33  
-## Total Effect    -0.0505      -0.1311         0.03    0.19  
-## Prop. Mediated   0.2718      -1.0839         2.47    0.24  
+## ACME            -0.0137      -0.0336         0.00   0.098 .
+## ADE             -0.0368      -0.1190         0.04   0.328  
+## Total Effect    -0.0505      -0.1321         0.03   0.172  
+## Prop. Mediated   0.2718      -1.3054         2.82   0.230  
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
@@ -350,9 +352,8 @@ summary(m.out)</code></pre>
 </div>
 <div id="ステップ4感度分析" class="section level3">
 <h3>ステップ4：感度分析</h3>
-<p>　媒介分析では、曝露ーアウトカム間と媒介変数ーアウトカム間の未測定交絡が無いことが仮定される（Imaiらは“Sequential Ignorability”と定義）。しかしこの仮定は非常に厳しいもので、現実には満たされることはないと考えるべき。したがって感度分析によって、どの程度仮定が満たされていないかを定量化する。ImaiらはBaron-Kenny法やSEMによる媒介分析の感度分析を提案している（Imai, K. Statistical Science. 2010; Imai, K. Phycological Science. 2010）。<br />
-　感度分析はステップ1回帰分析の残差とステップ2回帰分析の残差の間の相関係数で評価を行う。残差に相関があれば、潜在的な未測定交絡がある可能性があり、推定が妥当でないことが示唆される。しかし残差の相関係数は解釈が難しいという問題がある。<br />
-　そこでImaiらは残差相関の代替として、決定係数による感度分析を提案している（Imai, K. Statistical Science. 2010;）。決定係数により、未測定交絡によってACMEがどの程度影響を受けるかを定量化する。<br />
+<p>　媒介分析では、曝露ーアウトカム間と媒介変数ーアウトカム間の未測定交絡が無いことが仮定される（Imaiらは“Sequential Ignorability”と定義）。しかしこの仮定は非常に厳しいもので、<strong>現実には満たされることはないと考えるべき</strong>。したがって感度分析によって、どの程度仮定が満たされていないかを定量化する必要がある。ImaiらはBaron-Kenny法・SEMによる媒介分析に対する感度分析を提案している（Imai, K. Statistical Science. 2010; Imai, K. Phycological Science. 2010）。<br />
+　感度分析はステップ1回帰分析の残差とステップ2回帰分析の残差の間の相関係数で評価を行う。残差に相関があれば、潜在的な未測定交絡がある可能性があり、推定が妥当でないことが示唆される。また残差の相関係数は解釈が難しいという問題があり、Imaiらは代わりに決定係数による感度分析を提案している（Imai, K. Statistical Science. 2010;）。決定係数により、未測定交絡によってACMEがどの程度影響を受けるかを定量化する。以下では両方の感度分析を行う。<br />
 　感度分析は以下のコードで実行できる。sens.par=“R2”で決定係数、指定しなければ相関係数による感度分析の結果がプロットされる。</p>
 <table>
 <thead>
@@ -415,8 +416,7 @@ summary(s.out)</code></pre>
 ## Rho at which ACME = 0: -0.2
 ## R^2_M*R^2_Y* at which ACME = 0: 0.04
 ## R^2_M~R^2_Y~ at which ACME = 0: 0.0261</code></pre>
-<p>　テーブルは左から順に、残差の相関係数、ACMEの点推定値、ACMEの95%信頼区間下限と上限、未測定交絡によって説明される原因不明の分散比率、同様の未測定交絡によって説明される元の分散比率、を示している。詳細な定義式はImaiらの原著を参考に。
-　summary()で表示されたテーブルより、ACME=0での相関係数、決定係数による指標の値がわかる。</p>
+<p>　まずsummary()で表示されたテーブルについて。左から順に、残差の相関係数、ACMEの点推定値、ACMEの95%信頼区間下限と上限、未測定交絡によって説明される原因不明の分散比率、未測定交絡によって説明される元の分散比率、を示している。またテーブルの下部では、ACME=0での相関係数、決定係数による指標の値がわかる。これらの詳細な定義式はImaiらの原著論文を参考に。</p>
 <pre class="r"><code>plot(s.out)</code></pre>
 <p><img src="../../../post/2021-01-19 Rによる媒介分析1/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%901_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>　残差の相関係数による感度分析の結果が上記のグラフ。これにより未測定交絡によってACMEがどの程度影響を受けるのかが視覚的に評価できる。曲線はACMEの点推定値を変化させたときの残差の相関係数、グレーの部分はACMEの95%信頼区間を示す。このグラフより、未測定交絡が媒介変数・アウトカムに対して正の影響をもつ場合、未測定交絡の影響を考慮しても媒介効果は存在するだろうと考えられる（相関係数&lt;0でACMEの点推定値は常に負の値）。しかし未測定交絡が負の影響をもつ場合、媒介効果は未測定交絡によって正・負の値両方を取る可能性があり、解析で得られたACMEの値は妥当でないかもしれない。この場合負の媒介効果が存在するという主張の根拠が揺らぐことになる。</p>
@@ -427,19 +427,22 @@ summary(s.out)</code></pre>
 <pre class="r"><code>plot(s.out, sens.par=&quot;R2&quot;, r.type=2, sign.prod=-1)</code></pre>
 <p><img src="../../../post/2021-01-19 Rによる媒介分析1/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%901_files/figure-html/unnamed-chunk-7-3.png" width="672" /></p>
 <pre class="r"><code>plot(s.out, sens.par=&quot;R2&quot;, r.type=2, sign.prod=1)</code></pre>
-<p><img src="../../../post/2021-01-19 Rによる媒介分析1/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%901_files/figure-html/unnamed-chunk-7-4.png" width="672" />
-　
-　決定係数による感度分析が上記4つのグラフ。<br />
+<p><img src="../../../post/2021-01-19 Rによる媒介分析1/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%901_files/figure-html/unnamed-chunk-7-4.png" width="672" /></p>
+<p>　決定係数による感度分析が上記4つのグラフ。<br />
 　1番目のグラフより、未測定交絡の符号が同じという仮定のもとで「未測定交絡によって説明される原因不明の分散比率」が4%以下ならば、解析で得られたACMEは妥当であると判断できる（現実には満たすことは不可能な数値）。また3番目のグラフより、未測定交絡によって説明される元の分散比率が3%以下であれば、解析で得られたACMEは妥当であると判断できる。以上より、未測定交絡が媒介変数・アウトカムに対して同じ符号で相関をもつならば、解析結果は妥当でないと判断すべき。<br />
 　その一方で未測定交絡が媒介変数・アウトカムに対して異なる符号で相関をもつならば、解析結果は妥当である（未測定交絡があっても常にACMEは負の値）。<br />
-　未測定交絡の符号は研究対象についての専門知識をもとに判断すべきであり、それは統計学の領分ではない。それぞれの分野での専門知識をもとに符号がどちらかを想定することで、解析結果の妥当性を考察できるだろう。<br />
-　
-　
-## 参考文献
-<a href="https://www.springer.com/gp/book/9781441917638">1. Advances in social science Research using R（第8章 Causal Mediation Analysis Using R）</a><br />
+　未測定交絡の符号は研究対象についての専門知識をもとに判断すべきであり、それは統計学の領分ではない。それぞれの分野での専門知識をもとに符号がどちらかを想定することで、解析結果の妥当性を考察できるだろう。</p>
+</div>
+</div>
+<div id="終わりに" class="section level2">
+<h2>終わりに</h2>
+<p>　以上Baron-Kenny法による因果媒介分析を扱い、実際のデータをもとにRコードで解析してみた。今回は媒介変数とアウトカムが連続変数の場合を扱った。この手法は厳しい仮定を置いてしまうものの、感度分析を行うことで解析結果が妥当であるか検討することができる。</p>
+</div>
+<div id="参考文献" class="section level2">
+<h2>参考文献</h2>
+<p><a href="https://www.springer.com/gp/book/9781441917638">1. Advances in social science Research using R（第8章 Causal Mediation Analysis Using R）</a><br />
 2. Imai, K. et al. Identification, Inference and Sensitivity Aanalysis for Causal Mediation Effects. Statistical Science. 2010; 25(1):51-71.<br />
 3. Imai, K. et al. A General Approach to Causal Mediation Analysis. Phycological Methods. 2010;15(4):309-334.</p>
-</div>
 </div>
 
               
