@@ -1,0 +1,295 @@
+---
+title: "解析前のデータ処理"
+date: 2021-02-18
+categories:
+- データ処理
+summary: 統計解析の前に行うデータ処理のまとめ。量的研究を行う上で避けて通れない、変数作成、欠測データの処理、想定した解析に適したデータへの編集など。
+output: 
+        blogdown::html_page: 
+                toc: TRUE
+                css: "/css/custom.css"
+thumbnailImage: https://askul.c.yimg.jp/lpm/img/bookfan/BK-4274067572_3L.jpg
+coverImage: http://res.publicdomainfiles.com/pdf_view/145/13978843819386.jpg
+autoThumbnailImage: yes
+twitterImg: http://res.publicdomainfiles.com/pdf_view/145/13978843819386.jpg
+coverSize: partial
+coverCaption: "A short caption (Source: Source)"
+---
+
+## はじめに
+　解析前のデータ処理は、量的研究・統計解析を行う上で必須である。しかし統計解析についての本は多々あるが、解析前のデータ処理を扱う講義や本は意外と少ないように感じる。そのためデータがあって想定している解析もあるのに、なかなか解析に手がつかない、という状況は非常によくある（自分はそうだった）。そういう反省も踏まえて、Rによる解析前のデータ処理の内容を網羅的にまとめてみた。
+
+## 1. 疑似データの作成
+```{r}
+set.seed(218)
+dt <- data.frame(ID=1:5, #対象者番号
+                 age=round(rnorm(5, 30, 10)), #年齢
+                 gender=c("男","男","女","女",NA), #性別
+                 blood_type=c("A","B","AB","O","A"), #血液型
+                 test=c("不可","可","良","優","可")) #テストの成績
+knitr::kable(dt)
+```
+
+
+## 2. データフレームの変数の指定
+### 2-1 変数（列）の指定
+　1つの変数（1列）を指定する方法は3つある。方法③はデータフレームとして指定するため、表示形式が異なる    
+
+#### 方法① 列ベクトルとしての指定
+```{r eval=FALSE}
+dt$age
+dt[,1]
+```
+
+#### 方法② データフレームとしての指定
+```{r}
+dt[1]  #1列だけのデータフレームとして表示
+```
+
+### 2-2 繰り返し処理（複数列の指定）
+　for文と組み合わせることで、複数列に対する処理を行うことができる。またsapply関数により、全ての変数に対する処理も実行できる。
+```{r}
+for(i in 1:2){table(dt[,i])}
+sapply(dt, table)
+```
+
+## 3. データチェック
+　データの分布、欠測の数を把握する場合、まずはtable関数で確認する。これも指定方法によりいくつかの方法があるが、いずれも同じ結果を示す。
+```{r eval=FALSE}
+table(dt$gender, exclude=NULL)  #exclude=NULLで欠測をカウント
+```
+```{r eval=FALSE}
+table(dt[,2], exclude=NULL)
+```
+```{r}
+table(dt[2], exclude=NULL)
+```
+#### 全ての変数のデータチェック
+```{r}
+sapply(dt, table, exclude=NULL)
+```
+
+## 4. カテゴリー変数の定義
+　Rのデータ形式の一つであるデータフレームでは、カテゴリー変数を①文字型、②FACTOR型の2つで表現する。FACTOR型は数値として扱われるため、解析を行う場合には便利な形式である。  
+
+### 4-1 数値カテゴリーの定義
+　カテゴリー変数は省略された文字で表現されることが多い。例えば、血液型は以下のようにA、B、AB、Oの文字だけで表現されることもある。このような文字だけでは分かりづらいこともあるため、FACTOR型のlabels属性を付与することでデータがより見やすくなる（指定しなくても良い）。またlevels属性は割り当てる水準（数値）を指定する。（FACTOR型はlabelsとlevelsの2つの属性をもつ）
+```{r}
+dt$blood_typef <- factor(dt$blood_type,
+                        levels=c("A","B","AB","O"), #水準数の定義
+                        labels=c("A型","B型","O型","AB型")) #ラベル定義
+```
+```{r}
+dt_blood <- data.frame(dt$blood_type,dt$blood_typef)
+knitr::kable(dt_blood)
+```
+
+### 4-2 順序カテゴリーの定義
+　順序変数の定義にはfactor関数にordered=TRUEオプションを指定するだけでよい。これで指定順に値が大きくなることが表現される。これにより比較演算子による値の比較ができるようになる。
+```{r}
+dt$test <- factor(dt$test, 
+                  levels=c("不可","可","良","優"), 
+                  ordered=TRUE) #順序の定義
+dt$test>="可" #可、良、優以上の者
+```
+
+### 4-3 カテゴリーの定義順序の変更
+　FACTOR型を扱う場合、整数が**辞書順**に割り当てられる。例えば、男と女はそれぞれ一般的に1、2として割り振られる事が多い。しかしながらRでは、男を2、女を1として数値を割り当てることに注意しなければならない。これに気づかないとデータの解釈が男女で逆の結果となり、目が当てられないことになる。
+　
+```{r}
+unclass(dt$gender) 
+# 変数genderに割り当てられた整数の確認
+# 女=1、男=2となっていることを確認
+```
+
+```{r}
+dt$gender <- factor(dt$gender,levels=c("男","女"),labels=c("男性","女性"))
+unclass(dt$gender)
+```
+男=1、女=2となっていることを確認する。これは特に順序変数の順序変更に有用。
+
+## 5. 連続変数のカテゴリー化
+　統計解析では解釈のしやすさのために、連続変数をカテゴリー化することがよくある。そこでcut関数により、①カテゴリーとして分割する値、②ラベル名の指定、をすることでカテゴリー化できる。以下では順序変数に変換している。
+```{r}
+dt$agec <- cut(dt$age, 
+               breaks=c(-Inf,20,30,40,50,60,70,Inf), #分割点の定義（7カテゴリー）
+               right=FALSE,  #区間の下限点が区間に含まれ、上限が含まれないように指定
+               labels=c("20歳未満","20~30歳","30~40歳","40~50歳","50~60歳",
+                        "60~70歳","70歳以上"),
+               ordered_result = TRUE) 
+dt_age <- data.frame(dt$age,dt$agec)
+knitr::kable(dt_age)
+```
+
+## 6. カテゴリー変数の最カテゴリー化
+細かくカテゴリー化された変数をより少ないカテゴリーに変換する。levels関数で元の水準を新たに定義する。
+```{r}
+levels(dt$agec)
+```
+
+```{r}
+x <- dt$agec
+levels(x) <- c("30歳未満","30歳未満","30歳以上","30歳以上","30歳以上","30歳以上","30歳以上")
+```
+```{r}
+table(dt$agec,x) #カテゴリー化されているかの確認
+```
+
+## 7. 新しい変数の作成
+　連続変数の数値を加工し新たな変数を作成する。以下ではmean()とvar()を使用し、ageを標準化したage_sdを作成する。
+```{r}
+dt$age_sd <- (dt$age-mean(dt$age))/var(dt$age) #ageを標準化したage_sdを作成
+dt_age <- data.frame(dt$age,dt$age_sd)
+knitr::kable(dt_age)
+```
+　またtransform関数でも同様に変数を作成できる。
+```{r}
+dt <- transform(dt, age_sd=(age-mean(age))/var(age))
+```
+
+## 8. 新しいデータフレーム（サブセット）の作成
+　実際のデータ処理では、解析をスムーズにするためにデータの量を減らしたり、欠測値を除外するといった作業を行うことがよくある。そこで以下では特定の変数のみを含むデータの作成、条件を満たすデータの取り出し、という操作を行ってみる。
+
+### 8-1 指定した変数のサブセット作成
+```{r}
+dt1 <- dt[1,2]  #1,2列目変数を含むデータの作成
+dt1 <- data.frame(dt$age,dt$gender,dt$blood_type,dt$test)
+# age,gender,blood_type,testを含むデータの作成
+```
+### 8-2 条件を満たすサブセットの作成
+```{r}
+dt2 <- subset(dt,age>20) #20歳以上の者だけのデータ作成
+```
+
+### 8-3 欠測値の除外
+```{r}
+dt3 <- subset(dt,complete.cases(dt))  #一つでも欠測のある者を除外
+dt3 <- na.omit(dt)
+```
+
+## 9. データフレームの分割
+　カテゴリー別の解析も研究ではあるある。男女別などカテゴリー別にデータを作成したい場合、split関数でデータフレームを分割できる。そこから男女別のデータを作成する。
+```{r}
+dt_gender <- split(dt,dt$gender) #男女別のリストを含むデータの作成
+dt_man <- dt_gender$男 #男のみのデータ作成
+dt_woman <- dt_gender$女 #女のみのデータ作成
+```
+
+## 10. データフレームの結合
+### 10-1 縦結合
+```{r}
+dt_bind <- rbind(dt_man,dt_woman) #同じ変数（列数）をもつデータフレームを結合
+knitr::kable(dt_bind)
+```
+
+### 10-2 横結合
+```{r}
+dt_df <- data.frame(dt_man,dt_woman) #同じデータ数（行）をもつデータフレームを結合
+knitr::kable(dt_df)
+```
+### 10-3 柔軟な縦結合
+　データ間の対象者数が異なったり、追加データを元データに結合したい場合がある。そのような場合はmerge関数を使用する。デフォルトでは同じ列名を探し、縦に結合する。以下ではIDが3~5の対象者の血圧データを元のデータに追加してみる。
+
+```{r}
+dt_add <- data.frame(ID=3:5,bp=c(140,151,132))
+dt_merge <- merge(dt[1:2],dt_add,all=TRUE,by="ID") 
+knitr::kable(dt_merge)
+```
+
+　all=TRUEを指定しないと、共通ID以外が結合されない。そのため以下では、元データと追加データの共通IDである、IDが3~5の対象者のみが結合されている。したがってよほどのことが無い限り、all=TRUEを指定すべき。
+```{r}
+dt_merge1 <- merge(dt[1:2],dt_add,by="ID") 
+knitr::kable(dt_merge1)
+```
+  
+|merge関数        |内容                                                      |  
+|-----------------|----------------------------------------------------------|  
+|x,y              |データフレーム名            |   
+|by=列名　    　  |結合のために参照する列名の指定|  
+|by.x(by.y)=列名  |結合のために参照する列名の指定（xとyで異なる列名でも可）|  
+|all=T/F          |共通ID以外も結合する(FALSEで共通ID以外結合されない) | 
+|all.x(all.y)=T/F |どちらのデータを残すかの指定（all.x：左結合、all.y：右結合）|  
+
+## 11. 並び替え
+　ソートで有名なのはorder関数。指定した変数で昇順ソートし、行番号を返してくれる。その後得た行番号のオブジェクトをデータフレームの第1引数（行番号）に渡すことで、対象データをソートできる。
+```{r}
+sort_test <- order(dt$test) #ソートしたときの行番号をオブジェクトに格納
+dt_order <- dt[sort_test,]  #元データをテスト成績でソート（dt[行,列]による）
+dt_order
+```
+　因みにデータを見ると元々の行番号が表示されている。行番号を変更したい場合は以下のようにする。
+```{r}
+rownames(dt_order) <- c(1:nrow(dt_order))
+dt_order
+```
+
+## 12. リストとデータフレームの相互変換
+　分析方法によってはリストとデータフレームを相互に変換することが必要な場合がある。最も簡単なのはas.list関数とas.data.frame関数。
+```{r}
+list <- as.list(dt)  #変数ごとのベクトルをもつリストの作成
+dt_dataframe <- as.data.frame(list)  #リストからデータフレームに変換
+```
+
+　またstack関数によってリストからデータフレームに変換することも可能。
+```{r}
+list1 <- list(Man=c(30,40,50),Woman=c(30,41,46))
+list1
+dt_gender <- stack(list1)
+dt_gender
+```
+
+## 13. 対応のあるデータの転置
+　経時測定データを扱う場合、各列でそれぞれの時点の測定値を示している場合がある。しかしこの形式では統計解析を行うことはできない。解析を行うためには、各測定時点の値を一つの変数にまとめる必要がある（データの転置）。
+```{r}
+dt_time <- data.frame(ID=1:5,   #血圧の経時データの作成
+                      week.1=round(rnorm(5,140,10)),
+                      week.2=round(rnorm(5,135,10)),
+                      week.3=round(rnorm(5,130,10)))
+knitr::kable(dt_time)
+```
+
+　データの転置で便利なのはreshape関数。stack関数よりも柔軟なデータ編集が可能。以下ではlong形式のデータからwide形式のデータに変換している。各時点の変数名が"変数名.数値"でないと転置できないことに注意。
+```{r}
+dt_time1 <- reshape(dt_time,idvar="ID",
+                    varying = 2:4,direction="long",
+                    v.names="Week")
+knitr::kable(dt_time1)
+```
+　またlongからwideへ、逆の形式への変換も可能。timevar引数で時点を示す変数を指定する（week1~3を含むtime変数）。
+```{r}
+dt_time2 <- reshape(dt_time1,idvar="ID",timevar="time",direction="wide")
+knitr::kable(dt_time2)
+```
+
+
+|reshape関数            |内容                                                      |  
+|-----------------------|----------------------------------------------------------|  
+|data                   |データフレーム名            |   
+|idvar=識別変数         |対象者やデータを識別するための変数の指定  |  
+|varying=転置したい変数 |転置する変数の指定（ID以外の各時点の変数："列名.数値"）|  
+|direction="long""wide" |作成する形式の指定（long:各時点が1列、wide:各時点が複数列）| 
+|v.names=列名           |widw形式からlong形式への変更で作成される変数名の指定 | 
+|timevar=時点を示す変数 |long→wideで転置する変数を指定（時点変数）|
+
+
+## 14. クロス集計表の作成と元データの復元
+　カテゴリカルなアウトカムを含むデータの場合、クロス集計表の作成は必須。xtabs関数、table関数でクロス集計表を生成することができる。まずは単純な2変数の度数集計から。
+```{r}
+ct1 <- xtabs(~gender+test, data = dt) #性別とテスト成績の度数集計
+      # table(dt$gender,dt$test)も同じ結果
+knitr::kable(ct1)
+```
+　～は等号=と同じであり、度数=性別＋成績という方程式を表現している。因みに～の右辺に変数を加えると、3次元以上のクロス集計が可能（使うことはほとんどない）。
+    
+　またクロス集計から元データの復元には、data.frame関数でデータフレームに変換するのが分かりやすい。
+```{r}
+df1 <- data.frame(ct1)
+knitr::kable(df1)
+```
+　しかしこれだけでは、Freqという変数が邪魔であるし、Freq=0の行も除きたいところ。そこでdata.frameとlapplyにより、邪魔なFreqの列とFewq=0の行を除外する。
+```{r}
+data.frame(lapply(df1, function(i) rep(i,df1[, "Freq"]))) [-3]
+# function(i)で行数をカウント、rep関数でFreqの数値分対象行を繰り返す（Freq=0の除外）
+# df1[, "Freq"]はFreqという名前の列にある数値を指定
+# [-3]で3列目の変数を除外
+```

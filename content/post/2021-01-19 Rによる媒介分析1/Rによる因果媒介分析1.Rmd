@@ -5,8 +5,9 @@ categories:
 - 因果媒介分析
 - R
 - 解析コード
-thumbnailImage: https://images.springer.com/sgw/books/medium/9781441917638.jpg
+thumbnailImage: https://n1.sdlcdn.com/imgs/e/a/a/Advances-in-Social-Science-Research-SDL679544219-1-c945e.jpg
 thumbnailImagePosition: left
+summary: Baron-Kenny法による因果媒介分析のまとめ。統計ソフトRで実際に解析を行い、Imai論文を参考に結果を解釈してみた。
 ---
 ## はじめに
 　Rによる因果媒介分析のまとめ。今回は媒介変数・アウトカムが連続変数の場合のパラメトリックな手法を扱う。比較的お手軽にできる解析手法だが、同時に厳しい仮定を必要とする手法でもある。なので実際の解析から感度分析による結果の解釈までまとめてみたい。

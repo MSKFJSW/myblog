@@ -1,0 +1,1039 @@
+---
+title: "解析前のデータ処理"
+date: 2021-02-18
+categories:
+- データ処理
+summary: 統計解析の前に行うデータ処理のまとめ。量的研究を行う上で避けて通れない、変数作成、欠測データの処理、想定した解析に適したデータへの編集など。
+output: 
+        blogdown::html_page: 
+                toc: TRUE
+                css: "/css/custom.css"
+thumbnailImage: https://askul.c.yimg.jp/lpm/img/bookfan/BK-4274067572_3L.jpg
+coverImage: http://res.publicdomainfiles.com/pdf_view/145/13978843819386.jpg
+autoThumbnailImage: yes
+twitterImg: http://res.publicdomainfiles.com/pdf_view/145/13978843819386.jpg
+coverSize: partial
+coverCaption: "A short caption (Source: Source)"
+---
+
+<link href="解析前のデータ処理_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="解析前のデータ処理_files/anchor-sections/anchor-sections.js"></script>
+  <link rel="stylesheet" href="/css/custom.css" type="text/css" />
+
+<div id="TOC">
+<ul>
+<li><a href="#はじめに">はじめに</a></li>
+<li><a href="#疑似データの作成">1. 疑似データの作成</a></li>
+<li><a href="#データフレームの変数の指定">2. データフレームの変数の指定</a><ul>
+<li><a href="#変数列の指定">2-1 変数（列）の指定</a></li>
+<li><a href="#繰り返し処理複数列の指定">2-2 繰り返し処理（複数列の指定）</a></li>
+</ul></li>
+<li><a href="#データチェック">3. データチェック</a></li>
+<li><a href="#カテゴリー変数の定義">4. カテゴリー変数の定義</a><ul>
+<li><a href="#数値カテゴリーの定義">4-1 数値カテゴリーの定義</a></li>
+<li><a href="#順序カテゴリーの定義">4-2 順序カテゴリーの定義</a></li>
+<li><a href="#カテゴリーの定義順序の変更">4-3 カテゴリーの定義順序の変更</a></li>
+</ul></li>
+<li><a href="#連続変数のカテゴリー化">5. 連続変数のカテゴリー化</a></li>
+<li><a href="#カテゴリー変数の最カテゴリー化">6. カテゴリー変数の最カテゴリー化</a></li>
+<li><a href="#新しい変数の作成">7. 新しい変数の作成</a></li>
+<li><a href="#新しいデータフレームサブセットの作成">8. 新しいデータフレーム（サブセット）の作成</a><ul>
+<li><a href="#指定した変数のサブセット作成">8-1 指定した変数のサブセット作成</a></li>
+<li><a href="#条件を満たすサブセットの作成">8-2 条件を満たすサブセットの作成</a></li>
+<li><a href="#欠測値の除外">8-3 欠測値の除外</a></li>
+</ul></li>
+<li><a href="#データフレームの分割">9. データフレームの分割</a></li>
+<li><a href="#データフレームの結合">10. データフレームの結合</a><ul>
+<li><a href="#縦結合">10-1 縦結合</a></li>
+<li><a href="#横結合">10-2 横結合</a></li>
+<li><a href="#柔軟な縦結合">10-3 柔軟な縦結合</a></li>
+</ul></li>
+<li><a href="#並び替え">11. 並び替え</a></li>
+<li><a href="#リストとデータフレームの相互変換">12. リストとデータフレームの相互変換</a></li>
+<li><a href="#対応のあるデータの転置">13. 対応のあるデータの転置</a></li>
+<li><a href="#クロス集計表の作成と元データの復元">14. クロス集計表の作成と元データの復元</a></li>
+</ul>
+</div>
+
+<div id="はじめに" class="section level2">
+<h2>はじめに</h2>
+<p>　解析前のデータ処理は、量的研究・統計解析を行う上で必須である。しかし統計解析についての本は多々あるが、解析前のデータ処理を扱う講義や本は意外と少ないように感じる。そのためデータがあって想定している解析もあるのに、なかなか解析に手がつかない、という状況は非常によくある（自分はそうだった）。そういう反省も踏まえて、Rによる解析前のデータ処理の内容を網羅的にまとめてみた。</p>
+</div>
+<div id="疑似データの作成" class="section level2">
+<h2>1. 疑似データの作成</h2>
+<pre class="r"><code>set.seed(218)
+dt &lt;- data.frame(ID=1:5, #対象者番号
+                 age=round(rnorm(5, 30, 10)), #年齢
+                 gender=c(&quot;男&quot;,&quot;男&quot;,&quot;女&quot;,&quot;女&quot;,NA), #性別
+                 blood_type=c(&quot;A&quot;,&quot;B&quot;,&quot;AB&quot;,&quot;O&quot;,&quot;A&quot;), #血液型
+                 test=c(&quot;不可&quot;,&quot;可&quot;,&quot;良&quot;,&quot;優&quot;,&quot;可&quot;)) #テストの成績
+knitr::kable(dt)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">ID</th>
+<th align="right">age</th>
+<th align="left">gender</th>
+<th align="left">blood_type</th>
+<th align="left">test</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">42</td>
+<td align="left">男</td>
+<td align="left">A</td>
+<td align="left">不可</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">14</td>
+<td align="left">男</td>
+<td align="left">B</td>
+<td align="left">可</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="right">28</td>
+<td align="left">女</td>
+<td align="left">AB</td>
+<td align="left">良</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="right">41</td>
+<td align="left">女</td>
+<td align="left">O</td>
+<td align="left">優</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="right">13</td>
+<td align="left">NA</td>
+<td align="left">A</td>
+<td align="left">可</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="データフレームの変数の指定" class="section level2">
+<h2>2. データフレームの変数の指定</h2>
+<div id="変数列の指定" class="section level3">
+<h3>2-1 変数（列）の指定</h3>
+<p>　1つの変数（1列）を指定する方法は3つある。方法③はデータフレームとして指定するため、表示形式が異なる</p>
+<div id="方法①-列ベクトルとしての指定" class="section level4">
+<h4>方法① 列ベクトルとしての指定</h4>
+<pre class="r"><code>dt$age
+dt[,1]</code></pre>
+</div>
+<div id="方法②-データフレームとしての指定" class="section level4">
+<h4>方法② データフレームとしての指定</h4>
+<pre class="r"><code>dt[1]  #1列だけのデータフレームとして表示</code></pre>
+<pre><code>##   ID
+## 1  1
+## 2  2
+## 3  3
+## 4  4
+## 5  5</code></pre>
+</div>
+</div>
+<div id="繰り返し処理複数列の指定" class="section level3">
+<h3>2-2 繰り返し処理（複数列の指定）</h3>
+<p>　for文と組み合わせることで、複数列に対する処理を行うことができる。またsapply関数により、全ての変数に対する処理も実行できる。</p>
+<pre class="r"><code>for(i in 1:2){table(dt[,i])}
+sapply(dt, table)</code></pre>
+<pre><code>## $ID
+## 
+## 1 2 3 4 5 
+## 1 1 1 1 1 
+## 
+## $age
+## 
+## 13 14 28 41 42 
+##  1  1  1  1  1 
+## 
+## $gender
+## 
+## 女 男 
+##  2  2 
+## 
+## $blood_type
+## 
+##  A AB  B  O 
+##  2  1  1  1 
+## 
+## $test
+## 
+##   可 不可   優   良 
+##    2    1    1    1</code></pre>
+</div>
+</div>
+<div id="データチェック" class="section level2">
+<h2>3. データチェック</h2>
+<p>　データの分布、欠測の数を把握する場合、まずはtable関数で確認する。これも指定方法によりいくつかの方法があるが、いずれも同じ結果を示す。</p>
+<pre class="r"><code>table(dt$gender, exclude=NULL)  #exclude=NULLで欠測をカウント</code></pre>
+<pre class="r"><code>table(dt[,2], exclude=NULL)</code></pre>
+<pre class="r"><code>table(dt[2], exclude=NULL)</code></pre>
+<pre><code>## 
+## 13 14 28 41 42 
+##  1  1  1  1  1</code></pre>
+<div id="全ての変数のデータチェック" class="section level4">
+<h4>全ての変数のデータチェック</h4>
+<pre class="r"><code>sapply(dt, table, exclude=NULL)</code></pre>
+<pre><code>## $ID
+## 
+## 1 2 3 4 5 
+## 1 1 1 1 1 
+## 
+## $age
+## 
+## 13 14 28 41 42 
+##  1  1  1  1  1 
+## 
+## $gender
+## 
+##   女   男 &lt;NA&gt; 
+##    2    2    1 
+## 
+## $blood_type
+## 
+##  A AB  B  O 
+##  2  1  1  1 
+## 
+## $test
+## 
+##   可 不可   優   良 
+##    2    1    1    1</code></pre>
+</div>
+</div>
+<div id="カテゴリー変数の定義" class="section level2">
+<h2>4. カテゴリー変数の定義</h2>
+<p>　Rのデータ形式の一つであるデータフレームでは、カテゴリー変数を①文字型、②FACTOR型の2つで表現する。FACTOR型は数値として扱われるため、解析を行う場合には便利な形式である。</p>
+<div id="数値カテゴリーの定義" class="section level3">
+<h3>4-1 数値カテゴリーの定義</h3>
+<p>　カテゴリー変数は省略された文字で表現されることが多い。例えば、血液型は以下のようにA、B、AB、Oの文字だけで表現されることもある。このような文字だけでは分かりづらいこともあるため、FACTOR型のlabels属性を付与することでデータがより見やすくなる（指定しなくても良い）。またlevels属性は割り当てる水準（数値）を指定する。（FACTOR型はlabelsとlevelsの2つの属性をもつ）</p>
+<pre class="r"><code>dt$blood_typef &lt;- factor(dt$blood_type,
+                        levels=c(&quot;A&quot;,&quot;B&quot;,&quot;AB&quot;,&quot;O&quot;), #水準数の定義
+                        labels=c(&quot;A型&quot;,&quot;B型&quot;,&quot;O型&quot;,&quot;AB型&quot;)) #ラベル定義</code></pre>
+<pre class="r"><code>dt_blood &lt;- data.frame(dt$blood_type,dt$blood_typef)
+knitr::kable(dt_blood)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">dt.blood_type</th>
+<th align="left">dt.blood_typef</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">A</td>
+<td align="left">A型</td>
+</tr>
+<tr class="even">
+<td align="left">B</td>
+<td align="left">B型</td>
+</tr>
+<tr class="odd">
+<td align="left">AB</td>
+<td align="left">O型</td>
+</tr>
+<tr class="even">
+<td align="left">O</td>
+<td align="left">AB型</td>
+</tr>
+<tr class="odd">
+<td align="left">A</td>
+<td align="left">A型</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="順序カテゴリーの定義" class="section level3">
+<h3>4-2 順序カテゴリーの定義</h3>
+<p>　順序変数の定義にはfactor関数にordered=TRUEオプションを指定するだけでよい。これで指定順に値が大きくなることが表現される。これにより比較演算子による値の比較ができるようになる。</p>
+<pre class="r"><code>dt$test &lt;- factor(dt$test, 
+                  levels=c(&quot;不可&quot;,&quot;可&quot;,&quot;良&quot;,&quot;優&quot;), 
+                  ordered=TRUE) #順序の定義
+dt$test&gt;=&quot;可&quot; #可、良、優以上の者</code></pre>
+<pre><code>## [1] FALSE  TRUE  TRUE  TRUE  TRUE</code></pre>
+</div>
+<div id="カテゴリーの定義順序の変更" class="section level3">
+<h3>4-3 カテゴリーの定義順序の変更</h3>
+<p>　FACTOR型を扱う場合、整数が<strong>辞書順</strong>に割り当てられる。例えば、男と女はそれぞれ一般的に1、2として割り振られる事が多い。しかしながらRでは、男を2、女を1として数値を割り当てることに注意しなければならない。これに気づかないとデータの解釈が男女で逆の結果となり、目が当てられないことになる。
+　</p>
+<pre class="r"><code>unclass(dt$gender) </code></pre>
+<pre><code>## [1]  2  2  1  1 NA
+## attr(,&quot;levels&quot;)
+## [1] &quot;女&quot; &quot;男&quot;</code></pre>
+<pre class="r"><code># 変数genderに割り当てられた整数の確認
+# 女=1、男=2となっていることを確認</code></pre>
+<pre class="r"><code>dt$gender &lt;- factor(dt$gender,levels=c(&quot;男&quot;,&quot;女&quot;),labels=c(&quot;男性&quot;,&quot;女性&quot;))
+unclass(dt$gender)</code></pre>
+<pre><code>## [1]  1  1  2  2 NA
+## attr(,&quot;levels&quot;)
+## [1] &quot;男性&quot; &quot;女性&quot;</code></pre>
+<p>男=1、女=2となっていることを確認する。これは特に順序変数の順序変更に有用。</p>
+</div>
+</div>
+<div id="連続変数のカテゴリー化" class="section level2">
+<h2>5. 連続変数のカテゴリー化</h2>
+<p>　統計解析では解釈のしやすさのために、連続変数をカテゴリー化することがよくある。そこでcut関数により、①カテゴリーとして分割する値、②ラベル名の指定、をすることでカテゴリー化できる。以下では順序変数に変換している。</p>
+<pre class="r"><code>dt$agec &lt;- cut(dt$age, 
+               breaks=c(-Inf,20,30,40,50,60,70,Inf), #分割点の定義（7カテゴリー）
+               right=FALSE,  #区間の下限点が区間に含まれ、上限が含まれないように指定
+               labels=c(&quot;20歳未満&quot;,&quot;20~30歳&quot;,&quot;30~40歳&quot;,&quot;40~50歳&quot;,&quot;50~60歳&quot;,
+                        &quot;60~70歳&quot;,&quot;70歳以上&quot;),
+               ordered_result = TRUE) 
+dt_age &lt;- data.frame(dt$age,dt$agec)
+knitr::kable(dt_age)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">dt.age</th>
+<th align="left">dt.agec</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">42</td>
+<td align="left">40~50歳</td>
+</tr>
+<tr class="even">
+<td align="right">14</td>
+<td align="left">20歳未満</td>
+</tr>
+<tr class="odd">
+<td align="right">28</td>
+<td align="left">20~30歳</td>
+</tr>
+<tr class="even">
+<td align="right">41</td>
+<td align="left">40~50歳</td>
+</tr>
+<tr class="odd">
+<td align="right">13</td>
+<td align="left">20歳未満</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="カテゴリー変数の最カテゴリー化" class="section level2">
+<h2>6. カテゴリー変数の最カテゴリー化</h2>
+<p>細かくカテゴリー化された変数をより少ないカテゴリーに変換する。levels関数で元の水準を新たに定義する。</p>
+<pre class="r"><code>levels(dt$agec)</code></pre>
+<pre><code>## [1] &quot;20歳未満&quot; &quot;20~30歳&quot;  &quot;30~40歳&quot;  &quot;40~50歳&quot;  &quot;50~60歳&quot;  &quot;60~70歳&quot;  &quot;70歳以上&quot;</code></pre>
+<pre class="r"><code>x &lt;- dt$agec
+levels(x) &lt;- c(&quot;30歳未満&quot;,&quot;30歳未満&quot;,&quot;30歳以上&quot;,&quot;30歳以上&quot;,&quot;30歳以上&quot;,&quot;30歳以上&quot;,&quot;30歳以上&quot;)</code></pre>
+<pre class="r"><code>table(dt$agec,x) #カテゴリー化されているかの確認</code></pre>
+<pre><code>##           x
+##            30歳未満 30歳以上
+##   20歳未満        2        0
+##   20~30歳         1        0
+##   30~40歳         0        0
+##   40~50歳         0        2
+##   50~60歳         0        0
+##   60~70歳         0        0
+##   70歳以上        0        0</code></pre>
+</div>
+<div id="新しい変数の作成" class="section level2">
+<h2>7. 新しい変数の作成</h2>
+<p>　連続変数の数値を加工し新たな変数を作成する。以下ではmean()とvar()を使用し、ageを標準化したage_sdを作成する。</p>
+<pre class="r"><code>dt$age_sd &lt;- (dt$age-mean(dt$age))/var(dt$age) #ageを標準化したage_sdを作成
+dt_age &lt;- data.frame(dt$age,dt$age_sd)
+knitr::kable(dt_age)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">dt.age</th>
+<th align="right">dt.age_sd</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">42</td>
+<td align="right">0.0733571</td>
+</tr>
+<tr class="even">
+<td align="right">14</td>
+<td align="right">-0.0692817</td>
+</tr>
+<tr class="odd">
+<td align="right">28</td>
+<td align="right">0.0020377</td>
+</tr>
+<tr class="even">
+<td align="right">41</td>
+<td align="right">0.0682629</td>
+</tr>
+<tr class="odd">
+<td align="right">13</td>
+<td align="right">-0.0743760</td>
+</tr>
+</tbody>
+</table>
+<p>　またtransform関数でも同様に変数を作成できる。</p>
+<pre class="r"><code>dt &lt;- transform(dt, age_sd=(age-mean(age))/var(age))</code></pre>
+</div>
+<div id="新しいデータフレームサブセットの作成" class="section level2">
+<h2>8. 新しいデータフレーム（サブセット）の作成</h2>
+<p>　実際のデータ処理では、解析をスムーズにするためにデータの量を減らしたり、欠測値を除外するといった作業を行うことがよくある。そこで以下では特定の変数のみを含むデータの作成、条件を満たすデータの取り出し、という操作を行ってみる。</p>
+<div id="指定した変数のサブセット作成" class="section level3">
+<h3>8-1 指定した変数のサブセット作成</h3>
+<pre class="r"><code>dt1 &lt;- dt[1,2]  #1,2列目変数を含むデータの作成
+dt1 &lt;- data.frame(dt$age,dt$gender,dt$blood_type,dt$test)
+# age,gender,blood_type,testを含むデータの作成</code></pre>
+</div>
+<div id="条件を満たすサブセットの作成" class="section level3">
+<h3>8-2 条件を満たすサブセットの作成</h3>
+<pre class="r"><code>dt2 &lt;- subset(dt,age&gt;20) #20歳以上の者だけのデータ作成</code></pre>
+</div>
+<div id="欠測値の除外" class="section level3">
+<h3>8-3 欠測値の除外</h3>
+<pre class="r"><code>dt3 &lt;- subset(dt,complete.cases(dt))  #一つでも欠測のある者を除外
+dt3 &lt;- na.omit(dt)</code></pre>
+</div>
+</div>
+<div id="データフレームの分割" class="section level2">
+<h2>9. データフレームの分割</h2>
+<p>　カテゴリー別の解析も研究ではあるある。男女別などカテゴリー別にデータを作成したい場合、split関数でデータフレームを分割できる。そこから男女別のデータを作成する。</p>
+<pre class="r"><code>dt_gender &lt;- split(dt,dt$gender) #男女別のリストを含むデータの作成
+dt_man &lt;- dt_gender$男 #男のみのデータ作成
+dt_woman &lt;- dt_gender$女 #女のみのデータ作成</code></pre>
+</div>
+<div id="データフレームの結合" class="section level2">
+<h2>10. データフレームの結合</h2>
+<div id="縦結合" class="section level3">
+<h3>10-1 縦結合</h3>
+<pre class="r"><code>dt_bind &lt;- rbind(dt_man,dt_woman) #同じ変数（列数）をもつデータフレームを結合
+knitr::kable(dt_bind)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">ID</th>
+<th align="right">age</th>
+<th align="left">gender</th>
+<th align="left">blood_type</th>
+<th align="left">test</th>
+<th align="left">blood_typef</th>
+<th align="left">agec</th>
+<th align="right">age_sd</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">42</td>
+<td align="left">男性</td>
+<td align="left">A</td>
+<td align="left">不可</td>
+<td align="left">A型</td>
+<td align="left">40~50歳</td>
+<td align="right">0.0733571</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">14</td>
+<td align="left">男性</td>
+<td align="left">B</td>
+<td align="left">可</td>
+<td align="left">B型</td>
+<td align="left">20歳未満</td>
+<td align="right">-0.0692817</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="right">28</td>
+<td align="left">女性</td>
+<td align="left">AB</td>
+<td align="left">良</td>
+<td align="left">O型</td>
+<td align="left">20~30歳</td>
+<td align="right">0.0020377</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="right">41</td>
+<td align="left">女性</td>
+<td align="left">O</td>
+<td align="left">優</td>
+<td align="left">AB型</td>
+<td align="left">40~50歳</td>
+<td align="right">0.0682629</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="横結合" class="section level3">
+<h3>10-2 横結合</h3>
+<pre class="r"><code>dt_df &lt;- data.frame(dt_man,dt_woman) #同じデータ数（行）をもつデータフレームを結合
+knitr::kable(dt_df)</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="2%" />
+<col width="2%" />
+<col width="5%" />
+<col width="8%" />
+<col width="3%" />
+<col width="8%" />
+<col width="6%" />
+<col width="8%" />
+<col width="3%" />
+<col width="4%" />
+<col width="6%" />
+<col width="9%" />
+<col width="5%" />
+<col width="10%" />
+<col width="5%" />
+<col width="7%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">ID</th>
+<th align="right">age</th>
+<th align="left">gender</th>
+<th align="left">blood_type</th>
+<th align="left">test</th>
+<th align="left">blood_typef</th>
+<th align="left">agec</th>
+<th align="right">age_sd</th>
+<th align="right">ID.1</th>
+<th align="right">age.1</th>
+<th align="left">gender.1</th>
+<th align="left">blood_type.1</th>
+<th align="left">test.1</th>
+<th align="left">blood_typef.1</th>
+<th align="left">agec.1</th>
+<th align="right">age_sd.1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">42</td>
+<td align="left">男性</td>
+<td align="left">A</td>
+<td align="left">不可</td>
+<td align="left">A型</td>
+<td align="left">40~50歳</td>
+<td align="right">0.0733571</td>
+<td align="right">3</td>
+<td align="right">28</td>
+<td align="left">女性</td>
+<td align="left">AB</td>
+<td align="left">良</td>
+<td align="left">O型</td>
+<td align="left">20~30歳</td>
+<td align="right">0.0020377</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">14</td>
+<td align="left">男性</td>
+<td align="left">B</td>
+<td align="left">可</td>
+<td align="left">B型</td>
+<td align="left">20歳未満</td>
+<td align="right">-0.0692817</td>
+<td align="right">4</td>
+<td align="right">41</td>
+<td align="left">女性</td>
+<td align="left">O</td>
+<td align="left">優</td>
+<td align="left">AB型</td>
+<td align="left">40~50歳</td>
+<td align="right">0.0682629</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="柔軟な縦結合" class="section level3">
+<h3>10-3 柔軟な縦結合</h3>
+<p>　データ間の対象者数が異なったり、追加データを元データに結合したい場合がある。そのような場合はmerge関数を使用する。デフォルトでは同じ列名を探し、縦に結合する。以下ではIDが3~5の対象者の血圧データを元のデータに追加してみる。</p>
+<pre class="r"><code>dt_add &lt;- data.frame(ID=3:5,bp=c(140,151,132))
+dt_merge &lt;- merge(dt[1:2],dt_add,all=TRUE,by=&quot;ID&quot;) 
+knitr::kable(dt_merge)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">ID</th>
+<th align="right">age</th>
+<th align="right">bp</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">42</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">14</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="right">28</td>
+<td align="right">140</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="right">41</td>
+<td align="right">151</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="right">13</td>
+<td align="right">132</td>
+</tr>
+</tbody>
+</table>
+<p>　all=TRUEを指定しないと、共通ID以外が結合されない。そのため以下では、元データと追加データの共通IDである、IDが3~5の対象者のみが結合されている。したがってよほどのことが無い限り、all=TRUEを指定すべき。</p>
+<pre class="r"><code>dt_merge1 &lt;- merge(dt[1:2],dt_add,by=&quot;ID&quot;) 
+knitr::kable(dt_merge1)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">ID</th>
+<th align="right">age</th>
+<th align="right">bp</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">3</td>
+<td align="right">28</td>
+<td align="right">140</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="right">41</td>
+<td align="right">151</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="right">13</td>
+<td align="right">132</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th>merge関数</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>x,y</td>
+<td>データフレーム名</td>
+</tr>
+<tr class="even">
+<td>by=列名　 　</td>
+<td>結合のために参照する列名の指定</td>
+</tr>
+<tr class="odd">
+<td>by.x(by.y)=列名</td>
+<td>結合のために参照する列名の指定（xとyで異なる列名でも可）</td>
+</tr>
+<tr class="even">
+<td>all=T/F</td>
+<td>共通ID以外も結合する(FALSEで共通ID以外結合されない)</td>
+</tr>
+<tr class="odd">
+<td>all.x(all.y)=T/F</td>
+<td>どちらのデータを残すかの指定（all.x：左結合、all.y：右結合）</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="並び替え" class="section level2">
+<h2>11. 並び替え</h2>
+<p>　ソートで有名なのはorder関数。指定した変数で昇順ソートし、行番号を返してくれる。その後得た行番号のオブジェクトをデータフレームの第1引数（行番号）に渡すことで、対象データをソートできる。</p>
+<pre class="r"><code>sort_test &lt;- order(dt$test) #ソートしたときの行番号をオブジェクトに格納
+dt_order &lt;- dt[sort_test,]  #元データをテスト成績でソート（dt[行,列]による）
+dt_order</code></pre>
+<pre><code>##   ID age gender blood_type test blood_typef     agec       age_sd
+## 1  1  42   男性          A 不可         A型  40~50歳  0.073357106
+## 2  2  14   男性          B   可         B型 20歳未満 -0.069281712
+## 5  5  13   &lt;NA&gt;          A   可         A型 20歳未満 -0.074375955
+## 3  3  28   女性         AB   良         O型  20~30歳  0.002037697
+## 4  4  41   女性          O   優        AB型  40~50歳  0.068262863</code></pre>
+<p>　因みにデータを見ると元々の行番号が表示されている。行番号を変更したい場合は以下のようにする。</p>
+<pre class="r"><code>rownames(dt_order) &lt;- c(1:nrow(dt_order))
+dt_order</code></pre>
+<pre><code>##   ID age gender blood_type test blood_typef     agec       age_sd
+## 1  1  42   男性          A 不可         A型  40~50歳  0.073357106
+## 2  2  14   男性          B   可         B型 20歳未満 -0.069281712
+## 3  5  13   &lt;NA&gt;          A   可         A型 20歳未満 -0.074375955
+## 4  3  28   女性         AB   良         O型  20~30歳  0.002037697
+## 5  4  41   女性          O   優        AB型  40~50歳  0.068262863</code></pre>
+</div>
+<div id="リストとデータフレームの相互変換" class="section level2">
+<h2>12. リストとデータフレームの相互変換</h2>
+<p>　分析方法によってはリストとデータフレームを相互に変換することが必要な場合がある。最も簡単なのはas.list関数とas.data.frame関数。</p>
+<pre class="r"><code>list &lt;- as.list(dt)  #変数ごとのベクトルをもつリストの作成
+dt_dataframe &lt;- as.data.frame(list)  #リストからデータフレームに変換</code></pre>
+<p>　またstack関数によってリストからデータフレームに変換することも可能。</p>
+<pre class="r"><code>list1 &lt;- list(Man=c(30,40,50),Woman=c(30,41,46))
+list1</code></pre>
+<pre><code>## $Man
+## [1] 30 40 50
+## 
+## $Woman
+## [1] 30 41 46</code></pre>
+<pre class="r"><code>dt_gender &lt;- stack(list1)
+dt_gender</code></pre>
+<pre><code>##   values   ind
+## 1     30   Man
+## 2     40   Man
+## 3     50   Man
+## 4     30 Woman
+## 5     41 Woman
+## 6     46 Woman</code></pre>
+</div>
+<div id="対応のあるデータの転置" class="section level2">
+<h2>13. 対応のあるデータの転置</h2>
+<p>　経時測定データを扱う場合、各列でそれぞれの時点の測定値を示している場合がある。しかしこの形式では統計解析を行うことはできない。解析を行うためには、各測定時点の値を一つの変数にまとめる必要がある（データの転置）。</p>
+<pre class="r"><code>dt_time &lt;- data.frame(ID=1:5,   #血圧の経時データの作成
+                      week.1=round(rnorm(5,140,10)),
+                      week.2=round(rnorm(5,135,10)),
+                      week.3=round(rnorm(5,130,10)))
+knitr::kable(dt_time)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">ID</th>
+<th align="right">week.1</th>
+<th align="right">week.2</th>
+<th align="right">week.3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">130</td>
+<td align="right">131</td>
+<td align="right">142</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">127</td>
+<td align="right">137</td>
+<td align="right">126</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="right">133</td>
+<td align="right">147</td>
+<td align="right">148</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="right">120</td>
+<td align="right">134</td>
+<td align="right">146</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="right">134</td>
+<td align="right">146</td>
+<td align="right">130</td>
+</tr>
+</tbody>
+</table>
+<p>　データの転置で便利なのはreshape関数。stack関数よりも柔軟なデータ編集が可能。以下ではlong形式のデータからwide形式のデータに変換している。各時点の変数名が“変数名.数値”でないと転置できないことに注意。</p>
+<pre class="r"><code>dt_time1 &lt;- reshape(dt_time,idvar=&quot;ID&quot;,
+                    varying = 2:4,direction=&quot;long&quot;,
+                    v.names=&quot;Week&quot;)
+knitr::kable(dt_time1)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">ID</th>
+<th align="right">time</th>
+<th align="right">Week</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1.1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">130</td>
+</tr>
+<tr class="even">
+<td align="left">2.1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">127</td>
+</tr>
+<tr class="odd">
+<td align="left">3.1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">133</td>
+</tr>
+<tr class="even">
+<td align="left">4.1</td>
+<td align="right">4</td>
+<td align="right">1</td>
+<td align="right">120</td>
+</tr>
+<tr class="odd">
+<td align="left">5.1</td>
+<td align="right">5</td>
+<td align="right">1</td>
+<td align="right">134</td>
+</tr>
+<tr class="even">
+<td align="left">1.2</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">131</td>
+</tr>
+<tr class="odd">
+<td align="left">2.2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">137</td>
+</tr>
+<tr class="even">
+<td align="left">3.2</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">147</td>
+</tr>
+<tr class="odd">
+<td align="left">4.2</td>
+<td align="right">4</td>
+<td align="right">2</td>
+<td align="right">134</td>
+</tr>
+<tr class="even">
+<td align="left">5.2</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">146</td>
+</tr>
+<tr class="odd">
+<td align="left">1.3</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">142</td>
+</tr>
+<tr class="even">
+<td align="left">2.3</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">126</td>
+</tr>
+<tr class="odd">
+<td align="left">3.3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">148</td>
+</tr>
+<tr class="even">
+<td align="left">4.3</td>
+<td align="right">4</td>
+<td align="right">3</td>
+<td align="right">146</td>
+</tr>
+<tr class="odd">
+<td align="left">5.3</td>
+<td align="right">5</td>
+<td align="right">3</td>
+<td align="right">130</td>
+</tr>
+</tbody>
+</table>
+<p>　またlongからwideへ、逆の形式への変換も可能。timevar引数で時点を示す変数を指定する（week1~3を含むtime変数）。</p>
+<pre class="r"><code>dt_time2 &lt;- reshape(dt_time1,idvar=&quot;ID&quot;,timevar=&quot;time&quot;,direction=&quot;wide&quot;)
+knitr::kable(dt_time2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">ID</th>
+<th align="right">Week.1</th>
+<th align="right">Week.2</th>
+<th align="right">Week.3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1.1</td>
+<td align="right">1</td>
+<td align="right">130</td>
+<td align="right">131</td>
+<td align="right">142</td>
+</tr>
+<tr class="even">
+<td align="left">2.1</td>
+<td align="right">2</td>
+<td align="right">127</td>
+<td align="right">137</td>
+<td align="right">126</td>
+</tr>
+<tr class="odd">
+<td align="left">3.1</td>
+<td align="right">3</td>
+<td align="right">133</td>
+<td align="right">147</td>
+<td align="right">148</td>
+</tr>
+<tr class="even">
+<td align="left">4.1</td>
+<td align="right">4</td>
+<td align="right">120</td>
+<td align="right">134</td>
+<td align="right">146</td>
+</tr>
+<tr class="odd">
+<td align="left">5.1</td>
+<td align="right">5</td>
+<td align="right">134</td>
+<td align="right">146</td>
+<td align="right">130</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th>reshape関数</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>data</td>
+<td>データフレーム名</td>
+</tr>
+<tr class="even">
+<td>idvar=識別変数</td>
+<td>対象者やデータを識別するための変数の指定</td>
+</tr>
+<tr class="odd">
+<td>varying=転置したい変数</td>
+<td>転置する変数の指定（ID以外の各時点の変数：“列名.数値”）</td>
+</tr>
+<tr class="even">
+<td>direction=“long”“wide”</td>
+<td>作成する形式の指定（long:各時点が1列、wide:各時点が複数列）</td>
+</tr>
+<tr class="odd">
+<td>v.names=列名</td>
+<td>widw形式からlong形式への変更で作成される変数名の指定</td>
+</tr>
+<tr class="even">
+<td>timevar=時点を示す変数</td>
+<td>long→wideで転置する変数を指定（時点変数）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="クロス集計表の作成と元データの復元" class="section level2">
+<h2>14. クロス集計表の作成と元データの復元</h2>
+<p>　カテゴリカルなアウトカムを含むデータの場合、クロス集計表の作成は必須。xtabs関数、table関数でクロス集計表を生成することができる。まずは単純な2変数の度数集計から。</p>
+<pre class="r"><code>ct1 &lt;- xtabs(~gender+test, data = dt) #性別とテスト成績の度数集計
+      # table(dt$gender,dt$test)も同じ結果
+knitr::kable(ct1)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">不可</th>
+<th align="right">可</th>
+<th align="right">良</th>
+<th align="right">優</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">男性</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">女性</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+<p>　～は等号=と同じであり、度数=性別＋成績という方程式を表現している。因みに～の右辺に変数を加えると、3次元以上のクロス集計が可能（使うことはほとんどない）。</p>
+<p>　またクロス集計から元データの復元には、data.frame関数でデータフレームに変換するのが分かりやすい。</p>
+<pre class="r"><code>df1 &lt;- data.frame(ct1)
+knitr::kable(df1)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">gender</th>
+<th align="left">test</th>
+<th align="right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">男性</td>
+<td align="left">不可</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">女性</td>
+<td align="left">不可</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">男性</td>
+<td align="left">可</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">女性</td>
+<td align="left">可</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">男性</td>
+<td align="left">良</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">女性</td>
+<td align="left">良</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">男性</td>
+<td align="left">優</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">女性</td>
+<td align="left">優</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+<p>　しかしこれだけでは、Freqという変数が邪魔であるし、Freq=0の行も除きたいところ。そこでdata.frameとlapplyにより、邪魔なFreqの列とFewq=0の行を除外する。</p>
+<pre class="r"><code>data.frame(lapply(df1, function(i) rep(i,df1[, &quot;Freq&quot;]))) [-3]</code></pre>
+<pre><code>##   gender test
+## 1   男性 不可
+## 2   男性   可
+## 3   女性   良
+## 4   女性   優</code></pre>
+<pre class="r"><code># function(i)で行数をカウント、rep関数でFreqの数値分対象行を繰り返す（Freq=0の除外）
+# df1[, &quot;Freq&quot;]はFreqという名前の列にある数値を指定
+# [-3]で3列目の変数を除外</code></pre>
+</div>

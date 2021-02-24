@@ -97,4 +97,4 @@ params:
   sidebarBehavior: 1
   syntaxHighlighter: highlight.js
   thumbnailImage: yes
-  thumbnailImagePosition: bottom
+  thumbnailImagePosition: left

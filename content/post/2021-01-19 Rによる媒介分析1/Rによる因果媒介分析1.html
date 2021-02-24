@@ -5,8 +5,9 @@ categories:
 - 因果媒介分析
 - R
 - 解析コード
-thumbnailImage: https://images.springer.com/sgw/books/medium/9781441917638.jpg
+thumbnailImage: https://n1.sdlcdn.com/imgs/e/a/a/Advances-in-Social-Science-Research-SDL679544219-1-c945e.jpg
 thumbnailImagePosition: left
+summary: Baron-Kenny法による因果媒介分析のまとめ。統計ソフトRで実際に解析を行い、Imai論文を参考に結果を解釈してみた。
 ---
 
 <link href="Rによる因果媒介分析1_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
@@ -73,13 +74,11 @@ summary(m.out)</code></pre>
 ## 
 ## Nonparametric Bootstrap Confidence Intervals with the Percentile Method
 ## 
-##                Estimate 95% CI Lower 95% CI Upper p-value  
-## ACME            -0.0137      -0.0336         0.00   0.098 .
-## ADE             -0.0368      -0.1190         0.04   0.328  
-## Total Effect    -0.0505      -0.1321         0.03   0.172  
-## Prop. Mediated   0.2718      -1.3054         2.82   0.230  
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+##                Estimate 95% CI Lower 95% CI Upper p-value
+## ACME            -0.0137      -0.0336         0.00    0.10
+## ADE             -0.0368      -0.1096         0.04    0.41
+## Total Effect    -0.0505      -0.1272         0.03    0.25
+## Prop. Mediated   0.2718      -1.7799         2.68    0.30
 ## 
 ## Sample Size Used: 899 
 ## 
