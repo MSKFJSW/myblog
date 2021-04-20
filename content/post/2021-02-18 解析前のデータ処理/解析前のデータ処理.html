@@ -52,6 +52,7 @@ coverCaption: "A short caption (Source: Source)"
 <li><a href="#リストとデータフレームの相互変換">12. リストとデータフレームの相互変換</a></li>
 <li><a href="#対応のあるデータの転置">13. 対応のあるデータの転置</a></li>
 <li><a href="#クロス集計表の作成と元データの復元">14. クロス集計表の作成と元データの復元</a></li>
+<li><a href="#参考文献">参考文献</a></li>
 </ul>
 </div>
 
@@ -377,19 +378,22 @@ knitr::kable(dt_age)</code></pre>
 </div>
 <div id="新しいデータフレームサブセットの作成" class="section level2">
 <h2>8. 新しいデータフレーム（サブセット）の作成</h2>
-<p>　実際のデータ処理では、解析をスムーズにするためにデータの量を減らしたり、欠測値を除外するといった作業を行うことがよくある。そこで以下では特定の変数のみを含むデータの作成、条件を満たすデータの取り出し、という操作を行ってみる。</p>
+<p>　実際のデータ処理では、データ量を減らしたり目的の解析を行うため、サブセット（指定した条件を満たすデータ）を作成することが多い。特に研究では、欠測の除外、閾値を超える対象者の絞り込み、性別などのカテゴリ別のデータ作成、などサブセットを作成する過程が非常に多い。</p>
 <div id="指定した変数のサブセット作成" class="section level3">
 <h3>8-1 指定した変数のサブセット作成</h3>
+<p>　特定の変数のみを含むサブセットを作成する。主にデータ量を減らしたり、データを見やすくする目的で行う。</p>
 <pre class="r"><code>dt1 &lt;- dt[1,2]  #1,2列目変数を含むデータの作成
 dt1 &lt;- data.frame(dt$age,dt$gender,dt$blood_type,dt$test)
 # age,gender,blood_type,testを含むデータの作成</code></pre>
 </div>
 <div id="条件を満たすサブセットの作成" class="section level3">
 <h3>8-2 条件を満たすサブセットの作成</h3>
+<p>　特定の連続変数に対して、比較演算子による条件を満たしたサブセットを作成する。</p>
 <pre class="r"><code>dt2 &lt;- subset(dt,age&gt;20) #20歳以上の者だけのデータ作成</code></pre>
 </div>
 <div id="欠測値の除外" class="section level3">
 <h3>8-3 欠測値の除外</h3>
+<p>　欠測の除外には以下の2つの方法がある。</p>
 <pre class="r"><code>dt3 &lt;- subset(dt,complete.cases(dt))  #一つでも欠測のある者を除外
 dt3 &lt;- na.omit(dt)</code></pre>
 </div>
@@ -403,8 +407,10 @@ dt_woman &lt;- dt_gender$女 #女のみのデータ作成</code></pre>
 </div>
 <div id="データフレームの結合" class="section level2">
 <h2>10. データフレームの結合</h2>
+<p>　データをいじっていると複数のデータを結合したくなる場合がある。追加の対象者データを元データに統合したい場合は縦結合、同じ対象者の異なる変数のデータを追加したい場合は横結合を行う。</p>
 <div id="縦結合" class="section level3">
 <h3>10-1 縦結合</h3>
+<p>　結合するデータに同じ変数が含まれていれば、以下の記述で結合が可能。</p>
 <pre class="r"><code>dt_bind &lt;- rbind(dt_man,dt_woman) #同じ変数（列数）をもつデータフレームを結合
 knitr::kable(dt_bind)</code></pre>
 <table>
@@ -466,6 +472,7 @@ knitr::kable(dt_bind)</code></pre>
 </div>
 <div id="横結合" class="section level3">
 <h3>10-2 横結合</h3>
+<p>　結合するデータに同じ対象者（行数）があれば、以下の記述で結合が可能。</p>
 <pre class="r"><code>dt_df &lt;- data.frame(dt_man,dt_woman) #同じデータ数（行）をもつデータフレームを結合
 knitr::kable(dt_df)</code></pre>
 <table style="width:100%;">
@@ -549,7 +556,7 @@ knitr::kable(dt_df)</code></pre>
 </div>
 <div id="柔軟な縦結合" class="section level3">
 <h3>10-3 柔軟な縦結合</h3>
-<p>　データ間の対象者数が異なったり、追加データを元データに結合したい場合がある。そのような場合はmerge関数を使用する。デフォルトでは同じ列名を探し、縦に結合する。以下ではIDが3~5の対象者の血圧データを元のデータに追加してみる。</p>
+<p>　データ間の対象者数が異なったり、異なる変数データを元データに結合したい場合、上記の方法では結合できない。そのような場合はmerge関数を使用する。デフォルトでは同じ列名を探し、縦に結合する。以下ではIDが3~5の対象者の血圧データを元のデータに追加してみる。</p>
 <pre class="r"><code>dt_add &lt;- data.frame(ID=3:5,bp=c(140,151,132))
 dt_merge &lt;- merge(dt[1:2],dt_add,all=TRUE,by=&quot;ID&quot;) 
 knitr::kable(dt_merge)</code></pre>
@@ -1036,4 +1043,8 @@ knitr::kable(df1)</code></pre>
 <pre class="r"><code># function(i)で行数をカウント、rep関数でFreqの数値分対象行を繰り返す（Freq=0の除外）
 # df1[, &quot;Freq&quot;]はFreqという名前の列にある数値を指定
 # [-3]で3列目の変数を除外</code></pre>
+</div>
+<div id="参考文献" class="section level2">
+<h2>参考文献</h2>
+<p>・<a href="https://www.amazon.co.jp/R%E3%81%AB%E3%82%88%E3%82%8B%E7%B5%B1%E8%A8%88%E8%A7%A3%E6%9E%90-%E9%9D%92%E6%9C%A8-%E7%B9%81%E4%BC%B8/dp/4274067572">Rによる統計解析, 青木繁伸, 2009年, オーム社</a></p>
 </div>

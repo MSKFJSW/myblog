@@ -1,0 +1,96 @@
+---
+title: "Rによる因果媒介分析2 Non/Semiparametricな方法"
+date: 2021-02-25
+categories:
+- 因果媒介分析
+- R
+summary: Rによる因果媒介分析のまとめ2回目。今回はアウトカムが2値変数の場合を扱う。
+output:
+  blogdown::html_page:
+    toc: TRUE
+    css: "/css/custom.css"
+thumbnailImage: https://n1.sdlcdn.com/imgs/e/a/a/Advances-in-Social-Science-Research-SDL679544219-1-c945e.jpg
+thumbnailImagePosition: left
+coverImage: http://tabisaku.cocolog-nifty.com/photo/pic/i023_w4.jpg
+coverSize: partial
+coverCaption: "A short caption (Source: Source)"
+---
+
+　今回は2値アウトカムに対する因果媒介分析を扱う。医学分野では解釈を容易にするため、カテゴリ化されたアウトカムを使用することが多い。カテゴリー変数をアウトカムとする場合、解析に使用するモデルもロジスティックやプロビットなどにする必要がある。前回と同様に解析と感度分析を行い、結果の解釈を行ってみる。
+    
+　前回と同様jobsデータを使用。介入をtreat、媒介変数をjob_seek、アウトカムをdepress2（介入後の抑うつ症状：Hopkins Symptom Checklist）、交絡変数をecon_hard（経済的困難）・sex・ageとする。
+
+　まずはデータの読み込みから。
+```{r message=F}
+library(mediation)
+data("jobs")
+```
+
+## 連続媒介変数 + 2値アウトカム 
+　媒介変数を応答変数とした重回帰分析を行う。これはBaron-Kenny法と同様。
+```{r}
+m.con <- lm(job_seek ~ treat + econ_hard + sex + age, data=jobs)
+```
+
+　2値アウトカムwork1を応答変数、連続媒介変数job_seekと曝露変数treatを説明変数として、プロビット回帰を行う。glm関数を使用し、family引数でアウトカムに対して仮定する分布とリンク関数を指定できる（2値変数は2項分布に従うためbinomial、リンク関数はプロビット回帰）。
+```{r}
+o.bin <- glm(work1 ~ treat + job_seek + econ_hard + sex + age, 
+                 family=binomial(link="probit"),data=jobs)
+```
+
+```{r}
+conbin <- mediate(m.con, o.bin, sims=50, boot=TRUE,
+                  treat="treat", mediator="job_seek")
+summary(conbin)
+plot(conbin)
+```
+
+## 2値媒介変数 + 2値アウトカム
+　媒介変数とアウトカムがともに2値変数の場合、両モデルにプロビット回帰を使用。
+```{r}
+m.bin <- glm(job_dich ~ treat + econ_hard + sex + age, 
+                 family=binomial(link="probit"),data=jobs)
+```
+
+```{r}
+o.bin <- glm(work1 ~ treat + job_dich + econ_hard + sex + age, 
+                 family=binomial(link="probit"),data=jobs)
+```
+
+```{r}
+binbin <- mediate(m.bin, o.bin, sims=50, boot=TRUE, 
+                  treat="treat", mediator="job_dich")
+summary(binbin)
+plot(binbin)
+```
+
+```{r}
+m.binl <- glm(job_dich ~ treat + econ_hard + sex + age, 
+                 family=binomial(link="logit"),data=jobs)
+```
+
+```{r}
+o.binl <- glm(work1 ~ treat + job_dich + econ_hard + sex + age, 
+                 family=binomial(link="logit"),data=jobs)
+```
+
+```{r}
+binbinl <- mediate(m.binl, o.binl, sims=50, boot=TRUE, 
+                  treat="treat", mediator="job_dich")
+summary(binbinl)
+plot(binbinl)
+```
+
+## 解析可能な媒介変数・アウトカムの組み合わせ
+　Rのmediationパッケージで解析可能な変数型の組み合わせを以下に示す。順序アウトカムの解析は不可能であることに注意する必要がある。
+
+
+|               |連続アウトカム|順序アウトカム|2値アウトカム|
+|---------------|--------------|--------------|-------------|
+|媒介変数：連続 |       ○   　 |×             |       ○     |
+|媒介変数：順序 |       ○      |×             |       ×     |       　
+|媒介変数：2値  |       ○      |×             |       ○     |
+
+
+
+

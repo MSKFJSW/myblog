@@ -1,0 +1,176 @@
+---
+title: "Rによる因果媒介分析2 Non/Semiparametricな方法"
+date: 2021-02-25
+categories:
+- 因果媒介分析
+- R
+summary: Rによる因果媒介分析のまとめ2回目。今回はアウトカムが2値変数の場合を扱う。
+output:
+  blogdown::html_page:
+    toc: TRUE
+    css: "/css/custom.css"
+thumbnailImage: https://n1.sdlcdn.com/imgs/e/a/a/Advances-in-Social-Science-Research-SDL679544219-1-c945e.jpg
+thumbnailImagePosition: left
+coverImage: http://tabisaku.cocolog-nifty.com/photo/pic/i023_w4.jpg
+coverSize: partial
+coverCaption: "A short caption (Source: Source)"
+---
+
+<link href="Rによる因果媒介分析2_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="Rによる因果媒介分析2_files/anchor-sections/anchor-sections.js"></script>
+  <link rel="stylesheet" href="/css/custom.css" type="text/css" />
+
+<div id="TOC">
+<ul>
+<li><a href="#連続媒介変数-2値アウトカム">連続媒介変数 + 2値アウトカム</a></li>
+<li><a href="#値媒介変数-2値アウトカム">2値媒介変数 + 2値アウトカム</a></li>
+<li><a href="#解析可能な媒介変数アウトカムの組み合わせ">解析可能な媒介変数・アウトカムの組み合わせ</a></li>
+</ul>
+</div>
+
+<p>　今回は2値アウトカムに対する因果媒介分析を扱う。医学分野では解釈を容易にするため、カテゴリ化されたアウトカムを使用することが多い。カテゴリー変数をアウトカムとする場合、解析に使用するモデルもロジスティックやプロビットなどにする必要がある。前回と同様に解析と感度分析を行い、結果の解釈を行ってみる。</p>
+<p>　前回と同様jobsデータを使用。介入をtreat、媒介変数をjob_seek、アウトカムをdepress2（介入後の抑うつ症状：Hopkins Symptom Checklist）、交絡変数をecon_hard（経済的困難）・sex・ageとする。</p>
+<p>　まずはデータの読み込みから。</p>
+<pre class="r"><code>library(mediation)
+data(&quot;jobs&quot;)</code></pre>
+<div id="連続媒介変数-2値アウトカム" class="section level2">
+<h2>連続媒介変数 + 2値アウトカム</h2>
+<p>　媒介変数を応答変数とした重回帰分析を行う。これはBaron-Kenny法と同様。</p>
+<pre class="r"><code>m.con &lt;- lm(job_seek ~ treat + econ_hard + sex + age, data=jobs)</code></pre>
+<p>　2値アウトカムwork1を応答変数、連続媒介変数job_seekと曝露変数treatを説明変数として、プロビット回帰を行う。glm関数を使用し、family引数でアウトカムに対して仮定する分布とリンク関数を指定できる（2値変数は2項分布に従うためbinomial、リンク関数はプロビット回帰）。</p>
+<pre class="r"><code>o.bin &lt;- glm(work1 ~ treat + job_seek + econ_hard + sex + age, 
+                 family=binomial(link=&quot;probit&quot;),data=jobs)</code></pre>
+<pre class="r"><code>conbin &lt;- mediate(m.con, o.bin, sims=50, boot=TRUE,
+                  treat=&quot;treat&quot;, mediator=&quot;job_seek&quot;)</code></pre>
+<pre><code>## Running nonparametric bootstrap</code></pre>
+<pre class="r"><code>summary(conbin)</code></pre>
+<pre><code>## 
+## Causal Mediation Analysis 
+## 
+## Nonparametric Bootstrap Confidence Intervals with the Percentile Method
+## 
+##                           Estimate 95% CI Lower 95% CI Upper p-value  
+## ACME (control)            0.002656    -0.000435         0.01    0.24  
+## ACME (treated)            0.002857    -0.000477         0.01    0.24  
+## ADE (control)             0.054081     0.005939         0.13    0.04 *
+## ADE (treated)             0.054281     0.005959         0.13    0.04 *
+## Total Effect              0.056937     0.007831         0.13    0.04 *
+## Prop. Mediated (control)  0.046642    -0.007566         0.33    0.28  
+## Prop. Mediated (treated)  0.050171    -0.008331         0.34    0.28  
+## ACME (average)            0.002756    -0.000456         0.01    0.24  
+## ADE (average)             0.054181     0.005949         0.13    0.04 *
+## Prop. Mediated (average)  0.048406    -0.007948         0.34    0.28  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Sample Size Used: 899 
+## 
+## 
+## Simulations: 50</code></pre>
+<pre class="r"><code>plot(conbin)</code></pre>
+<p><img src="/post/2021-02-25 Rによる因果媒介分析2/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%902_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div id="値媒介変数-2値アウトカム" class="section level2">
+<h2>2値媒介変数 + 2値アウトカム</h2>
+<p>　媒介変数とアウトカムがともに2値変数の場合、両モデルにプロビット回帰を使用。</p>
+<pre class="r"><code>m.bin &lt;- glm(job_dich ~ treat + econ_hard + sex + age, 
+                 family=binomial(link=&quot;probit&quot;),data=jobs)</code></pre>
+<pre class="r"><code>o.bin &lt;- glm(work1 ~ treat + job_dich + econ_hard + sex + age, 
+                 family=binomial(link=&quot;probit&quot;),data=jobs)</code></pre>
+<pre class="r"><code>binbin &lt;- mediate(m.bin, o.bin, sims=50, boot=TRUE, 
+                  treat=&quot;treat&quot;, mediator=&quot;job_dich&quot;)</code></pre>
+<pre><code>## Running nonparametric bootstrap</code></pre>
+<pre class="r"><code>summary(binbin)</code></pre>
+<pre><code>## 
+## Causal Mediation Analysis 
+## 
+## Nonparametric Bootstrap Confidence Intervals with the Percentile Method
+## 
+##                           Estimate 95% CI Lower 95% CI Upper p-value    
+## ACME (control)            0.004314    -0.001259         0.01    0.24    
+## ACME (treated)            0.004675    -0.001393         0.01    0.24    
+## ADE (control)             0.052207    -0.000406         0.11    0.08 .  
+## ADE (treated)             0.052568    -0.000413         0.11    0.08 .  
+## Total Effect              0.056882     0.011674         0.11  &lt;2e-16 ***
+## Prop. Mediated (control)  0.075838    -0.018736         1.30    0.24    
+## Prop. Mediated (treated)  0.082184    -0.020017         1.30    0.24    
+## ACME (average)            0.004494    -0.001326         0.01    0.24    
+## ADE (average)             0.052388    -0.000409         0.11    0.08 .  
+## Prop. Mediated (average)  0.079011    -0.019321         1.30    0.24    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Sample Size Used: 899 
+## 
+## 
+## Simulations: 50</code></pre>
+<pre class="r"><code>plot(binbin)</code></pre>
+<p><img src="/post/2021-02-25 Rによる因果媒介分析2/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%902_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code>m.binl &lt;- glm(job_dich ~ treat + econ_hard + sex + age, 
+                 family=binomial(link=&quot;logit&quot;),data=jobs)</code></pre>
+<pre class="r"><code>o.binl &lt;- glm(work1 ~ treat + job_dich + econ_hard + sex + age, 
+                 family=binomial(link=&quot;logit&quot;),data=jobs)</code></pre>
+<pre class="r"><code>binbinl &lt;- mediate(m.binl, o.binl, sims=50, boot=TRUE, 
+                  treat=&quot;treat&quot;, mediator=&quot;job_dich&quot;)</code></pre>
+<pre><code>## Running nonparametric bootstrap</code></pre>
+<pre class="r"><code>summary(binbinl)</code></pre>
+<pre><code>## 
+## Causal Mediation Analysis 
+## 
+## Nonparametric Bootstrap Confidence Intervals with the Percentile Method
+## 
+##                          Estimate 95% CI Lower 95% CI Upper p-value  
+## ACME (control)            0.00464     -0.00180         0.01    0.20  
+## ACME (treated)            0.00499     -0.00208         0.01    0.20  
+## ADE (control)             0.05123      0.00650         0.11    0.04 *
+## ADE (treated)             0.05157      0.00654         0.11    0.04 *
+## Total Effect              0.05621      0.01222         0.11    0.04 *
+## Prop. Mediated (control)  0.08258     -0.02508         0.27    0.24  
+## Prop. Mediated (treated)  0.08874     -0.02841         0.28    0.24  
+## ACME (average)            0.00482     -0.00196         0.01    0.20  
+## ADE (average)             0.05140      0.00652         0.11    0.04 *
+## Prop. Mediated (average)  0.08566     -0.02675         0.27    0.24  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Sample Size Used: 899 
+## 
+## 
+## Simulations: 50</code></pre>
+<pre class="r"><code>plot(binbinl)</code></pre>
+<p><img src="/post/2021-02-25 Rによる因果媒介分析2/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%902_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+<div id="解析可能な媒介変数アウトカムの組み合わせ" class="section level2">
+<h2>解析可能な媒介変数・アウトカムの組み合わせ</h2>
+<p>　Rのmediationパッケージで解析可能な変数型の組み合わせを以下に示す。順序アウトカムの解析は不可能であることに注意する必要がある。</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>連続アウトカム</th>
+<th>順序アウトカム</th>
+<th>2値アウトカム</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>媒介変数：連続</td>
+<td>○ 　</td>
+<td>×</td>
+<td>○</td>
+</tr>
+<tr class="even">
+<td>媒介変数：順序</td>
+<td>○</td>
+<td>×</td>
+<td>×</td>
+</tr>
+<tr class="odd">
+<td>媒介変数：2値</td>
+<td>○</td>
+<td>×</td>
+<td>○</td>
+</tr>
+</tbody>
+</table>
+</div>

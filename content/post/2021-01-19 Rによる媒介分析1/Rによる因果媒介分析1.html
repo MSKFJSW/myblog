@@ -5,14 +5,34 @@ categories:
 - 因果媒介分析
 - R
 - 解析コード
+output:
+  blogdown::html_page:
+    toc: TRUE
+    css: "/css/custom.css"
 thumbnailImage: https://n1.sdlcdn.com/imgs/e/a/a/Advances-in-Social-Science-Research-SDL679544219-1-c945e.jpg
 thumbnailImagePosition: left
-summary: Baron-Kenny法による因果媒介分析のまとめ。統計ソフトRで実際に解析を行い、Imai論文を参考に結果を解釈してみた。
+summary: Baron-Kenny法による因果媒介分析のまとめ。媒介変数・アウトカムが連続変数の場合を想定した解析方法。Rで実際に解析を行い、Imai論文を参考に結果を考察する。
 ---
 
 <link href="Rによる因果媒介分析1_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
 <script src="Rによる因果媒介分析1_files/anchor-sections/anchor-sections.js"></script>
+  <link rel="stylesheet" href="/css/custom.css" type="text/css" />
 
+<div id="TOC">
+<ul>
+<li><a href="#はじめに">はじめに</a></li>
+<li><a href="#baron-kenny法">Baron-Kenny法</a><ul>
+<li><a href="#ステップ1媒介変数に対する回帰分析">ステップ1：媒介変数に対する回帰分析</a></li>
+<li><a href="#ステップ2アウトカムに対する回帰分析">ステップ2：アウトカムに対する回帰分析</a></li>
+<li><a href="#ステップ3媒介効果の点推定値95信頼区間の推定">ステップ3：媒介効果の点推定値・95%信頼区間の推定</a></li>
+<li><a href="#ステップ4感度分析">ステップ4：感度分析</a></li>
+</ul></li>
+<li><a href="#交互作用項の検討">交互作用項の検討</a></li>
+<li><a href="#おまけセミパラメトリックな解析方法一般化加法モデル">おまけ：セミパラメトリックな解析方法（一般化加法モデル）</a></li>
+<li><a href="#終わりに">終わりに</a></li>
+<li><a href="#参考文献">参考文献</a></li>
+</ul>
+</div>
 
 <div id="はじめに" class="section level2">
 <h2>はじめに</h2>
@@ -20,23 +40,23 @@ summary: Baron-Kenny法による因果媒介分析のまとめ。統計ソフト
 </div>
 <div id="baron-kenny法" class="section level2">
 <h2>Baron-Kenny法</h2>
-<p>　Baron-Kenny法は線形モデルによって媒介効果を推定する手法。アウトカムと媒介変数を応答変数とした2回の回帰分析を行い、媒介効果を推定。
-　使用するのはRのjobsデータ（JOBS2 field experetiment）。</p>
+<p>　Baron-Kenny法は線形モデルによって媒介効果を推定する手法。アウトカムと媒介変数を応答変数とした2回の回帰分析を行い、媒介効果を推定する。<br />
+　今回解析に使用するのはmediationパッケージに入っている、jobsデータ（就職活動に対する介入調査：JOBSⅡ field experetiment）。1801人の非雇用者が事前に質問紙調査を受け、ランダムに介入群と対照群に割り付けられた。介入群は職業技能ワークショップに参加し、対照群は就職活動についてのブックレットが配布された。後にインタビュー調査が行われ、アウトカムとして介入後の抑うつ症状（Hopkins Symptom Checklistスコア）、媒介変数として就職活動自己効力感（連続変数）が測定された。以下では、介入をtreat、媒介変数をjob_seek、アウトカムをdepress2、交絡変数をecon_hard（経済的苦痛）・sex・ageとする。</p>
 <pre class="r"><code>library(mediation)
 data(&quot;jobs&quot;)</code></pre>
 <div id="ステップ1媒介変数に対する回帰分析" class="section level3">
 <h3>ステップ1：媒介変数に対する回帰分析</h3>
 <p>　まず媒介変数を応答変数、曝露変数と交絡因子を説明変数とした回帰分析を行う。</p>
-<pre class="r"><code>model.m &lt;- lm(job_seek~treat+depress1+econ_hard+sex+age+occp+marital+nonwhite+educ+income, data=jobs)</code></pre>
+<pre class="r"><code>model.m &lt;- lm(job_seek ~ treat + econ_hard + sex + age, data=jobs)</code></pre>
 </div>
 <div id="ステップ2アウトカムに対する回帰分析" class="section level3">
 <h3>ステップ2：アウトカムに対する回帰分析</h3>
 <p>　次にアウトカムを応答変数、曝露変数、媒介変数、交絡因子を説明変数として回帰分析を実施。</p>
-<pre class="r"><code>model.y &lt;- lm(depress2~treat+job_seek+depress1+econ_hard+sex+age+occp+marital+nonwhite+educ+income, data=jobs)</code></pre>
+<pre class="r"><code>model.y &lt;- lm(depress2 ~ treat + job_seek + econ_hard + sex + age, data=jobs)</code></pre>
 </div>
 <div id="ステップ3媒介効果の点推定値95信頼区間の推定" class="section level3">
 <h3>ステップ3：媒介効果の点推定値・95%信頼区間の推定</h3>
-<p>　上記で行った回帰分析の結果をもとに媒介効果を推定するため、mediate関数を使う。ここでは媒介効果の点推定値と95%信頼区間の推定方法について設定することができる。mediate関数でboot=TRUEとすることでノンパラメトリックブートストラップ法による信頼区間が推定可能（分布を仮定しないが膨大な計算が必要）。</p>
+<p>　上記の結果をもとに媒介効果を推定するため、mediate関数を使う。ここでは媒介効果の点推定値と95%信頼区間の推定方法について設定することができる。mediate関数でboot=TRUEとすることでノンパラメトリックブートストラップ法による信頼区間が推定可能（分布を仮定しないが膨大な計算が必要）。</p>
 <table>
 <thead>
 <tr class="header">
@@ -51,7 +71,7 @@ data(&quot;jobs&quot;)</code></pre>
 </tr>
 <tr class="even">
 <td>　　</td>
-<td>(デフォルト、boot=FALSE)準ベイズモンテカルロ法</td>
+<td>(デフォルト：boot=FALSE)準ベイズ近似による信頼区間</td>
 </tr>
 <tr class="odd">
 <td>sims=試行回数</td>
@@ -67,29 +87,57 @@ data(&quot;jobs&quot;)</code></pre>
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>m.out &lt;- mediate(model.m, model.y, boot=TRUE, sims=1000, treat=&quot;treat&quot;, mediator=&quot;job_seek&quot;)
+<div id="準ベイズ近似によるacme推定" class="section level4">
+<h4>準ベイズ近似によるACME推定。</h4>
+<pre class="r"><code>m.out &lt;- mediate(model.m, model.y, sims=50, treat=&quot;treat&quot;, mediator=&quot;job_seek&quot;)
 summary(m.out)</code></pre>
+<pre><code>## 
+## Causal Mediation Analysis 
+## 
+## Quasi-Bayesian Confidence Intervals
+## 
+##                Estimate 95% CI Lower 95% CI Upper p-value
+## ACME            -0.0146      -0.0456         0.01    0.20
+## ADE             -0.0347      -0.0902         0.05    0.40
+## Total Effect    -0.0493      -0.1258         0.04    0.24
+## Prop. Mediated   0.2501      -0.6444         4.42    0.36
+## 
+## Sample Size Used: 899 
+## 
+## 
+## Simulations: 50</code></pre>
+<pre class="r"><code>plot(m.out)</code></pre>
+<p><img src="/post/2021-01-19 Rによる媒介分析1/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%901_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div id="ノンパラメトリックブートストラップ法によるacme推定" class="section level4">
+<h4>ノンパラメトリックブートストラップ法によるACME推定</h4>
+<pre class="r"><code>m.out &lt;-  mediate(model.m, model.y, boot=TRUE, sims=50, treat=&quot;treat&quot;, mediator=&quot;job_seek&quot;)</code></pre>
+<pre><code>## Running nonparametric bootstrap</code></pre>
+<pre class="r"><code>summary(m.out)</code></pre>
 <pre><code>## 
 ## Causal Mediation Analysis 
 ## 
 ## Nonparametric Bootstrap Confidence Intervals with the Percentile Method
 ## 
 ##                Estimate 95% CI Lower 95% CI Upper p-value
-## ACME            -0.0137      -0.0336         0.00    0.10
-## ADE             -0.0368      -0.1096         0.04    0.41
-## Total Effect    -0.0505      -0.1272         0.03    0.25
-## Prop. Mediated   0.2718      -1.7799         2.68    0.30
+## ACME            -0.0157      -0.0374         0.00    0.20
+## ADE             -0.0403      -0.1103         0.03    0.32
+## Total Effect    -0.0560      -0.1293         0.01    0.24
+## Prop. Mediated   0.2811      -6.7292         1.06    0.36
 ## 
 ## Sample Size Used: 899 
 ## 
 ## 
-## Simulations: 1000</code></pre>
+## Simulations: 50</code></pre>
+<pre class="r"><code>plot(m.out)</code></pre>
+<p><img src="/post/2021-01-19 Rによる媒介分析1/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%901_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>　媒介効果(ACME)を見ると、職業技能ワークショップは就職活動の自己効力感を介して抑うつ症状に影響すると解釈できる（信頼区間が負の大部分を被覆）。</p>
+</div>
 </div>
 <div id="ステップ4感度分析" class="section level3">
 <h3>ステップ4：感度分析</h3>
-<p>　媒介分析では、曝露ーアウトカム間と媒介変数ーアウトカム間の未測定交絡が無いことが仮定される（Imaiらは“Sequential Ignorability”と定義）。しかしこの仮定は非常に厳しいもので、<strong>現実には満たされることはないと考えるべき</strong>。したがって感度分析によって、どの程度仮定が満たされていないかを定量化する必要がある。ImaiらはBaron-Kenny法・SEMによる媒介分析に対する感度分析を提案している（Imai, K. Statistical Science. 2010; Imai, K. Phycological Science. 2010）。<br />
-　感度分析はステップ1回帰分析の残差とステップ2回帰分析の残差の間の相関係数で評価を行う。残差に相関があれば、潜在的な未測定交絡がある可能性があり、推定が妥当でないことが示唆される。また残差の相関係数は解釈が難しいという問題があり、Imaiらは代わりに決定係数による感度分析を提案している（Imai, K. Statistical Science. 2010;）。決定係数により、未測定交絡によってACMEがどの程度影響を受けるかを定量化する。以下では両方の感度分析を行う。<br />
+<p>　媒介分析では、曝露ーアウトカム間と媒介変数ーアウトカム間の未測定交絡が無いことが仮定される（Imaiらは“Sequential Ignorability”と定義）。しかしこの仮定は非常に厳しいもので、<strong>現実には満たされることはないと考えるべき</strong>。したがって感度分析によって、どの程度仮定が満たされていないかを定量化する必要がある。ImaiらはBaron-Kenny法・SEMによる媒介分析に対する感度分析を提案している（Imai, K. Statistical Science. 2010; Imai, K. Phycological Science. 2010）。</p>
+<p>　感度分析はステップ1回帰分析の残差とステップ2回帰分析の残差の間の相関係数で評価を行う。残差に相関があれば、潜在的な未測定交絡がある可能性があり、推定が妥当でないことが示唆される。また残差の相関係数は解釈が難しいという問題があり、Imaiらは代わりに決定係数による感度分析を提案している（Imai, K. Statistical Science. 2010;）。決定係数により、未測定交絡によってACMEがどの程度影響を受けるかを定量化する。以下では両方の感度分析を行う。<br />
 　感度分析は以下のコードで実行できる。sens.par=“R2”で決定係数、指定しなければ相関係数による感度分析の結果がプロットされる。</p>
 <table>
 <thead>
@@ -129,46 +177,112 @@ summary(s.out)</code></pre>
 ## Sensitivity Region
 ## 
 ##        Rho    ACME 95% CI Lower 95% CI Upper R^2_M*R^2_Y* R^2_M~R^2_Y~
-##  [1,] -0.9  0.1183      -0.0274       0.2640         0.81       0.5293
-##  [2,] -0.8  0.0715      -0.0166       0.1597         0.64       0.4182
-##  [3,] -0.7  0.0489      -0.0115       0.1093         0.49       0.3202
-##  [4,] -0.6  0.0342      -0.0081       0.0766         0.36       0.2353
-##  [5,] -0.5  0.0232      -0.0057       0.0520         0.25       0.1634
-##  [6,] -0.4  0.0142      -0.0038       0.0321         0.16       0.1046
-##  [7,] -0.3  0.0064      -0.0025       0.0153         0.09       0.0588
-##  [8,] -0.2 -0.0007      -0.0049       0.0036         0.04       0.0261
-##  [9,] -0.1 -0.0073      -0.0172       0.0026         0.01       0.0065
-## [10,]  0.0 -0.0137      -0.0312       0.0037         0.00       0.0000
-## [11,]  0.1 -0.0202      -0.0453       0.0050         0.01       0.0065
-## [12,]  0.2 -0.0268      -0.0600       0.0065         0.04       0.0261
-## [13,]  0.3 -0.0338      -0.0757       0.0080         0.09       0.0588
-## [14,]  0.4 -0.0416      -0.0931       0.0098         0.16       0.1046
-## [15,]  0.5 -0.0507      -0.1132       0.0118         0.25       0.1634
-## [16,]  0.6 -0.0617      -0.1378       0.0144         0.36       0.2353
-## [17,]  0.7 -0.0764      -0.1706       0.0177         0.49       0.3202
-## [18,]  0.8 -0.0990      -0.2209       0.0229         0.64       0.4182
-## [19,]  0.9 -0.1458      -0.3252       0.0337         0.81       0.5293
+##  [1,] -0.9  0.0986      -0.0527       0.2499         0.81       0.7044
+##  [2,] -0.8  0.0581      -0.0311       0.1473         0.64       0.5565
+##  [3,] -0.7  0.0385      -0.0207       0.0978         0.49       0.4261
+##  [4,] -0.6  0.0258      -0.0139       0.0655         0.36       0.3130
+##  [5,] -0.5  0.0162      -0.0089       0.0414         0.25       0.2174
+##  [6,] -0.4  0.0084      -0.0050       0.0218         0.16       0.1391
+##  [7,] -0.3  0.0017      -0.0028       0.0061         0.09       0.0783
+##  [8,] -0.2 -0.0044      -0.0122       0.0033         0.04       0.0348
+##  [9,] -0.1 -0.0102      -0.0262       0.0059         0.01       0.0087
+## [10,]  0.0 -0.0157      -0.0402       0.0087         0.00       0.0000
+## [11,]  0.1 -0.0213      -0.0542       0.0116         0.01       0.0087
+## [12,]  0.2 -0.0270      -0.0687       0.0146         0.04       0.0348
+## [13,]  0.3 -0.0332      -0.0842       0.0178         0.09       0.0783
+## [14,]  0.4 -0.0399      -0.1013       0.0214         0.16       0.1391
+## [15,]  0.5 -0.0477      -0.1210       0.0256         0.25       0.2174
+## [16,]  0.6 -0.0573      -0.1452       0.0307         0.36       0.3130
+## [17,]  0.7 -0.0700      -0.1775       0.0375         0.49       0.4261
+## [18,]  0.8 -0.0896      -0.2270       0.0479         0.64       0.5565
+## [19,]  0.9 -0.1301      -0.3297       0.0695         0.81       0.7044
 ## 
-## Rho at which ACME = 0: -0.2
-## R^2_M*R^2_Y* at which ACME = 0: 0.04
-## R^2_M~R^2_Y~ at which ACME = 0: 0.0261</code></pre>
+## Rho at which ACME = 0: -0.3
+## R^2_M*R^2_Y* at which ACME = 0: 0.09
+## R^2_M~R^2_Y~ at which ACME = 0: 0.0783</code></pre>
 <p>　まずsummary()で表示されたテーブルについて。左から順に、残差の相関係数、ACMEの点推定値、ACMEの95%信頼区間下限と上限、未測定交絡によって説明される原因不明の分散比率、未測定交絡によって説明される元の分散比率、を示している。またテーブルの下部では、ACME=0での相関係数、決定係数による指標の値がわかる。これらの詳細な定義式はImaiらの原著論文を参考に。</p>
 <pre class="r"><code>plot(s.out)</code></pre>
-<p><img src="/post/2021-01-19 Rによる媒介分析1/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%901_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
-<p>　残差の相関係数による感度分析の結果が上記のグラフ。これにより未測定交絡によってACMEがどの程度影響を受けるのかが視覚的に評価できる。曲線はACMEの点推定値を変化させたときの残差の相関係数、グレーの部分はACMEの95%信頼区間を示す。このグラフより、未測定交絡が媒介変数・アウトカムに対して正の影響をもつ場合、未測定交絡の影響を考慮しても媒介効果は存在するだろうと考えられる（相関係数&lt;0でACMEの点推定値は常に負の値）。しかし未測定交絡が負の影響をもつ場合、媒介効果は未測定交絡によって正・負の値両方を取る可能性があり、解析で得られたACMEの値は妥当でないかもしれない。この場合負の媒介効果が存在するという主張の根拠が揺らぐことになる。</p>
-<pre class="r"><code>plot(s.out, sens.par=&quot;R2&quot;, r.type=1, sign.prod=-1)</code></pre>
 <p><img src="/post/2021-01-19 Rによる媒介分析1/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%901_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>　残差の相関係数による感度分析の結果が上記のグラフ。これにより未測定交絡によってACMEがどの程度影響を受けるのかが視覚的に評価できる。曲線はACMEの点推定値を変化させたときの残差の相関係数、グレーの部分はACMEの95%信頼区間を示す。このグラフより、未測定交絡が媒介変数・アウトカムに対して同じ符号で影響する（正と正、負と負）場合、未測定交絡の影響を考慮しても媒介効果は存在するだろうと考えられる（相関係数&lt;0でACMEの点推定値は常に負の値）。しかし未測定交絡が異なる符号で影響する場合、媒介効果は未測定交絡によって正・負の値両方を取る可能性があり、解析で得られたACMEの値は妥当でないかもしれない。この場合<strong>負の媒介効果が存在するという主張の根拠が揺らぐことになる</strong>。</p>
+<pre class="r"><code>plot(s.out, sens.par=&quot;R2&quot;, r.type=1, sign.prod=-1)</code></pre>
+<p><img src="/post/2021-01-19 Rによる媒介分析1/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%901_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <pre class="r"><code>plot(s.out, sens.par=&quot;R2&quot;, r.type=1, sign.prod=1)</code></pre>
-<p><img src="/post/2021-01-19 Rによる媒介分析1/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%901_files/figure-html/unnamed-chunk-7-2.png" width="672" /></p>
+<p><img src="/post/2021-01-19 Rによる媒介分析1/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%901_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
 <pre class="r"><code>plot(s.out, sens.par=&quot;R2&quot;, r.type=2, sign.prod=-1)</code></pre>
-<p><img src="/post/2021-01-19 Rによる媒介分析1/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%901_files/figure-html/unnamed-chunk-7-3.png" width="672" /></p>
+<p><img src="/post/2021-01-19 Rによる媒介分析1/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%901_files/figure-html/unnamed-chunk-8-3.png" width="672" /></p>
 <pre class="r"><code>plot(s.out, sens.par=&quot;R2&quot;, r.type=2, sign.prod=1)</code></pre>
-<p><img src="/post/2021-01-19 Rによる媒介分析1/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%901_files/figure-html/unnamed-chunk-7-4.png" width="672" /></p>
+<p><img src="/post/2021-01-19 Rによる媒介分析1/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%901_files/figure-html/unnamed-chunk-8-4.png" width="672" /></p>
 <p>　決定係数による感度分析が上記4つのグラフ。<br />
-　1番目のグラフより、未測定交絡の符号が同じという仮定のもとで「未測定交絡によって説明される原因不明の分散比率」が4%以下ならば、解析で得られたACMEは妥当であると判断できる（現実には満たすことは不可能な数値）。また3番目のグラフより、未測定交絡によって説明される元の分散比率が3%以下であれば、解析で得られたACMEは妥当であると判断できる。以上より、未測定交絡が媒介変数・アウトカムに対して同じ符号で相関をもつならば、解析結果は妥当でないと判断すべき。<br />
-　その一方で未測定交絡が媒介変数・アウトカムに対して異なる符号で相関をもつならば、解析結果は妥当である（未測定交絡があっても常にACMEは負の値）。<br />
+　1番目のグラフより、未測定交絡の符号が同じという仮定のもとで「未測定交絡によって説明される原因不明の分散比率」が4%以下ならば、解析で得られたACMEは妥当であると判断できる（現実には満たすことは不可能な数値）。また3番目のグラフより、未測定交絡によって説明される元の分散比率が3%以下であれば、解析で得られたACMEは妥当であると判断できる。以上より、未測定交絡が媒介変数・アウトカムに対して異なる符号で相関をもつならば、解析結果は妥当でないと判断すべき。<br />
+　その一方で未測定交絡が媒介変数・アウトカムに対して同じ符号で相関をもつならば、解析結果は妥当である（未測定交絡があっても常にACMEは負の値）。<br />
 　未測定交絡の符号は研究対象についての専門知識をもとに判断すべきであり、それは統計学の領分ではない。それぞれの分野での専門知識をもとに符号がどちらかを想定することで、解析結果の妥当性を考察できるだろう。</p>
 </div>
+</div>
+<div id="交互作用項の検討" class="section level2">
+<h2>交互作用項の検討</h2>
+<p>　上記で得られた結果は、交互作用が無いという仮定のもとで得られたものである。しかし現実には、「介入群と対照群で間接効果が同じ」という仮定はあまり現実的なものではない。したがって交互作用については追加で検討しておくのが無難だろう。
+　
+### 治療と媒介変数間の交互作用</p>
+<pre class="r"><code>model.y1 &lt;- lm(depress2 ~ treat + job_seek + treat:job_seek + econ_hard + sex + age, data=jobs)
+m.out1 &lt;- mediate(model.m, model.y1, sims=50, treat=&quot;treat&quot;, mediator=&quot;job_seek&quot;)
+summary(m.out1)</code></pre>
+<pre><code>## 
+## Causal Mediation Analysis 
+## 
+## Quasi-Bayesian Confidence Intervals
+## 
+##                          Estimate 95% CI Lower 95% CI Upper p-value  
+## ACME (control)            -0.0240      -0.0491         0.00    0.04 *
+## ACME (treated)            -0.0177      -0.0390         0.00    0.04 *
+## ADE (control)             -0.0499      -0.1109         0.02    0.28  
+## ADE (treated)             -0.0436      -0.1095         0.03    0.28  
+## Total Effect              -0.0676      -0.1252         0.00    0.08 .
+## Prop. Mediated (control)   0.3680      -0.1492         3.68    0.12  
+## Prop. Mediated (treated)   0.2498      -0.1068         2.99    0.12  
+## ACME (average)            -0.0208      -0.0433         0.00    0.04 *
+## ADE (average)             -0.0467      -0.1102         0.02    0.28  
+## Prop. Mediated (average)   0.3089      -0.1260         3.34    0.12  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Sample Size Used: 899 
+## 
+## 
+## Simulations: 50</code></pre>
+<pre class="r"><code>plot(m.out1)</code></pre>
+<p><img src="/post/2021-01-19 Rによる媒介分析1/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%901_files/figure-html/unnamed-chunk-9-1.png" width="672" />
+　結果を見るとtreat群とcontrol群でACMEの値に大きな違いは無さそう。したがって介入群と対照群ともに負のACMEを持つと考えられる。</p>
+</div>
+<div id="おまけセミパラメトリックな解析方法一般化加法モデル" class="section level2">
+<h2>おまけ：セミパラメトリックな解析方法（一般化加法モデル）</h2>
+<p>　アウトカムモデルに対して分布を仮定しないセミパラメトリックな方法もある。アウトカムを従属変数としたモデルにおいて、線形回帰の代わりに一般化加法モデルを使用する。<br />
+　mgcvパッケージのgam関数で一般化加法モデルによるモデル化が可能。s()の部分はスプラインでのモデル化を表現しており、bs=“cr”で3次基底関数でのモデル化（平滑化スプライン）を行っている。</p>
+<pre class="r"><code>library(mgcv)</code></pre>
+<pre><code>##  要求されたパッケージ nlme をロード中です</code></pre>
+<pre><code>## This is mgcv 1.8-34. For overview type &#39;help(&quot;mgcv-package&quot;)&#39;.</code></pre>
+<pre class="r"><code>model.y1 &lt;- gam(depress2 ~ treat + s(job_seek,bs=&quot;cr&quot;) + econ_hard +
+                 sex + age, data=jobs)
+out1 &lt;- mediate(model.m, model.y1, sims=10, boot=TRUE, treat=&quot;treat&quot;,
+                mediator=&quot;job_seek&quot;)</code></pre>
+<pre><code>## Running nonparametric bootstrap</code></pre>
+<pre class="r"><code>plot(out1)</code></pre>
+<p><img src="/post/2021-01-19 Rによる媒介分析1/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%901_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<pre class="r"><code>summary(out1)</code></pre>
+<pre><code>## 
+## Causal Mediation Analysis 
+## 
+## Nonparametric Bootstrap Confidence Intervals with the Percentile Method
+## 
+##                Estimate 95% CI Lower 95% CI Upper p-value
+## ACME            -0.0192      -0.0414         0.02     0.4
+## ADE             -0.0298      -0.0657         0.05     0.8
+## Total Effect    -0.0490      -0.0998         0.02     0.6
+## Prop. Mediated   0.3919      -2.0642         1.82     1.0
+## 
+## Sample Size Used: 899 
+## 
+## 
+## Simulations: 10</code></pre>
 </div>
 <div id="終わりに" class="section level2">
 <h2>終わりに</h2>

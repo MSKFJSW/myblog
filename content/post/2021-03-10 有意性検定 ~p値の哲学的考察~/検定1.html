@@ -1,0 +1,92 @@
+---
+title: "有意性検定の考え方 ~ P値の誤解 ~"
+date: 2021-03-09
+categories:
+- category
+- subcategory
+output:
+  blogdown::html_page:
+    toc: TRUE
+    css: "/css/custom.css"
+thumbnailImage: https://halmek.co.jp/media/uploads/d955e3084920b92b28718b1e115e3e231588732714.3905.jpg
+thumbnailImagePosition: left
+summary: 検定とP値についての考察。
+---
+
+<link href="検定1_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="検定1_files/anchor-sections/anchor-sections.js"></script>
+  <link rel="stylesheet" href="/css/custom.css" type="text/css" />
+
+<div id="TOC">
+<ul>
+<li><a href="#有意性検定におけるp値とは何か">有意性検定におけるP値とは何か</a></li>
+<li><a href="#仮定1-帰無仮説が正しい">仮定1 帰無仮説が正しい</a></li>
+<li><a href="#仮定2-系統誤差バイアスが無い">仮定2 系統誤差(バイアス)が無い</a></li>
+</ul>
+</div>
+
+<p>　P値は医学系論文に関わらず、必ずといっていいほど目にする。しかし誤解が多いのもこの指標の問題点。例えば、「P値は帰無仮説が間違っている確率である」は典型的な誤解の一つ。自分が統計学を学んでいて、最初に挫折を経験したのは、この検定の考え方とP値の解釈。</p>
+<div id="有意性検定におけるp値とは何か" class="section level2">
+<h2>有意性検定におけるP値とは何か</h2>
+<p>結論から言うと、P値の定義は、
+「①帰無仮説が正しい、②データに系統誤差が無い、という状況下で、帰無仮説が間違っている確率」を表す。</p>
+<p>　つまり2つの仮定が満たされていなければ、P値は確率として解釈することができない。これだけでは何を言っているか分かりにくいので、以下でその根拠を述べる。
+　
+## 検定における有意水準とP値
+　まず検定は以下の流れで行われる<br />
+　1. 帰無仮説の設定<br />
+　2. 有意水準の設定（0.05が慣例）<br />
+　3. 検定統計量を計算し、P値を計算<br />
+　4. P値が有意水準以下であれば、帰無仮説を棄却し対立仮説（解析者の主張）を支持<br />
+　ここで</p>
+</div>
+<div id="仮定1-帰無仮説が正しい" class="section level2">
+<h2>仮定1 帰無仮説が正しい</h2>
+<p>　まず帰無仮説が正しいという状況下を仮想的につくる。
+　以下では母平均130、母分散10の正規分布に従う、1000個のデータを生成している。これは集団全体から1000人の対象者のランダムサンプリングに相当する。
+　</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ─ Attaching packages ──────────────────── tidyverse 1.3.0 ─</code></pre>
+<pre><code>## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
+## ✓ tibble  3.0.4     ✓ dplyr   1.0.2
+## ✓ tidyr   1.1.2     ✓ stringr 1.4.0
+## ✓ readr   1.4.0     ✓ forcats 0.5.0</code></pre>
+<pre><code>## ─ Conflicts ───────────────────── tidyverse_conflicts() ─
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>set.seed(123)
+N &lt;- data.frame(N1=rnorm(1000, 130, 10))
+ggplot(N,aes(x=N1))+geom_histogram()</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="/post/2021-03-10 有意性検定 ~p値の哲学的考察~/%E6%A4%9C%E5%AE%9A1_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>　疑似データから標準化を行った。</p>
+<pre class="r"><code>N$z &lt;- (N$N1-130)/10
+true_t&lt;- data.frame(x = seq(-4, 4, length = 100)) %&gt;%
+    mutate(density = dt(x, df = 98))
+ggplot(N,aes(x=z, y=..density..))+
+  geom_histogram(binwidth=0.2)+
+  geom_line(data = true_t, aes(x=x, y=density), color=&#39;blue&#39;)</code></pre>
+<p><img src="/post/2021-03-10 有意性検定 ~p値の哲学的考察~/%E6%A4%9C%E5%AE%9A1_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>有意水準0.05　→　確率0.05以下の事象を起こり得ないものとする
+Z検定　平均値の差÷標準誤差
+検定統計量　検定するためのデータに変換（標準誤差で割って標準化）
+帰無仮説が正しい　両側検定ではZ=±1.96付近で確率密度0.025と0.975
+　= 偶然帰無仮説を棄却する確率が0.05（ほとんど稀な事象）
+帰無仮説が間違っている　データの分布が歪む
+　= 帰無仮説が偶然で説明がつかない頻度で棄却される
+　　分布が右に歪めば、p値は0.05以下になりやすくなる
+　　これは母平均が異なることに相当
+　　P値はもはや確率ではない</p>
+</div>
+<div id="仮定2-系統誤差バイアスが無い" class="section level2">
+<h2>仮定2 系統誤差(バイアス)が無い</h2>
+<p>上記では差の分布が歪む原因の一つとして、母平均が違うことを紹介した。
+しかし実際の研究や調査では、系統誤差が非常に大きな問題となる。
+系統誤差とは、「データの収集段階」</p>
+<p>●参考資料</p>
+<ol style="list-style-type: decimal">
+<li>京大SPHの佐藤先生の論文。非常にわかりやすくおすすめ。
+ASA声明と疫学研究におけるP値, 佐藤 俊哉, 2017年, 計量生物学
+<a href="https://www.jstage.jst.go.jp/article/jjb/38/2/38_109/_pdf" class="uri">https://www.jstage.jst.go.jp/article/jjb/38/2/38_109/_pdf</a></li>
+</ol>
+</div>
