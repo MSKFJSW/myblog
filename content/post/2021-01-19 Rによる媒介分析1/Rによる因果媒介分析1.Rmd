@@ -51,14 +51,14 @@ model.y <- lm(depress2 ~ treat + job_seek + econ_hard + sex + age, data=jobs)
 #### 準ベイズ近似によるACME推定。
  
 ```{r message=FALSE}
-m.out <- mediate(model.m, model.y, sims=50, treat="treat", mediator="job_seek")
+m.out <- mediate(model.m, model.y, sims=100, treat="treat", mediator="job_seek")
 summary(m.out)
 plot(m.out)
 ```
 
 #### ノンパラメトリックブートストラップ法によるACME推定
 ```{r}
-m.out <-  mediate(model.m, model.y, boot=TRUE, sims=50, treat="treat", mediator="job_seek")
+m.out <-  mediate(model.m, model.y, boot=TRUE, sims=100, treat="treat", mediator="job_seek")
 summary(m.out)
 plot(m.out)
 ```
@@ -109,11 +109,11 @@ plot(s.out, sens.par="R2", r.type=2, sign.prod=1)
 
 ## 交互作用項の検討
 　上記で得られた結果は、交互作用が無いという仮定のもとで得られたものである。しかし現実には、「介入群と対照群で間接効果が同じ」という仮定はあまり現実的なものではない。したがって交互作用については追加で検討しておくのが無難だろう。
-　
+
 ### 治療と媒介変数間の交互作用
 ```{r}
 model.y1 <- lm(depress2 ~ treat + job_seek + treat:job_seek + econ_hard + sex + age, data=jobs)
-m.out1 <- mediate(model.m, model.y1, sims=50, treat="treat", mediator="job_seek")
+m.out1 <- mediate(model.m, model.y1, sims=100, treat="treat", mediator="job_seek")
 summary(m.out1)
 plot(m.out1)
 ```
@@ -128,7 +128,7 @@ plot(m.out1)
 library(mgcv)
 model.y1 <- gam(depress2 ~ treat + s(job_seek,bs="cr") + econ_hard +
                  sex + age, data=jobs)
-out1 <- mediate(model.m, model.y1, sims=10, boot=TRUE, treat="treat",
+out1 <- mediate(model.m, model.y1, sims=100, boot=TRUE, treat="treat",
                 mediator="job_seek")
 plot(out1)
 summary(out1)

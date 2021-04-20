@@ -24,7 +24,11 @@ coverCaption: "A short caption (Source: Source)"
 <ul>
 <li><a href="#連続媒介変数-2値アウトカム">連続媒介変数 + 2値アウトカム</a></li>
 <li><a href="#値媒介変数-2値アウトカム">2値媒介変数 + 2値アウトカム</a></li>
+<li><a href="#未測定交絡の感度分析">未測定交絡の感度分析</a><ul>
+<li><a href="#連続媒介変数2値アウトカム">連続媒介変数＋2値アウトカム</a></li>
+</ul></li>
 <li><a href="#解析可能な媒介変数アウトカムの組み合わせ">解析可能な媒介変数・アウトカムの組み合わせ</a></li>
+<li><a href="#参考文献">参考文献</a></li>
 </ul>
 </div>
 
@@ -40,7 +44,7 @@ data(&quot;jobs&quot;)</code></pre>
 <p>　2値アウトカムwork1（ワークショップ後の就職）を応答変数、連続媒介変数job_seekと曝露変数treatを説明変数として、プロビット回帰を行う。glm関数を使用し、family引数でアウトカムに対して仮定する分布とリンク関数を指定できる（2値変数は2項分布に従うためbinomial、リンク関数はプロビット回帰）。</p>
 <pre class="r"><code>o.bin &lt;- glm(work1 ~ treat + job_seek + econ_hard + sex + age, 
                  family=binomial(link=&quot;probit&quot;),data=jobs)</code></pre>
-<pre class="r"><code>conbin &lt;- mediate(m.con, o.bin, sims=50, boot=TRUE,
+<pre class="r"><code>conbin &lt;- mediate(m.con, o.bin, sims=100, boot=TRUE,
                   treat=&quot;treat&quot;, mediator=&quot;job_seek&quot;)</code></pre>
 <pre><code>## Running nonparametric bootstrap</code></pre>
 <pre class="r"><code>summary(conbin)</code></pre>
@@ -50,21 +54,21 @@ data(&quot;jobs&quot;)</code></pre>
 ## Nonparametric Bootstrap Confidence Intervals with the Percentile Method
 ## 
 ##                          Estimate 95% CI Lower 95% CI Upper p-value
-## ACME (control)            0.00266     -0.00152         0.01    0.24
-## ACME (treated)            0.00287     -0.00164         0.01    0.24
-## ADE (control)             0.05425     -0.00893         0.11    0.16
-## ADE (treated)             0.05445     -0.00898         0.11    0.16
-## Total Effect              0.05711     -0.00534         0.12    0.12
-## Prop. Mediated (control)  0.04665     -0.61066         0.28    0.36
-## Prop. Mediated (treated)  0.05017     -0.60428         0.29    0.36
-## ACME (average)            0.00276     -0.00158         0.01    0.24
-## ADE (average)             0.05435     -0.00896         0.11    0.16
-## Prop. Mediated (average)  0.04841     -0.60747         0.28    0.36
+## ACME (control)            0.00266     -0.00127         0.01    0.16
+## ACME (treated)            0.00286     -0.00138         0.01    0.16
+## ADE (control)             0.05407     -0.01279         0.11    0.14
+## ADE (treated)             0.05427     -0.01283         0.11    0.14
+## Total Effect              0.05693     -0.00948         0.11    0.10
+## Prop. Mediated (control)  0.04665     -0.20126         0.59    0.26
+## Prop. Mediated (treated)  0.05016     -0.19781         0.60    0.26
+## ACME (average)            0.00276     -0.00132         0.01    0.16
+## ADE (average)             0.05417     -0.01281         0.11    0.14
+## Prop. Mediated (average)  0.04841     -0.19954         0.59    0.26
 ## 
 ## Sample Size Used: 899 
 ## 
 ## 
-## Simulations: 50</code></pre>
+## Simulations: 100</code></pre>
 <pre class="r"><code>plot(conbin)</code></pre>
 <p><img src="/post/2021-02-25 Rによる因果媒介分析2/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%902_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 </div>
@@ -75,7 +79,7 @@ data(&quot;jobs&quot;)</code></pre>
                  family=binomial(link=&quot;probit&quot;),data=jobs)</code></pre>
 <pre class="r"><code>o.bin &lt;- glm(work1 ~ treat + job_dich + econ_hard + sex + age, 
                  family=binomial(link=&quot;probit&quot;),data=jobs)</code></pre>
-<pre class="r"><code>binbin &lt;- mediate(m.bin, o.bin, sims=50, boot=TRUE, 
+<pre class="r"><code>binbin &lt;- mediate(m.bin, o.bin, sims=100, boot=TRUE, 
                   treat=&quot;treat&quot;, mediator=&quot;job_dich&quot;)</code></pre>
 <pre><code>## Running nonparametric bootstrap</code></pre>
 <pre class="r"><code>summary(binbin)</code></pre>
@@ -85,21 +89,21 @@ data(&quot;jobs&quot;)</code></pre>
 ## Nonparametric Bootstrap Confidence Intervals with the Percentile Method
 ## 
 ##                           Estimate 95% CI Lower 95% CI Upper p-value
-## ACME (control)            0.000603    -0.000180         0.01    0.12
-## ACME (treated)            0.000623    -0.000199         0.01    0.12
-## ADE (control)             0.052388    -0.007849         0.11    0.24
-## ADE (treated)             0.052408    -0.007904         0.11    0.24
-## Total Effect              0.053010    -0.002934         0.12    0.12
-## Prop. Mediated (control)  0.011366    -1.015296         3.22    0.24
-## Prop. Mediated (treated)  0.011747    -1.003862         3.21    0.24
-## ACME (average)            0.000613    -0.000187         0.01    0.12
-## ADE (average)             0.052398    -0.007876         0.11    0.24
-## Prop. Mediated (average)  0.011557    -1.009579         3.21    0.24
+## ACME (control)            0.003524    -0.000979         0.01    0.16
+## ACME (treated)            0.003750    -0.001084         0.01    0.16
+## ADE (control)             0.052252    -0.010558         0.10    0.18
+## ADE (treated)             0.052478    -0.010576         0.10    0.18
+## Total Effect              0.056002    -0.008608         0.10    0.12
+## Prop. Mediated (control)  0.062932    -0.183959         0.84    0.20
+## Prop. Mediated (treated)  0.066956    -0.183409         0.84    0.20
+## ACME (average)            0.003637    -0.001032         0.01    0.16
+## ADE (average)             0.052365    -0.010567         0.10    0.18
+## Prop. Mediated (average)  0.064944    -0.183684         0.84    0.20
 ## 
 ## Sample Size Used: 899 
 ## 
 ## 
-## Simulations: 50</code></pre>
+## Simulations: 100</code></pre>
 <pre class="r"><code>plot(binbin)</code></pre>
 <p><img src="/post/2021-02-25 Rによる因果媒介分析2/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%902_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>一応ロジスティックモデルも実行してみた。</p>
@@ -107,7 +111,7 @@ data(&quot;jobs&quot;)</code></pre>
                  family=binomial(link=&quot;logit&quot;),data=jobs)</code></pre>
 <pre class="r"><code>o.binl &lt;- glm(work1 ~ treat + job_dich + econ_hard + sex + age, 
                  family=binomial(link=&quot;logit&quot;),data=jobs)</code></pre>
-<pre class="r"><code>binbinl &lt;- mediate(m.binl, o.binl, sims=50, boot=TRUE, 
+<pre class="r"><code>binbinl &lt;- mediate(m.binl, o.binl, sims=100, boot=TRUE, 
                   treat=&quot;treat&quot;, mediator=&quot;job_dich&quot;)</code></pre>
 <pre><code>## Running nonparametric bootstrap</code></pre>
 <pre class="r"><code>summary(binbinl)</code></pre>
@@ -116,35 +120,100 @@ data(&quot;jobs&quot;)</code></pre>
 ## 
 ## Nonparametric Bootstrap Confidence Intervals with the Percentile Method
 ## 
-##                          Estimate 95% CI Lower 95% CI Upper p-value  
-## ACME (control)            0.00326     -0.00110         0.01    0.16  
-## ACME (treated)            0.00357     -0.00115         0.01    0.16  
-## ADE (control)             0.05118      0.00723         0.11    0.04 *
-## ADE (treated)             0.05149      0.00734         0.11    0.04 *
-## Total Effect              0.05475      0.01703         0.11    0.04 *
-## Prop. Mediated (control)  0.05952     -0.02837         0.50    0.20  
-## Prop. Mediated (treated)  0.06524     -0.02971         0.50    0.20  
-## ACME (average)            0.00342     -0.00113         0.01    0.16  
-## ADE (average)             0.05134      0.00729         0.11    0.04 *
-## Prop. Mediated (average)  0.06238     -0.02904         0.50    0.20  
+##                           Estimate 95% CI Lower 95% CI Upper p-value  
+## ACME (control)            0.005315    -0.000813         0.01    0.14  
+## ACME (treated)            0.005720    -0.000869         0.01    0.14  
+## ADE (control)             0.051197    -0.007638         0.12    0.10 .
+## ADE (treated)             0.051602    -0.007702         0.12    0.10 .
+## Total Effect              0.056917    -0.003464         0.13    0.08 .
+## Prop. Mediated (control)  0.093384    -0.273474         0.47    0.22  
+## Prop. Mediated (treated)  0.100497    -0.263418         0.48    0.22  
+## ACME (average)            0.005518    -0.000841         0.01    0.14  
+## ADE (average)             0.051399    -0.007670         0.12    0.10 .
+## Prop. Mediated (average)  0.096940    -0.268944         0.47    0.22  
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Sample Size Used: 899 
 ## 
 ## 
-## Simulations: 50</code></pre>
+## Simulations: 100</code></pre>
 <pre class="r"><code>plot(binbinl)</code></pre>
 <p><img src="/post/2021-02-25 Rによる因果媒介分析2/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%902_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
-<p>プロビット、ロジスティックモデルでの結果を見ると、平均因果媒介効果(ACME)の点推定値と信頼区間が正の大部分を被覆している。したがってワークショップは参加者の自己効力感を増し、就職につながった可能性があることがわかった。ただ前回と同様、これだけでは未測定交絡の問題や交互作用についても考慮する必要がある。</p>
+<p>　プロビット、ロジスティックモデルでの結果を見ると、平均因果媒介効果(ACME)の点推定値と信頼区間が正の大部分を被覆している。したがってワークショップは参加者の自己効力感を増し、就職につながった可能性があることがわかった（ただ点推定値が小さいのは気になるところ）。ただ上記の解析は、未測定交絡の問題や交互作用について無視したものである点は注意すべきである。</p>
 </div>
-<div id="解析可能な媒介変数アウトカムの組み合わせ" class="section level2">
-<h2>解析可能な媒介変数・アウトカムの組み合わせ</h2>
-<p>　Rのmediationパッケージで解析可能な変数型の組み合わせを以下に示す。順序アウトカムの解析は不可能であることに注意する必要がある。</p>
+<div id="未測定交絡の感度分析" class="section level2">
+<h2>未測定交絡の感度分析</h2>
+<p>　連続媒介変数と2値アウトカムの場合のみ感度分析を行う（2値アウトカムを含む他の組は解析不可）。</p>
+<div id="連続媒介変数2値アウトカム" class="section level3">
+<h3>連続媒介変数＋2値アウトカム</h3>
+<p>　感度分析はmedsens関数で行う。媒介分析の結果が入ったオブジェクトconbin、有意水準、信頼区間を計算するためのブートストラップ法の試行回数を指定。まず相関係数による感度分析を実行する。</p>
+<pre class="r"><code>sens.conbin &lt;- medsens(conbin, rho.by=0.05, sims=100)</code></pre>
+<pre><code>## Warning in rho^2 * (1 - r.sq.m) * (1 - r.sq.y): Recycling array of length 1 in vector-array arithmetic is deprecated.
+##   Use c() or as.vector() instead.</code></pre>
+<pre><code>## Warning in err.cr.d^2 * (1 - r.sq.m) * (1 - r.sq.y): Recycling array of length 1 in vector-array arithmetic is deprecated.
+##   Use c() or as.vector() instead.</code></pre>
+<pre class="r"><code>plot(sens.conbin, sens.par=&quot;rho&quot;)</code></pre>
+<p><img src="/post/2021-02-25 Rによる因果媒介分析2/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%902_files/figure-html/unnamed-chunk-11-1.png" width="672" /><img src="/post/2021-02-25 Rによる因果媒介分析2/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%902_files/figure-html/unnamed-chunk-11-2.png" width="672" />
+　
+　感度分析の結果の見方は、①点線は、Sequencial ignorability下（未測定交絡なしというあまりにも厳しい仮定）でのACME（平均因果媒介効果）の点推定値、②曲線は、未測定交絡による相関に対応したACME、③グレーは、ACMEの95%信頼区間、を示す。<br />
+　相関係数は解釈が難しいので、決定係数による感度分析も実行する。</p>
+<pre class="r"><code>plot(sens.conbin, sens.par=&quot;R2&quot;, r.type=2, sign.prod = 1)</code></pre>
+<pre><code>## Warning in (1 - x$r.square.y) * seq(0, 1 - x$rho.by, 0.01): Recycling array of length 1 in array-vector arithmetic is deprecated.
+##   Use c() or as.vector() instead.</code></pre>
+<p><img src="/post/2021-02-25 Rによる因果媒介分析2/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%902_files/figure-html/unnamed-chunk-12-1.png" width="672" /><img src="/post/2021-02-25 Rによる因果媒介分析2/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%902_files/figure-html/unnamed-chunk-12-2.png" width="672" /></p>
+<pre class="r"><code>plot(sens.conbin, sens.par=&quot;R2&quot;, r.type=2, sign.prod = -1)</code></pre>
+<pre><code>## Warning in (1 - x$r.square.y) * seq(0, 1 - x$rho.by, 0.01): Recycling array of length 1 in array-vector arithmetic is deprecated.
+##   Use c() or as.vector() instead.</code></pre>
+<p><img src="/post/2021-02-25 Rによる因果媒介分析2/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%902_files/figure-html/unnamed-chunk-12-3.png" width="672" /><img src="/post/2021-02-25 Rによる因果媒介分析2/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%902_files/figure-html/unnamed-chunk-12-4.png" width="672" />
+　決定係数の感度分析の結果をみると、未測定交絡が媒介変数・アウトカムに対してどの符号で相関をもつのかによって、結果が変わることが分かる。ただいずれも場合でも、ACMEの点推定値は正もしくは負の一貫した符号を持っている。つまり未測定交絡があったとしても、媒介効果は存在すると考えられる（符号がどっちかは不明だが）。</p>
+<p>　ただし点推定値があまり大きい値ではないため、実際にどの程度の影響なのかは考慮が必要だろう。例えば、未測定交絡含めACMEは0.02だったとしよう。<strong>この0.02という値は、職業訓練ワークショプが参加者の自己効力感を高めて就職につなげたと考えて良い値なのだろうか</strong>。正直なところ、ちょっと怪しかったりする。総効果に対する媒介効果の割合が小さいことから、もしかしたら他の要因が関わっている可能性もあるだろう。なんらかの有益な知識、就活のテクニックを得ることができたとか。</p>
+<p>　ちなみに2値アウトカムの場合、媒介効果の割合も出力できる。</p>
+<pre class="r"><code>plot(sens.conbin, sens.par=&quot;rho&quot;, pr.plot = TRUE)</code></pre>
+<p><img src="/post/2021-02-25 Rによる因果媒介分析2/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%902_files/figure-html/unnamed-chunk-13-1.png" width="672" /><img src="/post/2021-02-25 Rによる因果媒介分析2/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%902_files/figure-html/unnamed-chunk-13-2.png" width="672" /></p>
 <table>
 <thead>
 <tr class="header">
-<th></th>
+<th>plot関数</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>sens.par=“R2”</td>
+<td>決定係数による感度分析（デフォルトは相関係数）</td>
+</tr>
+<tr class="even">
+<td>r.type=1　　</td>
+<td>未測定交絡によって説明される原因不明の分散比率での感度分析</td>
+</tr>
+<tr class="odd">
+<td>　　　=2</td>
+<td>未測定交絡によって説明される元の分散比率での感度分析</td>
+</tr>
+<tr class="even">
+<td>sign.prod=1</td>
+<td>未測定交絡の係数符号が媒介変数・アウトカムで同じ場合</td>
+</tr>
+<tr class="odd">
+<td>　　　　=-1</td>
+<td>係数の符号が異なるもとでの感度分析 　</td>
+</tr>
+<tr class="even">
+<td>pr.plot=TRUE</td>
+<td>総効果のうち、媒介される割合（2値アウトカムのみ可）</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="解析可能な媒介変数アウトカムの組み合わせ" class="section level2">
+<h2>解析可能な媒介変数・アウトカムの組み合わせ</h2>
+<p>　Rのmediationパッケージで解析可能な変数型の組み合わせを以下に示す。媒介分析については、順序アウトカムの解析は不可能。また感度分析が行える組み合わせも少ない。</p>
+<table>
+<thead>
+<tr class="header">
+<th><strong>媒介分析</strong></th>
 <th>連続アウトカム</th>
 <th>順序アウトカム</th>
 <th>2値アウトカム</th>
@@ -171,4 +240,40 @@ data(&quot;jobs&quot;)</code></pre>
 </tr>
 </tbody>
 </table>
+<table>
+<thead>
+<tr class="header">
+<th><strong>感度分析</strong></th>
+<th>連続アウトカム</th>
+<th>順序アウトカム</th>
+<th>2値アウトカム</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>媒介変数：連続</td>
+<td>○ 　</td>
+<td>×</td>
+<td>○</td>
+</tr>
+<tr class="even">
+<td>媒介変数：順序</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+</tr>
+<tr class="odd">
+<td>媒介変数：2値</td>
+<td>○</td>
+<td>×</td>
+<td>×</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="参考文献" class="section level2">
+<h2>参考文献</h2>
+<p><a href="https://www.springer.com/gp/book/9781441917638">1. Advances in social science Research using R（第8章 Causal Mediation Analysis Using R）</a><br />
+2. Imai, K. et al. Identification, Inference and Sensitivity Aanalysis for Causal Mediation Effects. Statistical Science. 2010; 25(1):51-71.<br />
+3. Imai, K. et al. A General Approach to Causal Mediation Analysis. Phycological Methods. 2010;15(4):309-334.</p>
 </div>

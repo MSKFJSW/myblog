@@ -27,7 +27,9 @@ summary: Baron-Kenny法による因果媒介分析のまとめ。媒介変数・
 <li><a href="#ステップ3媒介効果の点推定値95信頼区間の推定">ステップ3：媒介効果の点推定値・95%信頼区間の推定</a></li>
 <li><a href="#ステップ4感度分析">ステップ4：感度分析</a></li>
 </ul></li>
-<li><a href="#交互作用項の検討">交互作用項の検討</a></li>
+<li><a href="#交互作用項の検討">交互作用項の検討</a><ul>
+<li><a href="#治療と媒介変数間の交互作用">治療と媒介変数間の交互作用</a></li>
+</ul></li>
 <li><a href="#おまけセミパラメトリックな解析方法一般化加法モデル">おまけ：セミパラメトリックな解析方法（一般化加法モデル）</a></li>
 <li><a href="#終わりに">終わりに</a></li>
 <li><a href="#参考文献">参考文献</a></li>
@@ -89,7 +91,7 @@ data(&quot;jobs&quot;)</code></pre>
 </table>
 <div id="準ベイズ近似によるacme推定" class="section level4">
 <h4>準ベイズ近似によるACME推定。</h4>
-<pre class="r"><code>m.out &lt;- mediate(model.m, model.y, sims=50, treat=&quot;treat&quot;, mediator=&quot;job_seek&quot;)
+<pre class="r"><code>m.out &lt;- mediate(model.m, model.y, sims=100, treat=&quot;treat&quot;, mediator=&quot;job_seek&quot;)
 summary(m.out)</code></pre>
 <pre><code>## 
 ## Causal Mediation Analysis 
@@ -97,21 +99,21 @@ summary(m.out)</code></pre>
 ## Quasi-Bayesian Confidence Intervals
 ## 
 ##                Estimate 95% CI Lower 95% CI Upper p-value
-## ACME            -0.0146      -0.0456         0.01    0.20
-## ADE             -0.0347      -0.0902         0.05    0.40
-## Total Effect    -0.0493      -0.1258         0.04    0.24
-## Prop. Mediated   0.2501      -0.6444         4.42    0.36
+## ACME            -0.0179      -0.0424         0.00    0.14
+## ADE             -0.0468      -0.1212         0.04    0.20
+## Total Effect    -0.0646      -0.1496         0.01    0.12
+## Prop. Mediated   0.2403      -0.9002         1.63    0.26
 ## 
 ## Sample Size Used: 899 
 ## 
 ## 
-## Simulations: 50</code></pre>
+## Simulations: 100</code></pre>
 <pre class="r"><code>plot(m.out)</code></pre>
 <p><img src="/post/2021-01-19 Rによる媒介分析1/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%901_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 </div>
 <div id="ノンパラメトリックブートストラップ法によるacme推定" class="section level4">
 <h4>ノンパラメトリックブートストラップ法によるACME推定</h4>
-<pre class="r"><code>m.out &lt;-  mediate(model.m, model.y, boot=TRUE, sims=50, treat=&quot;treat&quot;, mediator=&quot;job_seek&quot;)</code></pre>
+<pre class="r"><code>m.out &lt;-  mediate(model.m, model.y, boot=TRUE, sims=100, treat=&quot;treat&quot;, mediator=&quot;job_seek&quot;)</code></pre>
 <pre><code>## Running nonparametric bootstrap</code></pre>
 <pre class="r"><code>summary(m.out)</code></pre>
 <pre><code>## 
@@ -120,15 +122,15 @@ summary(m.out)</code></pre>
 ## Nonparametric Bootstrap Confidence Intervals with the Percentile Method
 ## 
 ##                Estimate 95% CI Lower 95% CI Upper p-value
-## ACME            -0.0157      -0.0374         0.00    0.20
-## ADE             -0.0403      -0.1103         0.03    0.32
-## Total Effect    -0.0560      -0.1293         0.01    0.24
-## Prop. Mediated   0.2811      -6.7292         1.06    0.36
+## ACME            -0.0157      -0.0352         0.01    0.18
+## ADE             -0.0403      -0.1046         0.03    0.30
+## Total Effect    -0.0560      -0.1192         0.02    0.22
+## Prop. Mediated   0.2811      -1.4052         1.10    0.28
 ## 
 ## Sample Size Used: 899 
 ## 
 ## 
-## Simulations: 50</code></pre>
+## Simulations: 100</code></pre>
 <pre class="r"><code>plot(m.out)</code></pre>
 <p><img src="/post/2021-01-19 Rによる媒介分析1/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%901_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>　媒介効果(ACME)を見ると、職業技能ワークショップは就職活動の自己効力感を介して抑うつ症状に影響すると解釈できる（信頼区間が負の大部分を被覆）。</p>
@@ -220,11 +222,11 @@ summary(s.out)</code></pre>
 </div>
 <div id="交互作用項の検討" class="section level2">
 <h2>交互作用項の検討</h2>
-<p>　上記で得られた結果は、交互作用が無いという仮定のもとで得られたものである。しかし現実には、「介入群と対照群で間接効果が同じ」という仮定はあまり現実的なものではない。したがって交互作用については追加で検討しておくのが無難だろう。
-　
-### 治療と媒介変数間の交互作用</p>
+<p>　上記で得られた結果は、交互作用が無いという仮定のもとで得られたものである。しかし現実には、「介入群と対照群で間接効果が同じ」という仮定はあまり現実的なものではない。したがって交互作用については追加で検討しておくのが無難だろう。</p>
+<div id="治療と媒介変数間の交互作用" class="section level3">
+<h3>治療と媒介変数間の交互作用</h3>
 <pre class="r"><code>model.y1 &lt;- lm(depress2 ~ treat + job_seek + treat:job_seek + econ_hard + sex + age, data=jobs)
-m.out1 &lt;- mediate(model.m, model.y1, sims=50, treat=&quot;treat&quot;, mediator=&quot;job_seek&quot;)
+m.out1 &lt;- mediate(model.m, model.y1, sims=100, treat=&quot;treat&quot;, mediator=&quot;job_seek&quot;)
 summary(m.out1)</code></pre>
 <pre><code>## 
 ## Causal Mediation Analysis 
@@ -232,26 +234,27 @@ summary(m.out1)</code></pre>
 ## Quasi-Bayesian Confidence Intervals
 ## 
 ##                          Estimate 95% CI Lower 95% CI Upper p-value  
-## ACME (control)            -0.0240      -0.0491         0.00    0.04 *
-## ACME (treated)            -0.0177      -0.0390         0.00    0.04 *
-## ADE (control)             -0.0499      -0.1109         0.02    0.28  
-## ADE (treated)             -0.0436      -0.1095         0.03    0.28  
-## Total Effect              -0.0676      -0.1252         0.00    0.08 .
-## Prop. Mediated (control)   0.3680      -0.1492         3.68    0.12  
-## Prop. Mediated (treated)   0.2498      -0.1068         2.99    0.12  
-## ACME (average)            -0.0208      -0.0433         0.00    0.04 *
-## ADE (average)             -0.0467      -0.1102         0.02    0.28  
-## Prop. Mediated (average)   0.3089      -0.1260         3.34    0.12  
+## ACME (control)            -0.0211      -0.0507         0.00    0.08 .
+## ACME (treated)            -0.0148      -0.0382         0.00    0.08 .
+## ADE (control)             -0.0494      -0.1077         0.02    0.14  
+## ADE (treated)             -0.0431      -0.1046         0.02    0.16  
+## Total Effect              -0.0642      -0.1320         0.01    0.06 .
+## Prop. Mediated (control)   0.3225      -0.2038         1.62    0.14  
+## Prop. Mediated (treated)   0.2305      -0.2014         1.73    0.14  
+## ACME (average)            -0.0179      -0.0436         0.00    0.08 .
+## ADE (average)             -0.0462      -0.1059         0.02    0.16  
+## Prop. Mediated (average)   0.2765      -0.2026         1.73    0.14  
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Sample Size Used: 899 
 ## 
 ## 
-## Simulations: 50</code></pre>
+## Simulations: 100</code></pre>
 <pre class="r"><code>plot(m.out1)</code></pre>
 <p><img src="/post/2021-01-19 Rによる媒介分析1/R%E3%81%AB%E3%82%88%E3%82%8B%E5%9B%A0%E6%9E%9C%E5%AA%92%E4%BB%8B%E5%88%86%E6%9E%901_files/figure-html/unnamed-chunk-9-1.png" width="672" />
 　結果を見るとtreat群とcontrol群でACMEの値に大きな違いは無さそう。したがって介入群と対照群ともに負のACMEを持つと考えられる。</p>
+</div>
 </div>
 <div id="おまけセミパラメトリックな解析方法一般化加法モデル" class="section level2">
 <h2>おまけ：セミパラメトリックな解析方法（一般化加法モデル）</h2>
@@ -262,7 +265,7 @@ summary(m.out1)</code></pre>
 <pre><code>## This is mgcv 1.8-34. For overview type &#39;help(&quot;mgcv-package&quot;)&#39;.</code></pre>
 <pre class="r"><code>model.y1 &lt;- gam(depress2 ~ treat + s(job_seek,bs=&quot;cr&quot;) + econ_hard +
                  sex + age, data=jobs)
-out1 &lt;- mediate(model.m, model.y1, sims=10, boot=TRUE, treat=&quot;treat&quot;,
+out1 &lt;- mediate(model.m, model.y1, sims=100, boot=TRUE, treat=&quot;treat&quot;,
                 mediator=&quot;job_seek&quot;)</code></pre>
 <pre><code>## Running nonparametric bootstrap</code></pre>
 <pre class="r"><code>plot(out1)</code></pre>
@@ -274,15 +277,15 @@ out1 &lt;- mediate(model.m, model.y1, sims=10, boot=TRUE, treat=&quot;treat&quot
 ## Nonparametric Bootstrap Confidence Intervals with the Percentile Method
 ## 
 ##                Estimate 95% CI Lower 95% CI Upper p-value
-## ACME            -0.0192      -0.0414         0.02     0.4
-## ADE             -0.0298      -0.0657         0.05     0.8
-## Total Effect    -0.0490      -0.0998         0.02     0.6
-## Prop. Mediated   0.3919      -2.0642         1.82     1.0
+## ACME            -0.0189      -0.0513         0.02    0.24
+## ADE             -0.0298      -0.1206         0.06    0.28
+## Total Effect    -0.0487      -0.1366         0.06    0.22
+## Prop. Mediated   0.3887      -2.2491         1.36    0.34
 ## 
 ## Sample Size Used: 899 
 ## 
 ## 
-## Simulations: 10</code></pre>
+## Simulations: 100</code></pre>
 </div>
 <div id="終わりに" class="section level2">
 <h2>終わりに</h2>

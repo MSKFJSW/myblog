@@ -39,7 +39,7 @@ o.bin <- glm(work1 ~ treat + job_seek + econ_hard + sex + age,
 ```
 
 ```{r}
-conbin <- mediate(m.con, o.bin, sims=50, boot=TRUE,
+conbin <- mediate(m.con, o.bin, sims=100, boot=TRUE,
                   treat="treat", mediator="job_seek")
 summary(conbin)
 plot(conbin)
@@ -58,7 +58,7 @@ o.bin <- glm(work1 ~ treat + job_dich + econ_hard + sex + age,
 ```
 
 ```{r}
-binbin <- mediate(m.bin, o.bin, sims=50, boot=TRUE, 
+binbin <- mediate(m.bin, o.bin, sims=100, boot=TRUE, 
                   treat="treat", mediator="job_dich")
 summary(binbin)
 plot(binbin)
@@ -77,24 +77,72 @@ o.binl <- glm(work1 ~ treat + job_dich + econ_hard + sex + age,
 ```
 
 ```{r}
-binbinl <- mediate(m.binl, o.binl, sims=50, boot=TRUE, 
+binbinl <- mediate(m.binl, o.binl, sims=100, boot=TRUE, 
                   treat="treat", mediator="job_dich")
 summary(binbinl)
 plot(binbinl)
 ```
 
-プロビット、ロジスティックモデルでの結果を見ると、平均因果媒介効果(ACME)の点推定値と信頼区間が正の大部分を被覆している。したがってワークショップは参加者の自己効力感を増し、就職につながった可能性があることがわかった。ただ前回と同様、これだけでは未測定交絡の問題や交互作用についても考慮する必要がある。
+　プロビット、ロジスティックモデルでの結果を見ると、平均因果媒介効果(ACME)の点推定値と信頼区間が正の大部分を被覆している。したがってワークショップは参加者の自己効力感を増し、就職につながった可能性があることがわかった（ただ点推定値が小さいのは気になるところ）。ただ上記の解析は、未測定交絡の問題や交互作用について無視したものである点は注意すべきである。
+
+## 未測定交絡の感度分析
+　連続媒介変数と2値アウトカムの場合のみ感度分析を行う（2値アウトカムを含む他の組は解析不可）。
+
+### 連続媒介変数＋2値アウトカム
+　感度分析はmedsens関数で行う。媒介分析の結果が入ったオブジェクトconbin、有意水準、信頼区間を計算するためのブートストラップ法の試行回数を指定。まず相関係数による感度分析を実行する。
+```{r}
+sens.conbin <- medsens(conbin, rho.by=0.05, sims=100)
+plot(sens.conbin, sens.par="rho")
+```
+　
+　感度分析の結果の見方は、①点線は、Sequencial ignorability下（未測定交絡なしというあまりにも厳しい仮定）でのACME（平均因果媒介効果）の点推定値、②曲線は、未測定交絡による相関に対応したACME、③グレーは、ACMEの95%信頼区間、を示す。    
+　相関係数は解釈が難しいので、決定係数による感度分析も実行する。
+```{r}
+plot(sens.conbin, sens.par="R2", r.type=2, sign.prod = 1)
+plot(sens.conbin, sens.par="R2", r.type=2, sign.prod = -1)
+```
+　決定係数の感度分析の結果をみると、未測定交絡が媒介変数・アウトカムに対してどの符号で相関をもつのかによって、結果が変わることが分かる。ただいずれも場合でも、ACMEの点推定値は正もしくは負の一貫した符号を持っている。つまり未測定交絡があったとしても、媒介効果は存在すると考えられる（符号がどっちかは不明だが）。    
+
+　ただし点推定値があまり大きい値ではないため、実際にどの程度の影響なのかは考慮が必要だろう。例えば、未測定交絡含めACMEは0.02だったとしよう。**この0.02という値は、職業訓練ワークショプが参加者の自己効力感を高めて就職につなげたと考えて良い値なのだろうか**。正直なところ、ちょっと怪しかったりする。総効果に対する媒介効果の割合が小さいことから、もしかしたら他の要因が関わっている可能性もあるだろう。なんらかの有益な知識、就活のテクニックを得ることができたとか。    
+    
+　ちなみに2値アウトカムの場合、媒介効果の割合も出力できる。
+```{r}
+plot(sens.conbin, sens.par="rho", pr.plot = TRUE)
+```
+
+
+|plot関数     |内容                                                      |  
+|-------------|----------------------------------------------------------|  
+|sens.par="R2"|決定係数による感度分析（デフォルトは相関係数）            |   
+|r.type=1　　 |未測定交絡によって説明される原因不明の分散比率での感度分析|  
+|　　　=2     |未測定交絡によって説明される元の分散比率での感度分析      |  
+|sign.prod=1  |未測定交絡の係数符号が媒介変数・アウトカムで同じ場合      |  
+|　　　　=-1  |係数の符号が異なるもとでの感度分析           　           |  
+|pr.plot=TRUE |総効果のうち、媒介される割合（2値アウトカムのみ可）       |
+
+
 
 ## 解析可能な媒介変数・アウトカムの組み合わせ
-　Rのmediationパッケージで解析可能な変数型の組み合わせを以下に示す。順序アウトカムの解析は不可能であることに注意する必要がある。
+　Rのmediationパッケージで解析可能な変数型の組み合わせを以下に示す。媒介分析については、順序アウトカムの解析は不可能。また感度分析が行える組み合わせも少ない。
 
 
-|               |連続アウトカム|順序アウトカム|2値アウトカム|
+|**媒介分析**   |連続アウトカム|順序アウトカム|2値アウトカム|
 |---------------|--------------|--------------|-------------|
 |媒介変数：連続 |       ○   　 |×             |       ○     |
 |媒介変数：順序 |       ○      |×             |       ×     |       　
 |媒介変数：2値  |       ○      |×             |       ○     |
 
 
+|**感度分析**   |連続アウトカム|順序アウトカム|2値アウトカム|
+|---------------|--------------|--------------|-------------|
+|媒介変数：連続 |       ○   　 |×             |       ○     |
+|媒介変数：順序 |       ×      |×             |       ×     |       　
+|媒介変数：2値  |       ○      |×             |       ×     |
+
+
+## 参考文献
+[1. Advances in social science Research using R（第8章 Causal Mediation Analysis Using R） ](https://www.springer.com/gp/book/9781441917638)  
+2. Imai, K. et al. Identification, Inference and Sensitivity Aanalysis for Causal Mediation Effects. Statistical Science. 2010; 25(1):51-71.  
+3. Imai, K. et al. A General Approach to Causal Mediation Analysis. Phycological Methods. 2010;15(4):309-334.
 
 
