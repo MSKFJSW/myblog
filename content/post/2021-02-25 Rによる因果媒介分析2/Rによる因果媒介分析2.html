@@ -1,6 +1,6 @@
 ---
 title: "Rによる因果媒介分析2 Non/Semiparametricな方法"
-date: 2021-02-25
+date: 2021-04-20
 categories:
 - 因果媒介分析
 - R
@@ -53,17 +53,19 @@ data(&quot;jobs&quot;)</code></pre>
 ## 
 ## Nonparametric Bootstrap Confidence Intervals with the Percentile Method
 ## 
-##                          Estimate 95% CI Lower 95% CI Upper p-value
-## ACME (control)            0.00266     -0.00127         0.01    0.16
-## ACME (treated)            0.00286     -0.00138         0.01    0.16
-## ADE (control)             0.05407     -0.01279         0.11    0.14
-## ADE (treated)             0.05427     -0.01283         0.11    0.14
-## Total Effect              0.05693     -0.00948         0.11    0.10
-## Prop. Mediated (control)  0.04665     -0.20126         0.59    0.26
-## Prop. Mediated (treated)  0.05016     -0.19781         0.60    0.26
-## ACME (average)            0.00276     -0.00132         0.01    0.16
-## ADE (average)             0.05417     -0.01281         0.11    0.14
-## Prop. Mediated (average)  0.04841     -0.19954         0.59    0.26
+##                           Estimate 95% CI Lower 95% CI Upper p-value  
+## ACME (control)            0.002653    -0.000687         0.01    0.20  
+## ACME (treated)            0.002854    -0.000717         0.01    0.20  
+## ADE (control)             0.054033    -0.006119         0.12    0.10 .
+## ADE (treated)             0.054234    -0.006117         0.12    0.10 .
+## Total Effect              0.056887     0.000935         0.12    0.06 .
+## Prop. Mediated (control)  0.046638    -0.017481         0.60    0.18  
+## Prop. Mediated (treated)  0.050175    -0.018535         0.60    0.18  
+## ACME (average)            0.002754    -0.000702         0.01    0.20  
+## ADE (average)             0.054134    -0.006118         0.12    0.10 .
+## Prop. Mediated (average)  0.048406    -0.018008         0.60    0.18  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Sample Size Used: 899 
 ## 
@@ -88,17 +90,19 @@ data(&quot;jobs&quot;)</code></pre>
 ## 
 ## Nonparametric Bootstrap Confidence Intervals with the Percentile Method
 ## 
-##                           Estimate 95% CI Lower 95% CI Upper p-value
-## ACME (control)            0.003524    -0.000979         0.01    0.16
-## ACME (treated)            0.003750    -0.001084         0.01    0.16
-## ADE (control)             0.052252    -0.010558         0.10    0.18
-## ADE (treated)             0.052478    -0.010576         0.10    0.18
-## Total Effect              0.056002    -0.008608         0.10    0.12
-## Prop. Mediated (control)  0.062932    -0.183959         0.84    0.20
-## Prop. Mediated (treated)  0.066956    -0.183409         0.84    0.20
-## ACME (average)            0.003637    -0.001032         0.01    0.16
-## ADE (average)             0.052365    -0.010567         0.10    0.18
-## Prop. Mediated (average)  0.064944    -0.183684         0.84    0.20
+##                           Estimate 95% CI Lower 95% CI Upper p-value  
+## ACME (control)            0.002988    -0.001265         0.01    0.16  
+## ACME (treated)            0.003191    -0.001355         0.01    0.18  
+## ADE (control)             0.052288    -0.000554         0.12    0.06 .
+## ADE (treated)             0.052490    -0.000554         0.12    0.06 .
+## Total Effect              0.055479     0.002509         0.13    0.06 .
+## Prop. Mediated (control)  0.053863    -0.245157         0.32    0.22  
+## Prop. Mediated (treated)  0.057513    -0.242586         0.32    0.24  
+## ACME (average)            0.003089    -0.001310         0.01    0.16  
+## ADE (average)             0.052389    -0.000554         0.12    0.06 .
+## Prop. Mediated (average)  0.055688    -0.243872         0.32    0.22  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Sample Size Used: 899 
 ## 
@@ -121,16 +125,16 @@ data(&quot;jobs&quot;)</code></pre>
 ## Nonparametric Bootstrap Confidence Intervals with the Percentile Method
 ## 
 ##                           Estimate 95% CI Lower 95% CI Upper p-value  
-## ACME (control)            0.005315    -0.000813         0.01    0.14  
-## ACME (treated)            0.005720    -0.000869         0.01    0.14  
-## ADE (control)             0.051197    -0.007638         0.12    0.10 .
-## ADE (treated)             0.051602    -0.007702         0.12    0.10 .
-## Total Effect              0.056917    -0.003464         0.13    0.08 .
-## Prop. Mediated (control)  0.093384    -0.273474         0.47    0.22  
-## Prop. Mediated (treated)  0.100497    -0.263418         0.48    0.22  
-## ACME (average)            0.005518    -0.000841         0.01    0.14  
-## ADE (average)             0.051399    -0.007670         0.12    0.10 .
-## Prop. Mediated (average)  0.096940    -0.268944         0.47    0.22  
+## ACME (control)            0.002218    -0.000890         0.01    0.10 .
+## ACME (treated)            0.002444    -0.000994         0.01    0.10 .
+## ADE (control)             0.051281    -0.007224         0.11    0.10 .
+## ADE (treated)             0.051508    -0.007273         0.11    0.10 .
+## Total Effect              0.053726    -0.003641         0.11    0.06 .
+## Prop. Mediated (control)  0.041287    -0.035312         0.31    0.16  
+## Prop. Mediated (treated)  0.045496    -0.036159         0.32    0.16  
+## ACME (average)            0.002331    -0.000942         0.01    0.10 .
+## ADE (average)             0.051394    -0.007249         0.11    0.10 .
+## Prop. Mediated (average)  0.043392    -0.035735         0.31    0.16  
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
