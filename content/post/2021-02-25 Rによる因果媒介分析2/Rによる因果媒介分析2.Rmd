@@ -1,5 +1,5 @@
 ---
-title: "Rによる因果媒介分析2 Non/Semiparametricな方法"
+title: "Rによる因果媒介分析2 2値アウトカムの解析"
 date: 2021-04-20
 categories:
 - 因果媒介分析
