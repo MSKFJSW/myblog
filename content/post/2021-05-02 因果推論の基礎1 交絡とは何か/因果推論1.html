@@ -1,0 +1,169 @@
+---
+title: "因果推論1 交絡による「相関≠因果」"
+date: 2021-05-02
+categories: 
+- 因果推論
+- 交絡
+- R
+summary: 「相関≠因果」は多くの統計学の本に書かれていますが、これは不正確な表現です。正しくは特定条件下で「相関=因果」となります。その特定条件とは何か、Rを動かしながら考えます。第1回目は交絡です。
+output: 
+  blogdown::html_page:
+   toc: TRUE
+   css: "/css/custom.css"
+thumbnailImage: https://images-na.ssl-images-amazon.com/images/I/71DtqwUVqWL.jpg
+thumbnailImagePosition: left
+coverImage: https://www.jalan.net/news/img/2020/11/20201124_hoshizora_019.jpg
+coverSize: partial
+---
+
+<link href="因果推論1_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="因果推論1_files/anchor-sections/anchor-sections.js"></script>
+  <link rel="stylesheet" href="/css/custom.css" type="text/css" />
+
+<div id="TOC">
+<ul>
+<li><a href="#相関因果の状態">「相関=因果」の状態</a></li>
+<li><a href="#相関因果の状態-1">「相関≠因果」の状態</a></li>
+<li><a href="#交絡への対処方法">交絡への対処方法</a></li>
+<li><a href="#交絡の統制の難しさ">交絡の統制の難しさ</a></li>
+</ul>
+</div>
+
+<p>「相関≠因果」は統計学本でよく目にします。これは正しいのですが、不正確な表現です。正確には、「<strong>特定の条件下</strong>で、相関=因果」が正しいです。ではその<strong>特定の条件下</strong>とは何か。それを扱うのが<strong>因果推論</strong>という統計学の分野です。<br />
+　では「相関≠因果」となる原因は何か。その一つが<strong>交絡</strong>と呼ばれる現象です。以下でデータを扱いながら考えましょう。</p>
+<div id="相関因果の状態" class="section level1">
+<h1>「相関=因果」の状態</h1>
+<p>　まず「相関=因果」となっている状態をデータで表現してみます。Aが曝露(原因)、Yがアウトカム(結果)とします。</p>
+<pre class="r"><code>set.seed(100)
+d1 &lt;- data.frame(A=rbinom(1000,1,0.5))
+for(i in 1:1000){
+  ifelse(d1[i,1]==1, d1[i,2] &lt;- rbinom(1,1,0.7),d1[i,2] &lt;- rbinom(1,1,0.3))
+}
+names(d1)[which(names(d1)==&quot;V2&quot;)] &lt;- &quot;Y&quot;</code></pre>
+<pre class="r"><code>library(dagitty)
+g &lt;- dagitty(&#39;dag{
+A -&gt; Y
+}&#39;)
+coordinates(g) &lt;- list(x=c(A=0,Y=1),y=c(A=0,Y=0))
+plot(g)</code></pre>
+<p><img src="/post/2021-05-02 因果推論の基礎1 交絡とは何か/%E5%9B%A0%E6%9E%9C%E6%8E%A8%E8%AB%961_files/figure-html/unnamed-chunk-2-1.png" width="96" /></p>
+<p>　作成したデータでは、AはYに対して因果関係にあると言えます。以下の棒グラフでは、A=1とA=0でのYの分布（Y=1とY=0）を示していますが、AはYに対して因果関係があるので、A=1の方がY=1の割合は高くなっています。ちなみにAはYに対してリスク比2.3[2.0 - 2.6]、リスク差38.0%[32.2 - 43.7]のリスクを持っている（いずれも有意）。）</p>
+<pre class="r"><code>library(epiR)
+library(epitools)
+table(d1)</code></pre>
+<pre><code>##    Y
+## A     0   1
+##   0 333 151
+##   1 159 357</code></pre>
+<pre class="r"><code>table1 &lt;- xtabs(~Y+A, data=d1)
+barplot(table1, legend=rownames(table1))</code></pre>
+<p><img src="/post/2021-05-02 因果推論の基礎1 交絡とは何か/%E5%9B%A0%E6%9E%9C%E6%8E%A8%E8%AB%961_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code>epi.2by2(table1)</code></pre>
+<pre><code>##              Outcome +    Outcome -      Total        Inc risk *        Odds
+## Exposed +          333          159        492              67.7       2.094
+## Exposed -          151          357        508              29.7       0.423
+## Total              484          516       1000              48.4       0.938
+## 
+## Point estimates and 95% CIs:
+## -------------------------------------------------------------------
+## Inc risk ratio                               2.28 (1.97, 2.64)
+## Odds ratio                                   4.95 (3.79, 6.47)
+## Attrib risk *                                37.96 (32.22, 43.69)
+## Attrib risk in population *                  18.68 (13.64, 23.71)
+## Attrib fraction in exposed (%)               56.08 (49.13, 62.09)
+## Attrib fraction in population (%)            38.59 (31.85, 44.65)
+## -------------------------------------------------------------------
+##  Test that OR = 1: chi2(1) = 144.196 Pr&gt;chi2 = &lt;0.001
+##  Wald confidence limits
+##  CI: confidence interval
+##  * Outcomes per 100 population units</code></pre>
+</div>
+<div id="相関因果の状態-1" class="section level1">
+<h1>「相関≠因果」の状態</h1>
+<p>　では先程とは別のデータを新たに作ります。</p>
+<pre class="r"><code>d2 &lt;- data.frame(L=rnorm(1000,45,15))
+for(i in 1:1000){
+  ifelse(d2[i,1]&gt;60, d2[i,2] &lt;- rbinom(1,1,0.8), d2[i,2] &lt;- rbinom(1,1,0.3))
+  ifelse(d2[i,1]&gt;60, d2[i,3] &lt;- rbinom(1,1,0.8), d2[i,3] &lt;- rbinom(1,1,0.3))
+}
+names(d2)[which(names(d2)==&quot;V2&quot;)] &lt;- &quot;A&quot;
+names(d2)[which(names(d2)==&quot;V3&quot;)] &lt;- &quot;Y&quot;</code></pre>
+<p>　実は今回作成したデータでは、AはYに対して因果関係を持っていません。なぜならAとYは、第3の変数Lによってデータが生成されたからです。</p>
+<pre class="r"><code>library(dagitty)
+g &lt;- dagitty(&#39;dag{
+L -&gt; Y
+L -&gt; A
+}&#39;)
+coordinates(g) &lt;- list(x=c(A=0,L=0.5,Y=1),y=c(A=0,L=1,Y=0))
+plot(g)</code></pre>
+<p><img src="/post/2021-05-02 因果推論の基礎1 交絡とは何か/%E5%9B%A0%E6%9E%9C%E6%8E%A8%E8%AB%961_files/figure-html/unnamed-chunk-5-1.png" width="192" /></p>
+<p>　また先程と同様にリスク比とリスク差を計算してみます。</p>
+<pre class="r"><code>library(epiR)
+library(epitools)
+table2 &lt;- xtabs(~Y+A, data=d2)
+barplot(table2, legend=rownames(table2))</code></pre>
+<p><img src="/post/2021-05-02 因果推論の基礎1 交絡とは何か/%E5%9B%A0%E6%9E%9C%E6%8E%A8%E8%AB%961_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="r"><code>epi.2by2(table2)</code></pre>
+<pre><code>##              Outcome +    Outcome -      Total        Inc risk *        Odds
+## Exposed +          417          210        627              66.5        1.99
+## Exposed -          191          182        373              51.2        1.05
+## Total              608          392       1000              60.8        1.55
+## 
+## Point estimates and 95% CIs:
+## -------------------------------------------------------------------
+## Inc risk ratio                               1.30 (1.16, 1.46)
+## Odds ratio                                   1.89 (1.46, 2.46)
+## Attrib risk *                                15.30 (9.03, 21.58)
+## Attrib risk in population *                  9.59 (3.69, 15.50)
+## Attrib fraction in exposed (%)               23.01 (13.75, 31.27)
+## Attrib fraction in population (%)            15.78 (8.92, 22.12)
+## -------------------------------------------------------------------
+##  Test that OR = 1: chi2(1) = 22.973 Pr&gt;chi2 = &lt;0.001
+##  Wald confidence limits
+##  CI: confidence interval
+##  * Outcomes per 100 population units</code></pre>
+<p>　上記の結果を見ると、AはYに対して因果関係に無いにも関わらず、ぞれぞれリスク比1.3[1.2 - 1.5]、リスク差15.3%[9.0 - 21.6]となっています。あたかもAがYに対して因果関係を持っているように見えます。これが<strong>交絡</strong>と呼ばれる現象です。</p>
+</div>
+<div id="交絡への対処方法" class="section level1">
+<h1>交絡への対処方法</h1>
+<p>　もし仮に交絡がLによって生じていると判明している場合、実はいくつかの方法で対処できます。今回はMH（マンテルヘンツェル）の方法で調整リスク比、調整リスク差を計算します。<br />
+　まずLを60未満と以上で層に分けます。</p>
+<pre class="r"><code>for(i in 1:1000){
+  ifelse(d2[i,1]&lt;60, d2[i,4] &lt;- 1, d2[i,4] &lt;- 0)
+}
+names(d2)[4] &lt;- &quot;L60&quot;</code></pre>
+<p>　次に以下でMHリスク比、MHリスク差が計算できます。</p>
+<pre class="r"><code>table3 &lt;- xtabs(~Y+A+L60,data=d2)
+epi.2by2(table3)</code></pre>
+<pre><code>##              Outcome +    Outcome -      Total        Inc risk *        Odds
+## Exposed +          417          210        627              66.5        1.99
+## Exposed -          191          182        373              51.2        1.05
+## Total              608          392       1000              60.8        1.55
+## 
+## 
+## Point estimates and 95% CIs:
+## -------------------------------------------------------------------
+## Inc risk ratio (crude)                       1.30 (1.16, 1.46)
+## Inc risk ratio (M-H)                         0.99 (0.90, 1.09)
+## Inc risk ratio (crude:M-H)                   1.31
+## Odds ratio (crude)                           1.89 (1.46, 2.46)
+## Odds ratio (M-H)                             0.97 (0.71, 1.32)
+## Odds ratio (crude:M-H)                       1.96
+## Attrib risk (crude) *                        15.30 (9.03, 21.58)
+## Attrib risk (M-H) *                          -0.70 (-9.85, 8.45)
+## Attrib risk (crude:M-H)                      -21.80
+## -------------------------------------------------------------------
+##  M-H test of homogeneity of RRs: chi2(1) = 0.242 Pr&gt;chi2 = 0.62
+##  M-H test of homogeneity of ORs: chi2(1) = 0.391 Pr&gt;chi2 = 0.53
+##  Test that M-H adjusted OR = 1:  chi2(1) = 0.048 Pr&gt;chi2 = 0.83
+##  Wald confidence limits
+##  M-H: Mantel-Haenszel; CI: confidence interval
+##  * Outcomes per 100 population units</code></pre>
+<p>　上記の結果を見ると、MHリスク比は1.01、MHリスク差は0.54%となっています。つまりLによって生じていた交絡を統制し、純粋なAとYの関係を見ることができたことになります。この結果から、AはYに対して因果関係に無いと確認することができました。</p>
+</div>
+<div id="交絡の統制の難しさ" class="section level1">
+<h1>交絡の統制の難しさ</h1>
+<p>　上記では交絡因子（交絡を引き起こす因子）Lが事前に分かっていたので、MHリスク比とMHリスク差が計算できました。しかし実際の調査やリアルワールドデータ、ビッグデータには、交絡因子は無数に存在しています。加えて<strong>交絡因子がすべて測定されているかもしくは既知であるかも私達には検証するすべがありません</strong>。ここが交絡のやっかいなところで、<strong>いくら交絡因子を列挙して統制しても、得られたAとYの関係が交絡によるものなのか、因果関係なのかが分からないのです。</strong>研究・解析を行う人間がすべきなのは、既存の学問的知見や一般常識の観点から、交絡因子を列挙して統制することです。<br />
+　しかし「相関≠因果」をもたらすのは交絡だけではありません。間違った変数の統制や測定で生じるバイアスも問題となります。次回はこれら系統誤差を取り上げていきたいと思います。
+　</p>
+</div>

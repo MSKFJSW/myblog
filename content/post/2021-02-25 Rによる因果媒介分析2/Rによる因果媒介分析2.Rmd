@@ -13,7 +13,6 @@ thumbnailImage: https://n1.sdlcdn.com/imgs/e/a/a/Advances-in-Social-Science-Rese
 thumbnailImagePosition: left
 coverImage: http://tabisaku.cocolog-nifty.com/photo/pic/i023_w4.jpg
 coverSize: partial
-coverCaption: "A short caption (Source: Source)"
 ---
 
 　今回は2値アウトカムに対する因果媒介分析を扱う。医学分野では解釈を容易にするため、カテゴリ化されたアウトカムを使用することが多い。カテゴリー変数をアウトカムとする場合、解析に使用するモデルもロジスティックやプロビットなどにする必要がある。前回と同様に解析と感度分析を行い、結果の解釈を行ってみる。
