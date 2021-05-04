@@ -24,7 +24,11 @@ coverSize: partial
 <ul>
 <li><a href="#相関因果の状態">「相関=因果」の状態</a></li>
 <li><a href="#相関因果の状態-1">「相関≠因果」の状態</a></li>
-<li><a href="#交絡への対処方法">交絡への対処方法</a></li>
+<li><a href="#交絡への対処">交絡への対処</a><ul>
+<li><a href="#mhの方法による調整リスク比リスク差の計算">1. MHの方法による調整リスク比・リスク差の計算</a></li>
+<li><a href="#ロジスティックモデルによる調整オッズ比の計算">2. ロジスティックモデルによる調整オッズ比の計算</a></li>
+<li><a href="#層別化による交絡の統制層別化">3. 層別化による交絡の統制（層別化）</a></li>
+</ul></li>
 <li><a href="#交絡の統制の難しさ">交絡の統制の難しさ</a></li>
 </ul>
 </div>
@@ -124,15 +128,17 @@ barplot(table2, legend=rownames(table2))</code></pre>
 ##  * Outcomes per 100 population units</code></pre>
 <p>　上記の結果を見ると、AはYに対して因果関係に無いにも関わらず、ぞれぞれリスク比1.3[1.2 - 1.5]、リスク差15.3%[9.0 - 21.6]となっています。あたかもAがYに対して因果関係を持っているように見えます。これが<strong>交絡</strong>と呼ばれる現象です。</p>
 </div>
-<div id="交絡への対処方法" class="section level1">
-<h1>交絡への対処方法</h1>
-<p>　もし仮に交絡がLによって生じていると判明している場合、実はいくつかの方法で対処できます。今回はMH（マンテルヘンツェル）の方法で調整リスク比、調整リスク差を計算します。<br />
-　まずLを60より上、以下で2つの層に分けます。</p>
+<div id="交絡への対処" class="section level1">
+<h1>交絡への対処</h1>
+<p>　もし仮に交絡がLによって生じていると判明している場合、実はいくつかの方法で対処できます。今回は3つ紹介します。<br />
+　データの作成段階でLは60を境に曝露とアウトカムに影響することが分かっているので、Lを60より上、以下で2つの層に分けておきます。</p>
 <pre class="r"><code>for(i in 1:1000){
   ifelse(d2[i,1]&gt;60, d2[i,4] &lt;- 1, d2[i,4] &lt;- 0)
 }
 names(d2)[4] &lt;- &quot;L60&quot;</code></pre>
-<p>　次に以下でMHリスク比、MHリスク差が計算できます。</p>
+<div id="mhの方法による調整リスク比リスク差の計算" class="section level2">
+<h2>1. MHの方法による調整リスク比・リスク差の計算</h2>
+<p>まずMH（マンテルヘンツェル）の方法で調整リスク比、調整リスク差を計算してみます。</p>
 <pre class="r"><code>table3 &lt;- xtabs(~Y+A+L60,data=d2)
 epi.2by2(table3)</code></pre>
 <pre><code>##              Outcome +    Outcome -      Total        Inc risk *        Odds
@@ -160,6 +166,70 @@ epi.2by2(table3)</code></pre>
 ##  M-H: Mantel-Haenszel; CI: confidence interval
 ##  * Outcomes per 100 population units</code></pre>
 <p>　上記の結果を見ると、MHリスク比は0.99、MHリスク差は-0.7%となっています。つまりLによって生じていた交絡を統制し、純粋なAとYの関係を見ることができたことになります。この結果から、AはYに対して因果関係に無いと確認することができました。</p>
+</div>
+<div id="ロジスティックモデルによる調整オッズ比の計算" class="section level2">
+<h2>2. ロジスティックモデルによる調整オッズ比の計算</h2>
+<p>　ロジスティック回帰を使用することで、交絡の影響を除いたオッズ比を計算できます。L60を説明変数に加えて、</p>
+<pre class="r"><code>glm(Y~A+L60, family=&quot;binomial&quot;, data=d2)</code></pre>
+<pre><code>## 
+## Call:  glm(formula = Y ~ A + L60, family = &quot;binomial&quot;, data = d2)
+## 
+## Coefficients:
+## (Intercept)            A          L60  
+##    -0.89073     -0.03464      2.36086  
+## 
+## Degrees of Freedom: 999 Total (i.e. Null);  997 Residual
+## Null Deviance:       1321 
+## Residual Deviance: 1165  AIC: 1171</code></pre>
+<p>ここで得られた係数をオッズ比に変換する必要があります。なのでexp(-0.03)により、調整オッズ比を計算できます。</p>
+</div>
+<div id="層別化による交絡の統制層別化" class="section level2">
+<h2>3. 層別化による交絡の統制（層別化）</h2>
+<p>　これが最もシンプルな方法です。単純にL60の2つの層でそれぞれリスク比・リスク差・オッズ比を計算するので、層別化と呼ばれます。各層でのリスク比・リスク差・オッズ比を計算できるので、層ごとの比較ができるのも大きな利点です（性別で層別化を行って比較をしている論文は非常に多いです）。</p>
+<pre class="r"><code>L1 &lt;- subset(d2,L60==1)
+L0 &lt;- subset(d2,L60==0)
+tableL1 &lt;- xtabs(~Y+A, data=L1)
+tableL0 &lt;- xtabs(~Y+A, data=L0)
+epi.2by2(tableL1)</code></pre>
+<pre><code>##              Outcome +    Outcome -      Total        Inc risk *        Odds
+## Exposed +            6           25         31              19.4       0.240
+## Exposed -           21          110        131              16.0       0.191
+## Total               27          135        162              16.7       0.200
+## 
+## Point estimates and 95% CIs:
+## -------------------------------------------------------------------
+## Inc risk ratio                               1.21 (0.53, 2.74)
+## Odds ratio                                   1.26 (0.46, 3.44)
+## Attrib risk *                                3.32 (-11.94, 18.59)
+## Attrib risk in population *                  0.64 (-7.87, 9.15)
+## Attrib fraction in exposed (%)               17.18 (-87.77, 63.47)
+## Attrib fraction in population (%)            3.82 (-15.42, 19.84)
+## -------------------------------------------------------------------
+##  Test that OR = 1: chi2(1) = 0.199 Pr&gt;chi2 = 0.66
+##  Wald confidence limits
+##  CI: confidence interval
+##  * Outcomes per 100 population units</code></pre>
+<pre class="r"><code>epi.2by2(tableL0)</code></pre>
+<pre><code>##              Outcome +    Outcome -      Total        Inc risk *        Odds
+## Exposed +          411          185        596              69.0        2.22
+## Exposed -          170           72        242              70.2        2.36
+## Total              581          257        838              69.3        2.26
+## 
+## Point estimates and 95% CIs:
+## -------------------------------------------------------------------
+## Inc risk ratio                               0.98 (0.89, 1.08)
+## Odds ratio                                   0.94 (0.68, 1.30)
+## Attrib risk *                                -1.29 (-8.14, 5.57)
+## Attrib risk in population *                  -0.92 (-7.47, 5.64)
+## Attrib fraction in exposed (%)               -1.87 (-12.37, 7.65)
+## Attrib fraction in population (%)            -1.32 (-8.60, 5.47)
+## -------------------------------------------------------------------
+##  Test that OR = 1: chi2(1) = 0.134 Pr&gt;chi2 = 0.71
+##  Wald confidence limits
+##  CI: confidence interval
+##  * Outcomes per 100 population units</code></pre>
+<p>層別化はシンプルな方法ではありますが、サンプルサイズが小さくなりやすいことが問題となります。実際Lが60より上の層では、リスク比1.2[0.5 - 2.7]とリスク差3.32[-11.9 - 18.6]となっていて、信頼区間が広すぎます。今回の場合は明らかにサンプルサイズが足りていないので、妥当な方法とは言えません。</p>
+</div>
 </div>
 <div id="交絡の統制の難しさ" class="section level1">
 <h1>交絡の統制の難しさ</h1>
