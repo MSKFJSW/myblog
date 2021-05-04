@@ -127,9 +127,9 @@ barplot(table2, legend=rownames(table2))</code></pre>
 <div id="交絡への対処方法" class="section level1">
 <h1>交絡への対処方法</h1>
 <p>　もし仮に交絡がLによって生じていると判明している場合、実はいくつかの方法で対処できます。今回はMH（マンテルヘンツェル）の方法で調整リスク比、調整リスク差を計算します。<br />
-　まずLを60未満と以上で層に分けます。</p>
+　まずLを60より上、以下で2つの層に分けます。</p>
 <pre class="r"><code>for(i in 1:1000){
-  ifelse(d2[i,1]&lt;60, d2[i,4] &lt;- 1, d2[i,4] &lt;- 0)
+  ifelse(d2[i,1]&gt;60, d2[i,4] &lt;- 1, d2[i,4] &lt;- 0)
 }
 names(d2)[4] &lt;- &quot;L60&quot;</code></pre>
 <p>　次に以下でMHリスク比、MHリスク差が計算できます。</p>
@@ -159,7 +159,7 @@ epi.2by2(table3)</code></pre>
 ##  Wald confidence limits
 ##  M-H: Mantel-Haenszel; CI: confidence interval
 ##  * Outcomes per 100 population units</code></pre>
-<p>　上記の結果を見ると、MHリスク比は1.01、MHリスク差は0.54%となっています。つまりLによって生じていた交絡を統制し、純粋なAとYの関係を見ることができたことになります。この結果から、AはYに対して因果関係に無いと確認することができました。</p>
+<p>　上記の結果を見ると、MHリスク比は0.99、MHリスク差は-0.7%となっています。つまりLによって生じていた交絡を統制し、純粋なAとYの関係を見ることができたことになります。この結果から、AはYに対して因果関係に無いと確認することができました。</p>
 </div>
 <div id="交絡の統制の難しさ" class="section level1">
 <h1>交絡の統制の難しさ</h1>
