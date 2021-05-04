@@ -138,7 +138,7 @@ barplot(table2, legend=rownames(table2))</code></pre>
 names(d2)[4] &lt;- &quot;L60&quot;</code></pre>
 <div id="mhの方法による調整リスク比リスク差の計算" class="section level2">
 <h2>1. MHの方法による調整リスク比・リスク差の計算</h2>
-<p>まずMH（マンテルヘンツェル）の方法で調整リスク比、調整リスク差を計算してみます。</p>
+<p>　まずMH（マンテルヘンツェル）の方法で調整リスク比、調整リスク差を計算してみます。</p>
 <pre class="r"><code>table3 &lt;- xtabs(~Y+A+L60,data=d2)
 epi.2by2(table3)</code></pre>
 <pre><code>##              Outcome +    Outcome -      Total        Inc risk *        Odds
@@ -169,19 +169,43 @@ epi.2by2(table3)</code></pre>
 </div>
 <div id="ロジスティックモデルによる調整オッズ比の計算" class="section level2">
 <h2>2. ロジスティックモデルによる調整オッズ比の計算</h2>
-<p>　ロジスティック回帰を使用することで、交絡の影響を除いたオッズ比を計算できます。L60を説明変数に加えて、</p>
-<pre class="r"><code>glm(Y~A+L60, family=&quot;binomial&quot;, data=d2)</code></pre>
+<p>　ロジスティック回帰を使用することで、交絡の影響を除いたオッズ比を計算できます。この方法の利点は、共変量に入れる変数が増えても調整オッズ比が計算できる点にあります。先程のMHの方法では、統制できる変数の数は非常に限られます。<br />
+　L60を説明変数に加えて、</p>
+<pre class="r"><code>logistic &lt;- glm(Y~A+L60, family=&quot;binomial&quot;, data=d2)
+summary(logistic)</code></pre>
 <pre><code>## 
-## Call:  glm(formula = Y ~ A + L60, family = &quot;binomial&quot;, data = d2)
+## Call:
+## glm(formula = Y ~ A + L60, family = &quot;binomial&quot;, data = d2)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -1.8314  -0.8293  -0.8172   0.6534   1.5870  
 ## 
 ## Coefficients:
-## (Intercept)            A          L60  
-##    -0.89073     -0.03464      2.36086  
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -0.89073    0.09014  -9.882   &lt;2e-16 ***
+## A           -0.03464    0.15848  -0.219    0.827    
+## L60          2.36086    0.22985  10.271   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Degrees of Freedom: 999 Total (i.e. Null);  997 Residual
-## Null Deviance:       1321 
-## Residual Deviance: 1165  AIC: 1171</code></pre>
-<p>ここで得られた係数をオッズ比に変換する必要があります。なのでexp(-0.03)により、調整オッズ比を計算できます。</p>
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 1321.1  on 999  degrees of freedom
+## Residual deviance: 1165.5  on 997  degrees of freedom
+## AIC: 1171.5
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<pre class="r"><code>exp(coef(logistic)) #調整オッズ比の点推定値</code></pre>
+<pre><code>## (Intercept)           A         L60 
+##   0.4103548   0.9659520  10.6000873</code></pre>
+<pre class="r"><code>exp(confint(logistic)) #信頼区間の上限・下限</code></pre>
+<pre><code>## Waiting for profiling to be done...</code></pre>
+<pre><code>##                 2.5 %    97.5 %
+## (Intercept) 0.3431507  0.488691
+## A           0.7056189  1.314124
+## L60         6.8401512 16.877911</code></pre>
+<p>ここで得られた係数をオッズ比に変換する必要があります。なのでexp(-0.03)を計算して、調整オッズ0.97が得られます。信頼区間の下限と上限も同様にして計算できます。</p>
 </div>
 <div id="層別化による交絡の統制層別化" class="section level2">
 <h2>3. 層別化による交絡の統制（層別化）</h2>
@@ -233,7 +257,7 @@ epi.2by2(tableL1)</code></pre>
 </div>
 <div id="交絡の統制の難しさ" class="section level1">
 <h1>交絡の統制の難しさ</h1>
-<p>　上記では交絡因子（交絡を引き起こす因子）Lが事前に分かっていたので、MHリスク比とMHリスク差が計算できました。しかし実際の調査やリアルワールドデータ、ビッグデータには、交絡因子は無数に存在しています。加えて<strong>交絡因子がすべて測定されているかもしくは既知であるかも私達には検証するすべがありません</strong>。ここが交絡のやっかいなところで、<strong>いくら交絡因子を列挙して統制しても、得られたAとYの関係が交絡によるものなのか、因果関係なのかが分からないのです。</strong>研究・解析を行う人間がすべきなのは、既存の学問的知見や一般常識の観点から、交絡因子を列挙して統制することです。<br />
+<p>　上記では交絡因子（交絡を引き起こす因子）Lが事前に分かっていたので、交絡の影響を除いたリスク比・リスク差・オッズ比が計算できました。しかし実際の調査やリアルワールドデータ、ビッグデータには、交絡因子は無数に存在しています。加えて<strong>交絡因子がすべて測定されているかもしくは既知であるかも私達には検証するすべがありません</strong>。ここが交絡のやっかいなところで、<strong>いくら交絡因子を列挙して統制しても、得られたAとYの関係が交絡によるものなのか、因果関係なのかが分からないのです。</strong>研究・解析を行う人間がすべきなのは、既存の学問的知見や一般常識の観点から、交絡因子を列挙して統制することです。<br />
 　しかし「相関≠因果」をもたらすのは交絡だけではありません。間違った変数の統制や測定で生じるバイアスも問題となります。次回はこれら系統誤差を取り上げていきたいと思います。
 　</p>
 </div>
